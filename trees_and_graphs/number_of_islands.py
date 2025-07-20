@@ -76,3 +76,40 @@ def numIslandsFA(self, grid: List[List[str]]) -> int:
             )
 
     return num_islands
+
+
+def numIslandsDS1(self, grid: List[List[str]]) -> int:
+    """
+    Time complexity O(M x N), where M = num rows and N = num cols.
+    Space complexity O(M x N) in the worst case that the grid map is filled with
+    lands where DFS is M x N deep.
+    """
+    if not grid:
+        return 0
+
+    num_islands = 0
+    for row in range(len(grid)):
+        for col in range(len(grid[0])):
+            if grid[row][col] == "1":
+                self.mark_island(grid, row, col)
+                num_islands += 1
+
+    return num_islands
+
+
+def mark_island(self, grid, row, col):
+    if (
+        row < 0
+        or col < 0
+        or row >= len(grid)
+        or col >= len(grid[0])
+        or grid[row][col] != "1"
+    ):
+        return
+
+    grid[row][col] = "0"
+
+    self.mark_island(grid, row - 1, col)
+    self.mark_island(grid, row + 1, col)
+    self.mark_island(grid, row, col - 1)
+    self.mark_island(grid, row, col + 1)
