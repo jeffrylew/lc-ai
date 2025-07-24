@@ -1,5 +1,6 @@
 set (
     cpp_files
+    "binary_tree_level_order_traversal"
     "number_of_islands"
 )
 
