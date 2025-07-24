@@ -1,6 +1,7 @@
 set (
     cpp_files
     "binary_tree_level_order_traversal"
+    "maximum_depth_of_binary_tree"
     "number_of_islands"
 )
 
