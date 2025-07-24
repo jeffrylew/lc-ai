@@ -7,10 +7,10 @@
 //! @return Number of islands
 static int numIslandsFA(const std::vector<std::vector<char>>& grid)
 {
-
+    //! @todo
 }
 
-TEST(NumIslandsTest, SampleTest1)
+TEST_CASE("Example 1", "[NumIslands]")
 {
     const std::vector<std::vector<char>> grid {
         {'1', '1', '1', '1', '0'},
@@ -18,10 +18,10 @@ TEST(NumIslandsTest, SampleTest1)
         {'1', '1', '0', '0', '0'},
         {'0', '0', '0', '0', '0'}};
 
-    EXPECT_EQ(1, numIslandsFA(grid));
+    REQUIRE(1 == numIslandsFA(grid));
 }
 
-TEST(NumIslandsTest, SampleTest2)
+TEST_CASE("Example 2", "[NumIslands]")
 {
     const std::vector<std::vector<char>> grid {
         {'1', '1', '0', '0', '0'},
@@ -29,5 +29,5 @@ TEST(NumIslandsTest, SampleTest2)
         {'0', '0', '1', '0', '0'},
         {'0', '0', '0', '1', '1'}};
 
-    EXPECT_EQ(1, numIslandsFA(grid));
+    REQUIRE(1 == numIslandsFA(grid));
 }
