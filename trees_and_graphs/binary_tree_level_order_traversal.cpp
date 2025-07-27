@@ -62,12 +62,12 @@ static std::vector<std::vector<int>> levelOrderFA(TreeNode* root)
 
 TEST_CASE("Example 1", "[LevelOrder]")
 {
-    constexpr TreeNode seven {7};
-    constexpr TreeNode nine {9};
-    constexpr TreeNode fifteen {15};
+    TreeNode seven {7};
+    TreeNode nine {9};
+    TreeNode fifteen {15};
 
-    const TreeNode twenty {20, &fifteen, &seven};
-    const TreeNode three {3, &nine, &twenty};
+    TreeNode twenty {20, &fifteen, &seven};
+    TreeNode three {3, &nine, &twenty};
 
     const std::vector<std::vector<int>> expected_output {{3}, {9, 20}, {15, 7}};
 
@@ -76,7 +76,7 @@ TEST_CASE("Example 1", "[LevelOrder]")
 
 TEST_CASE("Example 2", "[LevelOrder]")
 {
-    constexpr TreeNode one {1};
+    TreeNode one {1};
 
     const std::vector<std::vector<int>> expected_output {{1}};
 

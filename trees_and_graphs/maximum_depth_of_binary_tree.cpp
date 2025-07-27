@@ -29,20 +29,20 @@ static int maxDepthFA(TreeNode* root)
 
 TEST_CASE("Example 1", "[MaxDepth]")
 {
-    constexpr TreeNode seven {7};
-    constexpr TreeNode nine {9};
-    constexpr TreeNode fifteen {15};
+    TreeNode seven {7};
+    TreeNode nine {9};
+    TreeNode fifteen {15};
 
-    const TreeNode twenty {20, &fifteen, &seven};
-    const TreeNode three {3, &nine, &twenty};
+    TreeNode twenty {20, &fifteen, &seven};
+    TreeNode three {3, &nine, &twenty};
 
     REQUIRE(3 == maxDepthFA(&three));
 }
 
 TEST_CASE("Example 2", "[MaxDepth]")
 {
-    constexpr TreeNode two {2};
-    const     TreeNode one {1, nullptr, &two};
+    TreeNode two {2};
+    TreeNode one {1, nullptr, &two};
 
     REQUIRE(2 == maxDepthFA(&one));
 }
