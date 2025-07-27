@@ -2,6 +2,11 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+static bool is_(TreeNode* node, TreeNode* parent)
+{
+
+}
+
 //! @brief First attempt solution to determine if a binary tree is a valid BST
 //! @param[in] root Pointer to root TreeNode
 //! @return True if binary tree is a valid binary search tree, else false
@@ -28,6 +33,23 @@ static bool isValidBSTFA(TreeNode* root)
         return true;
     }
 
+    if (root->left != nullptr)
+    {
+        if (root->left->val >= root->val)
+        {
+            return false;
+        }
+    }
+
+    if (root->right != nullptr)
+    {
+        if (root->right->val <= root->val)
+        {
+            return false;
+        }
+    }
+
+    /*
     if (root->left != nullptr && root->left->val >= root->val)
     {
         return false;
@@ -37,6 +59,7 @@ static bool isValidBSTFA(TreeNode* root)
     {
         return false;
     }
+    */
 
     return isValidBSTFA(root->left) && isValidBSTFA(root->right);
 
