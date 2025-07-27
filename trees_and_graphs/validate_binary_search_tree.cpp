@@ -2,11 +2,6 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-static bool is_(TreeNode* node, TreeNode* parent)
-{
-
-}
-
 //! @brief First attempt solution to determine if a binary tree is a valid BST
 //! @param[in] root Pointer to root TreeNode
 //! @return True if binary tree is a valid binary search tree, else false
@@ -33,23 +28,6 @@ static bool isValidBSTFA(TreeNode* root)
         return true;
     }
 
-    if (root->left != nullptr)
-    {
-        if (root->left->val >= root->val)
-        {
-            return false;
-        }
-    }
-
-    if (root->right != nullptr)
-    {
-        if (root->right->val <= root->val)
-        {
-            return false;
-        }
-    }
-
-    /*
     if (root->left != nullptr && root->left->val >= root->val)
     {
         return false;
@@ -59,11 +37,44 @@ static bool isValidBSTFA(TreeNode* root)
     {
         return false;
     }
-    */
 
     return isValidBSTFA(root->left) && isValidBSTFA(root->right);
 
 } // static bool isValidBSTFA( ...
+
+[[nodiscard]] static bool
+    validate_bst(TreeNode* root, TreeNode* low_node, TreeNode* high_node)
+{
+    //! Empty tree is a valid BST
+    if (root == nullptr)
+    {
+        return true;
+    }
+
+    //! Current node's value must be between low_node and high_node
+    if ((low_node != nullptr && root->val <= low_node->val)
+        || (high_node != nullptr && root->val >= high_node->val))
+    {
+        return false;
+    }
+
+    //! Left and right subtrees must be valid
+    return validate_bst(root->right, root, high_node)
+        && validate_bst(root->left, low_node, root);
+}
+
+//! @brief Recursive traversal with valid range discussion solution
+//! @param[in] root Pointer to root TreeNode
+//! @return True if binary tree is a valid binary search tree, else false
+static bool isValidBSTDS1(TreeNode* root)
+{
+    //! @details https://leetcode.com/problems/validate-binary-search-tree/
+    //!
+    //!          Time complexity O(N) to visit each node exactly once
+    //!          Space complexity O(N) to store up to the entire tree
+
+    return validate_bst(root, nullptr, nullptr);
+}
 
 TEST_CASE("Example 1", "[isValidBST]")
 {
@@ -72,6 +83,7 @@ TEST_CASE("Example 1", "[isValidBST]")
     TreeNode two {2, &one, &three};
 
     REQUIRE(isValidBSTFA(&two));
+    REQUIRE(isValidBSTDS1(&two));
 }
 
 TEST_CASE("Example 2", "[isValidBST]")
@@ -84,6 +96,7 @@ TEST_CASE("Example 2", "[isValidBST]")
     TreeNode five {5, &one, &four};
 
     REQUIRE(!isValidBSTFA(&five));
+    REQUIRE(!isValidBSTDS1(&five));
 }
 
 TEST_CASE("Example 3", "[isValidBST]")
@@ -92,6 +105,7 @@ TEST_CASE("Example 3", "[isValidBST]")
     TreeNode zero {0, &neg_one, nullptr};
 
     REQUIRE(isValidBSTFA(&zero));
+    REQUIRE(isValidBSTDS1(&zero));
 }
 
 TEST_CASE("Example 4", "[isValidBST]")
@@ -104,4 +118,5 @@ TEST_CASE("Example 4", "[isValidBST]")
     TreeNode five {5, &four, &six};
 
     // REQUIRE(!isValidBSTFA(&five));
+    REQUIRE(!isValidBSTDS1(&five));
 }
