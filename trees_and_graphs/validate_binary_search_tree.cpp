@@ -173,6 +173,46 @@ static bool isValidBSTDS3(TreeNode* root)
 
 } // static bool isValidBSTDS3( ...
 
+//! @brief Iterative inorder traversal discussion solution
+//! @param[in] root Pointer to root TreeNode
+//! @return True if binary tree is a valid binary search tree, else false
+static bool isValidBSTDS4(TreeNode* root)
+{
+    //! @details https://leetcode.com/problems/validate-binary-search-tree/
+    //!
+    //!          Time complexity O(N) in the worst case when the tree is a BST
+    //!          or when the "bad" element is the rightmost leaf.
+    //!          Space complexity O(N) for node_stack.
+
+    std::stack<TreeNode*> node_stack;
+    TreeNode*             prev {nullptr};
+
+    while (!node_stack.empty() || root != nullptr)
+    {
+        while (root != nullptr)
+        {
+            node_stack.push(root);
+            root = root->left;
+        }
+
+        root = node_stack.top();
+        node_stack.pop();
+
+        //! If the next node in the inorder traversal is smaller
+        //! than the previous one then we do not have a BST
+        if (prev != nullptr && root->val <= prev->val)
+        {
+            return false;
+        }
+
+        prev = root;
+        root = root->right;
+    }
+
+    return true;
+
+} // static bool isValidBSTDS4( ...
+
 TEST_CASE("Example 1", "[isValidBST]")
 {
     TreeNode one {1};
@@ -183,6 +223,7 @@ TEST_CASE("Example 1", "[isValidBST]")
     REQUIRE(isValidBSTDS1(&two));
     REQUIRE(isValidBSTDS2(&two));
     REQUIRE(isValidBSTDS3(&two));
+    REQUIRE(isValidBSTDS4(&two));
 }
 
 TEST_CASE("Example 2", "[isValidBST]")
@@ -198,6 +239,7 @@ TEST_CASE("Example 2", "[isValidBST]")
     REQUIRE(!isValidBSTDS1(&five));
     REQUIRE(!isValidBSTDS2(&five));
     REQUIRE(!isValidBSTDS3(&five));
+    REQUIRE(!isValidBSTDS4(&five));
 }
 
 TEST_CASE("Example 3", "[isValidBST]")
@@ -209,6 +251,7 @@ TEST_CASE("Example 3", "[isValidBST]")
     REQUIRE(isValidBSTDS1(&zero));
     REQUIRE(isValidBSTDS2(&zero));
     REQUIRE(isValidBSTDS3(&zero));
+    REQUIRE(isValidBSTDS4(&zero));
 }
 
 TEST_CASE("Example 4", "[isValidBST]")
@@ -224,4 +267,5 @@ TEST_CASE("Example 4", "[isValidBST]")
     REQUIRE(!isValidBSTDS1(&five));
     REQUIRE(!isValidBSTDS2(&five));
     REQUIRE(!isValidBSTDS3(&five));
+    REQUIRE(!isValidBSTDS4(&five));
 }
