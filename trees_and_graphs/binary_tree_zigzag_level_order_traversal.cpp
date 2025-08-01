@@ -86,6 +86,78 @@ static std::vector<std::vector<int>> zigzagLevelOrderFA(TreeNode* root)
 
 } // static std::vector<std::vector<int>> zigzagLevelOrderFA( ...
 
+//! @brief BFS discussion solution
+//! @param[in] root Pointer to root TreeNode
+//! @return Zigzag level order traversal from left to right and henceforth
+static std::vector<std::vector<int>> zigzagLevelOrderDS1(TreeNode* root)
+{
+    //! @details https://leetcode.com/problems
+    //!          /binary-tree-zigzag-level-order-traversal/editorial/
+
+    if (root == nullptr)
+    {
+        return {};
+    }
+
+    std::vector<std::vector<int>> zigzag_traversal;
+
+    std::deque<TreeNode*> node_queue;
+    node_queue.push_back(root);
+
+    //! Delimiter for a single level
+    node_queue.push_back(nullptr);
+
+    std::deque<int> level_values;
+
+    bool is_order_left {true};
+
+    while (!node_queue.empty())
+    {
+        auto node = node_queue.front();
+        node_queue.pop_front();
+
+        if (node != nullptr)
+        {
+            if (is_order_left)
+            {
+                level_values.push_back(node->val);
+            }
+            else
+            {
+                level_values.push_front(node->val);
+            }
+
+            if (node->left != nullptr)
+            {
+                node_queue.push_back(node->left);
+            }
+
+            if (node->right != nullptr)
+            {
+                node_queue.push_back(node->right);
+            }
+        }
+        else
+        {
+            //! Add current level to zigzag_traversal and prepare for next level
+            zigzag_traversal.push_back(
+                std::vector<int> {level_values.begin(), level_values.end()});
+
+            level_values.clear();
+
+            if (!node_queue.empty())
+            {
+                node_queue.push_back(nullptr);
+            }
+
+            is_order_left = !is_order_left;
+        }
+    }
+
+    return zigzag_traversal;
+
+} // static std::vector<std::vector<int>> zigzagLevelOrderDS1( ...
+
 TEST_CASE("Example 1", "zigzagLevelOrder")
 {
     TreeNode seven {7};
@@ -98,6 +170,7 @@ TEST_CASE("Example 1", "zigzagLevelOrder")
     const std::vector<std::vector<int>> expected_output {{3}, {20, 9}, {15, 7}};
 
     REQUIRE(expected_output == zigzagLevelOrderFA(&three));
+    REQUIRE(expected_output == zigzagLevelOrderDS1(&three));
 }
 
 TEST_CASE("Example 2", "zigzagLevelOrder")
@@ -107,11 +180,13 @@ TEST_CASE("Example 2", "zigzagLevelOrder")
     const std::vector<std::vector<int>> expected_output {{1}};
 
     REQUIRE(expected_output == zigzagLevelOrderFA(&one));
+    REQUIRE(expected_output == zigzagLevelOrderDS1(&one));
 }
 
 TEST_CASE("Example 3", "zigzagLevelOrder")
 {
     REQUIRE(zigzagLevelOrderFA(nullptr).empty());
+    REQUIRE(zigzagLevelOrderDS1(nullptr).empty());
 }
 
 TEST_CASE("Example 4", "zigzagLevelOrder")
@@ -126,6 +201,7 @@ TEST_CASE("Example 4", "zigzagLevelOrder")
     const std::vector<std::vector<int>> expected_output {{1}, {3, 2}, {4, 5}};
 
     REQUIRE(expected_output == zigzagLevelOrderFA(&one));
+    REQUIRE(expected_output == zigzagLevelOrderDS1(&one));
 }
 
 TEST_CASE("Example 5", "zigzagLevelOrder")
@@ -148,4 +224,5 @@ TEST_CASE("Example 5", "zigzagLevelOrder")
         {0}, {4, 2}, {1, 3, -1}, {8, 6, 1, 5}};
 
     // REQUIRE(expected_output == zigzagLevelOrderFA(&zero));
+    REQUIRE(expected_output == zigzagLevelOrderDS1(&zero));
 }
