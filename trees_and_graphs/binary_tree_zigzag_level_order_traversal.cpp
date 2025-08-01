@@ -169,7 +169,7 @@ static std::vector<std::vector<int>> zigzagLevelOrderDS1(TreeNode* root)
 
 } // static std::vector<std::vector<int>> zigzagLevelOrderDS1( ...
 
-TEST_CASE("Example 1", "zigzagLevelOrder")
+TEST_CASE("Example 1", "[zigzagLevelOrder]")
 {
     TreeNode seven {7};
     TreeNode nine {9};
@@ -184,7 +184,7 @@ TEST_CASE("Example 1", "zigzagLevelOrder")
     REQUIRE(expected_output == zigzagLevelOrderDS1(&three));
 }
 
-TEST_CASE("Example 2", "zigzagLevelOrder")
+TEST_CASE("Example 2", "[zigzagLevelOrder]")
 {
     TreeNode one {1};
 
@@ -194,13 +194,13 @@ TEST_CASE("Example 2", "zigzagLevelOrder")
     REQUIRE(expected_output == zigzagLevelOrderDS1(&one));
 }
 
-TEST_CASE("Example 3", "zigzagLevelOrder")
+TEST_CASE("Example 3", "[zigzagLevelOrder]")
 {
     REQUIRE(zigzagLevelOrderFA(nullptr).empty());
     REQUIRE(zigzagLevelOrderDS1(nullptr).empty());
 }
 
-TEST_CASE("Example 4", "zigzagLevelOrder")
+TEST_CASE("Example 4", "[zigzagLevelOrder]")
 {
     TreeNode four {4};
     TreeNode five {5};
@@ -215,7 +215,7 @@ TEST_CASE("Example 4", "zigzagLevelOrder")
     REQUIRE(expected_output == zigzagLevelOrderDS1(&one));
 }
 
-TEST_CASE("Example 5", "zigzagLevelOrder")
+TEST_CASE("Example 5", "[zigzagLevelOrder]")
 {
     TreeNode one_bottom {1};
     TreeNode five {5};
