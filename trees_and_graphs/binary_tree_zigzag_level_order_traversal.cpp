@@ -2,6 +2,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+#include <iterator>
 #include <queue>
 #include <stack>
 #include <utility>
@@ -93,6 +94,16 @@ static std::vector<std::vector<int>> zigzagLevelOrderDS1(TreeNode* root)
 {
     //! @details https://leetcode.com/problems
     //!          /binary-tree-zigzag-level-order-traversal/editorial/
+    //!
+    //!          Time complexity O(N) where N = number of nodes in the tree. We
+    //!          visit each node once. The insertion operation on either end of
+    //!          the level_values deque takes O(1).
+    //!          Space complexity O(N). node_queue can hold the nodes that are
+    //!          in two levels. If L is the max number of nodes that might be in
+    //!          a level then the size of the queue is no more than 2 * L. The
+    //!          level that contains the most nodes consists of all the leaf
+    //!          nodes in a full binary tree, which is L = N / 2. In the worst
+    //!          case, we have 2 * N / 2 = N.
 
     if (root == nullptr)
     {
@@ -101,11 +112,10 @@ static std::vector<std::vector<int>> zigzagLevelOrderDS1(TreeNode* root)
 
     std::vector<std::vector<int>> zigzag_traversal;
 
-    std::deque<TreeNode*> node_queue;
-    node_queue.push_back(root);
-
-    //! Delimiter for a single level
-    node_queue.push_back(nullptr);
+    //! nullptr is the delimiter for a single level
+    std::queue<TreeNode*> node_queue;
+    node_queue.push(root);
+    node_queue.push(nullptr);
 
     std::deque<int> level_values;
 
@@ -114,7 +124,7 @@ static std::vector<std::vector<int>> zigzagLevelOrderDS1(TreeNode* root)
     while (!node_queue.empty())
     {
         auto node = node_queue.front();
-        node_queue.pop_front();
+        node_queue.pop();
 
         if (node != nullptr)
         {
@@ -129,25 +139,26 @@ static std::vector<std::vector<int>> zigzagLevelOrderDS1(TreeNode* root)
 
             if (node->left != nullptr)
             {
-                node_queue.push_back(node->left);
+                node_queue.push(node->left);
             }
 
             if (node->right != nullptr)
             {
-                node_queue.push_back(node->right);
+                node_queue.push(node->right);
             }
         }
         else
         {
             //! Add current level to zigzag_traversal and prepare for next level
-            zigzag_traversal.push_back(
-                std::vector<int> {level_values.begin(), level_values.end()});
+            zigzag_traversal.emplace_back(
+                std::move_iterator(level_values.begin()),
+                std::move_iterator(level_values.end()));
 
             level_values.clear();
 
             if (!node_queue.empty())
             {
-                node_queue.push_back(nullptr);
+                node_queue.push(nullptr);
             }
 
             is_order_left = !is_order_left;
