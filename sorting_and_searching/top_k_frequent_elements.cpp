@@ -64,6 +64,64 @@ static std::vector<int> topKFrequentFA(const std::vector<int>& nums, int k)
     return top_k_elements;
 }
 
+//! @brief Heap discussion solution to get k most frequent elements
+//! @param[in] nums Reference to vector of ints
+//! @param[in] k    Number of most frequent elements to return
+//! @return Vector of k most frequent elements
+static std::vector<int> topKFrequentDS1(const std::vector<int>& nums, int k)
+{
+    //! @details https://leetcode.com/problems/top-k-frequent-elements/editorial
+    //!
+    //!          Time complexity O(N + N * log k) where N = nums.size() for
+    //!          k < N. If k = N then O(1).
+    //!          Space complexity O(N + k) to store the hash map with no more
+    //!          than N elements and the min heap with k elements.
+
+    //! O(1) time
+    if (k == std::ssize(nums))
+    {
+        return nums;
+    }
+
+    //! Build hash map of <element, element count> in O(N)
+    std::unordered_map<int, int> num_counts;
+    for (const int num : nums)
+    {
+        ++num_counts[num];
+    }
+
+    //! Initialize a heap with the least frequent elements at the top
+    auto min_count_compare = [&num_counts](int lhs_elem, int rhs_elem) {
+        return num_counts[lhs_elem] > num_counts[rhs_elem];
+    };
+    std::priority_queue<int,
+                        std::vector<int>,
+                        decltype(min_count_compare)> min_count_heap(
+                            min_count_compare);
+
+    //! Keep top k frequent elements in the min heap
+    //! O(N * log k) < O(N * log N) time
+    for (const auto& [element, element_count] : num_counts)
+    {
+        min_count_heap.push(element);
+
+        if (std::ssize(min_count_heap) > k)
+        {
+            min_count_heap.pop();
+        }
+    }
+
+    //! Build an output vector in O(k * log k) time
+    std::vector<int> top_k_elements(k);
+    for (int elem_idx = k - 1; elem_idx >= 0; --elem_idx)
+    {
+        top_k_elements[elem_idx] = min_count_heap.top();
+        min_count_heap.pop();
+    }
+
+    return top_k_elements;
+}
+
 TEST_CASE("Example 1", "[topKFrequent]")
 {
     const std::vector<int> nums {1, 1, 1, 2, 2, 3};
@@ -71,6 +129,7 @@ TEST_CASE("Example 1", "[topKFrequent]")
     const std::vector<int> expected_output {1, 2};
 
     REQUIRE(expected_output == topKFrequentFA(nums, k));
+    REQUIRE(expected_output == topKFrequentDS1(nums, k));
 }
 
 TEST_CASE("Example 2", "[topKFrequent]")
@@ -80,4 +139,5 @@ TEST_CASE("Example 2", "[topKFrequent]")
     const std::vector<int> expected_output {1};
 
     REQUIRE(expected_output == topKFrequentFA(nums, k));
+    REQUIRE(expected_output == topKFrequentDS1(nums, k));
 }
