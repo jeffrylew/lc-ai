@@ -1,6 +1,8 @@
 #include <catch2/catch_test_macros.hpp>
 
+#include <algorithm>
 #include <queue>
+//#include <ranges>
 #include <unordered_map>
 #include <utility>
 #include <vector>
@@ -122,6 +124,71 @@ static std::vector<int> topKFrequentDS1(const std::vector<int>& nums, int k)
     return top_k_elements;
 }
 
+//! @brief Bucket sort discussion solution to get k most frequent elements
+//! @param[in] nums Reference to vector of ints
+//! @param[in] k    Number of most frequent elements to return
+//! @return Vector of k most frequent elements
+static std::vector<int> topKFrequentDS2(const std::vector<int>& nums, int k)
+{
+    //! @details https://leetcode.com/problems/top-k-frequent-elements/editorial
+
+    if (k == std::ssize(nums))
+    {
+        return nums;
+    }
+
+    //! Build hash map of <element, element count>
+    std::unordered_map<int, int> num_counts;
+    for (const int num : nums)
+    {
+        ++num_counts[num];
+    }
+
+    //! Create vector of buckets where each index is the element count and the
+    //! corresponding bucket stores the elements. Could also use a
+    //! map<element count, vector<element>> but insertions take O(N * log N) in
+    //! the worst case of unique elements.
+    std::vector<std::vector<int>> frequency_buckets(1U + nums.size());
+    for (const auto& [element, element_count] : num_counts)
+    {
+        frequency_buckets[element_count].push_back(element);
+    }
+
+    std::vector<int> top_k_elements;
+    top_k_elements.reserve(k);
+
+    const auto num_buckets = static_cast<int>(std::ssize(frequency_buckets));
+
+    for (int bucket = num_buckets - 1; bucket >= 0; --bucket)
+    {
+        auto& curr_bucket = frequency_buckets[bucket];
+
+        if (curr_bucket.empty())
+        {
+            continue;
+        }
+
+        const int num_elements_to_add {
+            std::min(k - static_cast<int>(std::ssize(top_k_elements)),
+                     static_cast<int>(std::ssize(curr_bucket)))};
+        if (num_elements_to_add == 0)
+        {
+            break;
+        }
+
+        //top_k_elements.append_range(
+        //    std::ranges::subrange(curr_bucket.begin(),
+        //                          curr_bucket.begin() + num_elements_to_add));
+
+        top_k_elements.insert(
+            top_k_elements.end(),
+            curr_bucket.begin(),
+            curr_bucket.begin() + num_elements_to_add);
+    }
+
+    return top_k_elements;
+}
+
 TEST_CASE("Example 1", "[topKFrequent]")
 {
     const std::vector<int> nums {1, 1, 1, 2, 2, 3};
@@ -130,6 +197,7 @@ TEST_CASE("Example 1", "[topKFrequent]")
 
     REQUIRE(expected_output == topKFrequentFA(nums, k));
     REQUIRE(expected_output == topKFrequentDS1(nums, k));
+    REQUIRE(expected_output == topKFrequentDS2(nums, k));
 }
 
 TEST_CASE("Example 2", "[topKFrequent]")
@@ -140,4 +208,5 @@ TEST_CASE("Example 2", "[topKFrequent]")
 
     REQUIRE(expected_output == topKFrequentFA(nums, k));
     REQUIRE(expected_output == topKFrequentDS1(nums, k));
+    REQUIRE(expected_output == topKFrequentDS2(nums, k));
 }
