@@ -131,6 +131,9 @@ static std::vector<int> topKFrequentDS1(const std::vector<int>& nums, int k)
 static std::vector<int> topKFrequentDS2(const std::vector<int>& nums, int k)
 {
     //! @details https://leetcode.com/problems/top-k-frequent-elements/editorial
+    //!
+    //!          Time complexity O(N) where N = nums.size().
+    //!          Space complexity O(N).
 
     if (k == std::ssize(nums))
     {
