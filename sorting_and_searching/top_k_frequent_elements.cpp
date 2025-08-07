@@ -192,6 +192,93 @@ static std::vector<int> topKFrequentDS2(const std::vector<int>& nums, int k)
     return top_k_elements;
 }
 
+[[nodiscard]] static int partition(
+    int                                 left_idx,
+    int                                 right_idx,
+    int                                 pivot_idx,
+    std::vector<int>&                   unique_nums,
+    const std::unordered_map<int, int>& count_map)
+{
+    const int pivot_frequency {count_map.at(unique_nums[pivot_idx])};
+
+    //! 1. Move the pivot to the end
+    std::swap(unique_nums[pivot_idx], unique_nums[right_idx]);
+
+    //! 2. Move all less frequent elements to the left
+    int store_idx {left_idx};
+    for (int curr_idx = left; curr_idx <= right_idx; ++curr_idx)
+    {
+        if (count_map.at(unique_nums[curr_idx]) < pivot_frequency)
+        {
+            std::swap(unique_nums[store_idx], unique_nums[curr_idx]);
+            ++store_idx;
+        }
+    }
+
+    //! 3. Move the pivot to its final place
+    std::swap(unique_nums[right_idx], unique_nums[store_idx]);
+
+    return store_idx;
+
+} // [[nodiscard]] static int partition( ...
+
+static void quickselect(
+    int                                 left_idx,
+    int                                 right_idx,
+    int                                 k_smallest,
+    std::vector<int>&                   unique_nums,
+    const std::unordered_map<int, int>& count_map)
+{
+    
+}
+
+//! @brief Quickselect discussion solution to get k most frequent elements
+//! @param[in] nums Reference to vector of ints
+//! @param[in] k    Number of most frequent elements to return
+//! @return Vector of k most frequent elements
+static std::vector<int> topKFrequentDS3(const std::vector<int>& nums, int k)
+{
+    //! @details https://leetcode.com/problems/top-k-frequent-elements/editorial
+
+    //! Build hash map of <element, element count>
+    std::unordered_map<int, int> count_map;
+    for (const int num : nums)
+    {
+        ++count_map[num];
+    }
+
+    //! Vector of unique elements
+    std::vector<int> unique_nums;
+    unique_nums.reserve(count_map.size());
+    for (const auto& [element, element_count] : count_map)
+    {
+        unique_nums.push_back(element);
+    }
+
+    const auto num_unique_elements = static_cast<int>(std::ssize(count_map));
+
+    //! kth top frequent element is (N - k)th least frequent
+    //! Do a partial sort: from least frequent to the most frequent until the
+    //! (N - k)th least frequent element is correctly placed in a sorted vector
+    //! at the N - k position.
+    //! All elements on the left are less frequent.
+    //! All elements on the right are more frequent.
+    quickselect(0,
+                num_unique_elements - 1,
+                num_unique_elements - k,
+                unique_nums,
+                count_map);
+
+    //! Return top k frequent elements
+    std::vector<int> top_k_elements(k);
+    std::move(unique_nums.begin() + num_unique_elements - k,
+              unique_nums.end(),
+              top_k_elements.begin());
+
+    return top_k_elements;
+
+} // static std::vector<int> topKFrequentDS3( ...
+
 TEST_CASE("Example 1", "[topKFrequent]")
 {
     const std::vector<int> nums {1, 1, 1, 2, 2, 3};
@@ -201,6 +288,7 @@ TEST_CASE("Example 1", "[topKFrequent]")
     REQUIRE(expected_output == topKFrequentFA(nums, k));
     REQUIRE(expected_output == topKFrequentDS1(nums, k));
     REQUIRE(expected_output == topKFrequentDS2(nums, k));
+    REQUIRE(expected_output == topKFrequentDS3(nums, k));
 }
 
 TEST_CASE("Example 2", "[topKFrequent]")
@@ -212,4 +300,5 @@ TEST_CASE("Example 2", "[topKFrequent]")
     REQUIRE(expected_output == topKFrequentFA(nums, k));
     REQUIRE(expected_output == topKFrequentDS1(nums, k));
     REQUIRE(expected_output == topKFrequentDS2(nums, k));
+    REQUIRE(expected_output == topKFrequentDS3(nums, k));
 }
