@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <queue>
+#include <random>
 //#include <ranges>
 #include <unordered_map>
 #include <utility>
@@ -222,6 +223,8 @@ static std::vector<int> topKFrequentDS2(const std::vector<int>& nums, int k)
 
 } // [[nodiscard]] static int partition( ...
 
+//! @brief Sort a vector within left_idx...right_idx till the kth least frequent
+//!        element is in the correct position
 static void quickselect(
     int                                 left_idx,
     int                                 right_idx,
@@ -229,7 +232,52 @@ static void quickselect(
     std::vector<int>&                   unique_nums,
     const std::unordered_map<int, int>& count_map)
 {
-    
+    //! Base case: The vector contains only one element
+    if (left_idx == right_idx)
+    {
+        return;
+    }
+
+    //! Seed source for the random number engine
+    std::random_device rd;
+
+    //! mersenne_twister_engine seeded with rd()
+    std::mt19937 gen {rd()};
+
+    std::uniform_int_distribution<> distrib(left_idx, right_idx);
+
+    int pivot_idx {distrib(gen)};
+
+    //! Find the pivot position in a sorted vector
+    pivot_idx = partition(left_idx,
+                          right_idx,
+                          pivot_idx,
+                          unique_nums,
+                          count_map);
+
+    //! If the pivot is in its final sorted position
+    if (k_smallest == pivot_idx)
+    {
+        return;
+    }
+    else if (k_smallest < pivot_idx)
+    {
+        //! Go left
+        quickselect(left_idx,
+                    pivot_idx - 1,
+                    k_smallest,
+                    unique_nums,
+                    count_map);
+    }
+    else
+    {
+        //! Go right
+        quickselect(pivot_idx + 1,
+                    right,
+                    k_smallest,
+                    unique_nums,
+                    count_map);
+    }
 }
 
 //! @brief Quickselect discussion solution to get k most frequent elements
