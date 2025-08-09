@@ -287,6 +287,13 @@ static void quickselect(
 static std::vector<int> topKFrequentDS3(const std::vector<int>& nums, int k)
 {
     //! @details https://leetcode.com/problems/top-k-frequent-elements/editorial
+    //!
+    //!          Time complexity O(N) in the average case, O(N ^ 2) in the worst
+    //!          case. The Master Theorem results in O(N) with random pivots. In
+    //!          the case of badly chosen pivots, the problem becomes one
+    //!          element fewer which leads to O(N ^ 2).
+    //!          Space complexity O(N) to store the hash map and vector of
+    //!          unique elements.
 
     //! Build hash map of <element, element count>
     std::unordered_map<int, int> count_map;
