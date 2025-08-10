@@ -1,10 +1,39 @@
 #include <catch2/catch_test_macros.hpp>
 
+#include <unordered_map>
 #include <vector>
 
+//! @brief First attempt to get indices of two numbers that add up to target
+//! @param[in] nums   Reference to vector of integers
+//! @param[in] target Target sum of two numbers
+//! @return Vector of indices of two numbers that add up to target
 static std::vector<int> twoSumFA(const std::vector<int>& nums, int target)
 {
+    //! @details https://leetcode.com/explore/interview/card/amazon/76
+    //!          /array-and-strings/508/
+    //!
+    //!          Time complexity O(N) where N = nums.size().
+    //!          Space complexity O(N) in the worst case where N - 1 numbers
+    //!          need to be stored in the num_indices map.
 
+    //! Map of <number, index>
+    std::unordered_map<int, int> num_indices;
+    num_indices.reserve(nums.size());
+
+    for (int idx = 0; idx < std::ssize(nums); ++idx)
+    {
+        const int curr_number {nums[idx]};
+        const int complement {target - curr_number};
+
+        if (num_indices.contains(complement))
+        {
+            return {num_indices[complement], idx};
+        }
+
+        num_indices[curr_number] = idx;
+    }
+
+    return {-1, -1};
 }
 
 TEST_CASE("Example 1", "[twoSum]")
