@@ -9,8 +9,10 @@ struct Enemy
     //! Damage per second that enemy deals
     int damage_points {};
 
+    /*
     //! Health points that enemy has
     int health_points {};
+     */
 
     //! Number of seconds it takes Bob to kill this enemy
     int secs_to_kill {};
@@ -52,7 +54,7 @@ static long long minDamageFA(int               power,
         }
 
         enemies.emplace_back(damage[enemy],
-                             health[enemy],
+                             // health[enemy],
                              secs_to_kill,
                              static_cast<double>(damage[enemy]) / secs_to_kill);
     }
@@ -60,7 +62,7 @@ static long long minDamageFA(int               power,
     //! Descending sort based on damage_rate
     std::sort(enemies.begin(),
               enemies.end(),
-              [&](const Enemy& lhs, const Enemy& rhs) {
+              [](const Enemy& lhs, const Enemy& rhs) {
                   return lhs.damage_rate > rhs.damage_rate;
               });
 
