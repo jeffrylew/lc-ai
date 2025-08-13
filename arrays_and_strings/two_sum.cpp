@@ -36,12 +36,35 @@ static std::vector<int> twoSumFA(const std::vector<int>& nums, int target)
     return {-1, -1};
 }
 
+//! @brief Brute force discussion solution
+//! @param[in] nums   Reference to vector of integers
+//! @param[in] target Target sum of two numbers
+//! @return Vector of indices of two numbers that add up to target
+static std::vector<int> twoSumDS1(const std::vector<int>& nums, int target)
+{
+    for (int num1_idx = 0; num1_idx < std::ssize(nums); ++num1_idx)
+    {
+        for (int num2_idx = num1_idx + 1;
+             num2_idx < std::ssize(nums);
+             ++num2_idx)
+        {
+            if (nums[num2_idx] == target - nums[num1_idx])
+            {
+                return {num1_idx, num2_idx};
+            }
+        }
+    }
+
+    return {};
+}
+
 TEST_CASE("Example 1", "[twoSum]")
 {
     const std::vector<int> nums {2, 7, 11, 15};
     const std::vector<int> expected_output {0, 1};
 
     REQUIRE(expected_output == twoSumFA(nums, 9));
+    REQUIRE(expected_output == twoSumDS1(nums, 9));
 }
 
 TEST_CASE("Example 2", "[twoSum]")
@@ -50,6 +73,7 @@ TEST_CASE("Example 2", "[twoSum]")
     const std::vector<int> expected_output {1, 2};
 
     REQUIRE(expected_output == twoSumFA(nums, 6));
+    REQUIRE(expected_output == twoSumDS1(nums, 6));
 }
 
 TEST_CASE("Example 3", "[twoSum]")
@@ -58,4 +82,5 @@ TEST_CASE("Example 3", "[twoSum]")
     const std::vector<int> expected_output {0, 1};
 
     REQUIRE(expected_output == twoSumFA(nums, 6));
+    REQUIRE(expected_output == twoSumDS1(nums, 6));
 }
