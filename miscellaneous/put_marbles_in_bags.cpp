@@ -11,22 +11,32 @@ static long long putMarblesDS(const std::vector<int>& weights, int k)
 {
     //! @details https://leetcode.com/problems/put-marbles-in-bags/description/
 
-    //! Collect and sort the value of all n - 1 pairs
+    //! Collect and sort the values of all (num_weights - 1) pairs
+    //! Let N = num_weights below
     const auto num_weights = static_cast<int>(std::ssize(weights));
 
+    //! paired_weights_sum indices are in [0, N - 2]
     std::vector<int> paired_weights_sum(num_weights - 1);
 
     for (int idx = 0; idx < num_weights - 1; ++idx)
     {
-        paired_weights_sum[idx] += weights[idx] + weights[idx + 1];
+        paired_weights_sum[idx] = weights[idx] + weights[idx + 1];
     }
 
     std::sort(paired_weights_sum.begin(), paired_weights_sum.end());
 
-    //! Get the difference between the largest k - 1 values
-    //! and the smallest k - 1 values
+    //! Get the difference between
+    //! - the largest (k - 1) values from indices [(N - 2) - (k - 1) + 1] to
+    //!   (N - 2) = (N - k) to (N - 2)
+    //! - the smallest (k - 1) values from indices 0 to [(k - 1) - 1] = (k - 2)
     long long min_max_diff {};
 
+    //! idx = 0:
+    //!     paired_weights_sum[(N - 2) - 0] - paired_weights_sum[0]
+    //!   = paired_weights_sum[N - 2] - paired_weights_sum[0]
+    //! idx = k - 2:
+    //!     paired_weights_sum[(N - 2) - (k - 2)] - paired_weights_sum[k - 2]
+    //!   = paired_weights_sum[N - k] - paired_weights_sum[k - 2]
     for (int idx = 0; idx < k - 1; ++idx)
     {
         min_max_diff +=
