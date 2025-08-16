@@ -2,6 +2,7 @@ set (
     cpp_files
     "count_substrings_with_k-frequency_characters_i"
     "minimum_amount_of_damage_dealt_to_bob"
+    "put_marbles_in_bags"
 )
 
 foreach (cpp_file in ITEMS ${cpp_files})
