@@ -85,6 +85,29 @@ static std::vector<int> twoSumDS2(const std::vector<int>& nums, int target)
     return {};
 }
 
+//! @brief One-pass hash table discussion solution
+//! @param[in] nums   Reference to vector of integers
+//! @param[in] target Target sum of two numbers
+//! @return Vector of indices of two numbers that add up to target
+static std::vector<int> twoSumDS3(const std::vector<int>& nums, int target)
+{
+    std::unordered_map<int, int> num_idxs;
+    for (int idx = 0; idx < std::ssize(nums); ++idx)
+    {
+        const int complement {target - nums[idx]};
+
+        if (num_idxs.contains(complement))
+        {
+            return {num_idxs[complement], idx};
+        }
+
+        num_idxs[nums[idx]] = idx;
+    }
+
+    //! Return an empty vector if no solution is found
+    return {};
+}
+
 TEST_CASE("Example 1", "[twoSum]")
 {
     const std::vector<int> nums {2, 7, 11, 15};
@@ -93,6 +116,7 @@ TEST_CASE("Example 1", "[twoSum]")
     REQUIRE(expected_output == twoSumFA(nums, 9));
     REQUIRE(expected_output == twoSumDS1(nums, 9));
     REQUIRE(expected_output == twoSumDS2(nums, 9));
+    REQUIRE(expected_output == twoSumDS3(nums, 9));
 }
 
 TEST_CASE("Example 2", "[twoSum]")
@@ -103,6 +127,7 @@ TEST_CASE("Example 2", "[twoSum]")
     REQUIRE(expected_output == twoSumFA(nums, 6));
     REQUIRE(expected_output == twoSumDS1(nums, 6));
     REQUIRE(expected_output == twoSumDS2(nums, 6));
+    REQUIRE(expected_output == twoSumDS3(nums, 6));
 }
 
 TEST_CASE("Example 3", "[twoSum]")
@@ -113,4 +138,5 @@ TEST_CASE("Example 3", "[twoSum]")
     REQUIRE(expected_output == twoSumFA(nums, 6));
     REQUIRE(expected_output == twoSumDS1(nums, 6));
     REQUIRE(expected_output == twoSumDS2(nums, 6));
+    REQUIRE(expected_output == twoSumDS3(nums, 6));
 }
