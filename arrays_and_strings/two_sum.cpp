@@ -64,6 +64,14 @@ static std::vector<int> twoSumDS1(const std::vector<int>& nums, int target)
 //! @return Vector of indices of two numbers that add up to target
 static std::vector<int> twoSumDS2(const std::vector<int>& nums, int target)
 {
+    //! @details https://leetcode.com/problems/two-sum/editorial/
+    //!
+    //!          Time complexity O(N) where N = nums.size(). We traverse the
+    //!          list containing N elements exactly twice.
+    //!          Space complexity O(N). The extra space required depends on the
+    //!          number of items stored in the hash table, which stores exactly
+    //!          N elements.
+
     std::unordered_map<int, int> num_idxs;
 
     for (int idx = 0; idx < std::ssize(nums); ++idx)
