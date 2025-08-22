@@ -6,6 +6,7 @@ set (
     "number_of_islands"
     "symmetric_tree"
     "validate_binary_search_tree"
+    "word_ladder"
 )
 
 foreach (cpp_file in ITEMS ${cpp_files})
