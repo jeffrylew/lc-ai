@@ -138,6 +138,14 @@ static int ladderLengthDS2(std::string               beginWord,
                            std::vector<std::string>& wordList)
 {
     //! @details https://leetcode.com/problems/word-ladder/editorial/
+    //!
+    //!          Time complexity O(M ^ 2 * N) where M = length of each word and
+    //!          N = total number of words in the input word list. It takes
+    //!          O(M ^ 2 * N) to find all transformations but the search time is
+    //!          reduced by half since the two parallel searches meet somewhere
+    //!          in the middle.
+    //!          Space complexity O(M ^ 2 * N) to store all M transformations
+    //!          for each of the N words in the word_combo_map.
 
     if (0 == std::count(wordList.begin(), wordList.end(), endWord))
     {
