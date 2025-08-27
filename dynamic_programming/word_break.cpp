@@ -9,6 +9,17 @@ static bool wordBreakDS1(std::string                     s,
                          const std::vector<std::string>& wordDict)
 {
     //! @details https://leetcode.com/problems/word-break/editorial/
+    //!
+    //!          Time complexity O(N ^ 3 + M * K) where N = s.size(), M = size
+    //!          of wordDict, and K = average length of words in wordDict. There
+    //!          are O(N) nodes. We never visit a node more than once due to
+    //!          visited_idxs. At each node, we iterate over O(N) nodes in front
+    //!          of the current node. For each node end_idx, we create a
+    //!          substring, which costs O(N). Thus, handling N nodes costs
+    //!          O(N * N ^ 2) = O(N ^ 3) for BFS. We also spent O(M * K) to
+    //!          create the words set.
+    //!          Space complexity O(N + M * K). We use O(N) space for idx_queue
+    //!          and visited_idxs. We use O(M * K) space for the words set.
 
     std::unordered_set<std::string> words(wordDict.begin(), wordDict.end());
 
