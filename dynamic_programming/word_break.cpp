@@ -63,10 +63,21 @@ static bool wordBreakDS2(std::string                     s,
                          const std::vector<std::string>& wordDict)
 {
     //! @details https://leetcode.com/problems/word-break/editorial/
+    //!
+    //!          Time complexity O(N * M * k) where N = s.size(), M = size of
+    //!          wordDict, and k = average length of words in wordDict. There
+    //!          are N states of can_build(idx) which are calculated once due to
+    //!          memoization. To calculate a state, we iterate over M words and
+    //!          for each word, we perform substring operations in O(k).
+    //!          Space complexity O(N). The can_build_cache vector uses O(N) and
+    //!          the recursion call stack can use up to O(N).
 
+    //! Cache memoizing whether there s can be built at each index
     std::vector<std::optional<bool>> can_build_cache(s.size());
 
+    //! Check if it is possible to build s up to and including index idx
     const std::function<bool(int)> can_build = [&](int idx) {
+        //! Base case: Represents empty string. Can always build doing nothing.
         if (idx < 0)
         {
             return true;
@@ -87,8 +98,12 @@ static bool wordBreakDS2(std::string                     s,
                 continue;
             }
 
+            //! Recurrence relation requirements:
+            //! 1. There needs to be a word from wordDict that ends at idx
+            //! 2. If we find a word that ends at idx, it needs to build upon
+            //!    another word ending at idx - curr_word_size
             if (s.substr(idx - curr_word_size + 1, curr_word_size) == word
-               && can_build(idx - curr_size))
+               && can_build(idx - curr_word_size))
             {
                 can_build_cache[idx] = true;
                 return true;
