@@ -1,5 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 
+#include <functional>
+#include <optional>
 #include <queue>
 #include <string>
 #include <unordered_set>
@@ -57,12 +59,56 @@ static bool wordBreakDS1(std::string                     s,
     return false;
 }
 
+static bool wordBreakDS2(std::string                     s,
+                         const std::vector<std::string>& wordDict)
+{
+    //! @details https://leetcode.com/problems/word-break/editorial/
+
+    std::vector<std::optional<bool>> can_build_cache(s.size());
+
+    const std::function<bool(int)> can_build = [&](int idx) {
+        if (idx < 0)
+        {
+            return true;
+        }
+
+        if (can_build_cache[idx].has_value())
+        {
+            return can_build_cache[idx].value();
+        }
+
+        for (const auto& word : wordDict)
+        {
+            const auto curr_word_size = static_cast<int>(std::ssize(word));
+
+            //! Handle out-of-bounds case
+            if (idx - curr_word_size + 1 < 0)
+            {
+                continue;
+            }
+
+            if (s.substr(idx - curr_word_size + 1, curr_word_size) == word
+               && can_build(idx - curr_size))
+            {
+                can_build_cache[idx] = true;
+                return true;
+            }
+        }
+
+        can_build_cache[idx] = false;
+        return false;
+    };
+
+    return can_build(static_cast<int>(std::ssize(s)) - 1);
+}
+
 TEST_CASE("Example 1", "[wordBreak]")
 {
     const std::string              s {"leetcode"};
     const std::vector<std::string> wordDict {"leet", "code"};
 
     REQUIRE(wordBreakDS1(s, wordDict));
+    REQUIRE(wordBreakDS2(s, wordDict));
 }
 
 TEST_CASE("Example 2", "[wordBreak]")
@@ -71,6 +117,7 @@ TEST_CASE("Example 2", "[wordBreak]")
     const std::vector<std::string> wordDict {"apple", "pen"};
 
     REQUIRE(wordBreakDS1(s, wordDict));
+    REQUIRE(wordBreakDS2(s, wordDict));
 }
 
 TEST_CASE("Example 3", "[wordBreak]")
@@ -80,4 +127,5 @@ TEST_CASE("Example 3", "[wordBreak]")
         "cats", "dog", "sand", "and", "cat"};
 
     REQUIRE(!wordBreakDS1(s, wordDict));
+    REQUIRE(!wordBreakDS2(s, wordDict));
 }
