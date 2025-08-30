@@ -117,6 +117,45 @@ static bool wordBreakDS2(std::string                     s,
     return can_build(static_cast<int>(std::ssize(s)) - 1);
 }
 
+static bool wordBreakDS3(std::string                     s,
+                         const std::vector<std::string>& wordDict)
+{
+    //! @details https://leetcode.com/problems/word-break/editorial/
+    //!
+    //!          Time complexity O(N * M * k). It costs O(M * k) to calculate
+    //!          each state and there are O(N) states in total.
+    //!          Space complexity O(N) for can_build vector of size N.
+
+    std::vector<bool> can_build(s.size());
+
+    //! Top-down approach started at s.size() - 1 and ended at base cases
+    //! Bottom-up approach starts at idx = 0 and ends at s.size() - 1
+    for (int idx = 0; idx < std::ssize(s); ++idx)
+    {
+        for (const auto& word : wordDict)
+        {
+            const auto curr_word_size = static_cast<int>(std::ssize(word));
+
+            //! Handle out-of-bounds case
+            if (idx < curr_word_size - 1)
+            {
+                continue;
+            }
+
+            //! If idx == curr_word_size - 1 then word ending at idx is first
+            //! (don't check can_build[idx - curr_word_size] accessing neg idx)
+            if ((idx == curr_word_size - 1 || can_build[idx - curr_word_size])
+                && s.substr(idx - curr_word_size + 1, curr_word_size) == word)
+            {
+                can_build[idx] = true;
+                break;
+            }
+        }
+    }
+
+    return can_build.back();
+}
+
 TEST_CASE("Example 1", "[wordBreak]")
 {
     const std::string              s {"leetcode"};
@@ -124,6 +163,7 @@ TEST_CASE("Example 1", "[wordBreak]")
 
     REQUIRE(wordBreakDS1(s, wordDict));
     REQUIRE(wordBreakDS2(s, wordDict));
+    REQUIRE(wordBreakDS3(s, wordDict));
 }
 
 TEST_CASE("Example 2", "[wordBreak]")
@@ -133,6 +173,7 @@ TEST_CASE("Example 2", "[wordBreak]")
 
     REQUIRE(wordBreakDS1(s, wordDict));
     REQUIRE(wordBreakDS2(s, wordDict));
+    REQUIRE(wordBreakDS3(s, wordDict));
 }
 
 TEST_CASE("Example 3", "[wordBreak]")
@@ -143,4 +184,5 @@ TEST_CASE("Example 3", "[wordBreak]")
 
     REQUIRE(!wordBreakDS1(s, wordDict));
     REQUIRE(!wordBreakDS2(s, wordDict));
+    REQUIRE(!wordBreakDS3(s, wordDict));
 }
