@@ -1,9 +1,11 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <functional>
+#include <memory>
 #include <optional>
 #include <queue>
 #include <string>
+#include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
@@ -156,6 +158,75 @@ static bool wordBreakDS3(std::string                     s,
     return can_build.back();
 }
 
+struct TrieNode
+{
+    bool is_word {};
+
+    std::unordered_map<char, std::unique_ptr<TrieNode>> children;
+};
+
+static bool wordBreakDS4(std::string                     s,
+                         const std::vector<std::string>& wordDict)
+{
+    //! @details https://leetcode.com/problems/word-break/editorial/
+    //!
+    //!          Time complexity O(M * k + N * k) where N = s.size(), M = size
+    //!          of wordDict, and k = average length of words in wordDict.
+    //!          Building the trie involves iterating over all characters of all
+    //!          words in O(M * k). Once we build the trie, we fill can_build.
+    //!          For each start_idx, we iterate over indices after start_idx up
+    //!          to O(k) since the inner loop will stop after k steps.
+    //!          Space complexity O(M * k + N). The trie can have up to M * k
+    //!          nodes and the can_build vector takes O(N) space.
+
+    TrieNode root;
+
+    for (const auto& word : wordDict)
+    {
+        auto* curr = &root;
+        for (const char letter : word)
+        {
+            auto [child_it, exists] = curr->children.try_emplace(
+                letter, std::make_unique<TrieNode>());
+
+            curr = child_it->second.get();
+        }
+
+        curr->is_word = true;
+    }
+
+    const auto        str_size = static_cast<int>(std::ssize(s));
+    std::vector<bool> can_build(s.size());
+
+    for (int start_idx = 0; start_idx < str_size; ++start_idx)
+    {
+        if (start_idx != 0 && !can_build[start_idx - 1])
+        {
+            continue;
+        }
+
+        auto* curr = &root;
+        for (int end_idx = start_idx; end_idx < str_size; ++end_idx)
+        {
+            const char end_letter {s[end_idx]};
+
+            if (!curr->children.contains(end_letter))
+            {
+                //! No words exist
+                break;
+            }
+
+            curr = curr->children[end_letter].get();
+            if (curr->is_word)
+            {
+                can_build[end_idx] = true;
+            }
+        }
+    }
+
+    return can_build.back();
+}
+
 TEST_CASE("Example 1", "[wordBreak]")
 {
     const std::string              s {"leetcode"};
@@ -164,6 +235,7 @@ TEST_CASE("Example 1", "[wordBreak]")
     REQUIRE(wordBreakDS1(s, wordDict));
     REQUIRE(wordBreakDS2(s, wordDict));
     REQUIRE(wordBreakDS3(s, wordDict));
+    REQUIRE(wordBreakDS4(s, wordDict));
 }
 
 TEST_CASE("Example 2", "[wordBreak]")
@@ -174,6 +246,7 @@ TEST_CASE("Example 2", "[wordBreak]")
     REQUIRE(wordBreakDS1(s, wordDict));
     REQUIRE(wordBreakDS2(s, wordDict));
     REQUIRE(wordBreakDS3(s, wordDict));
+    REQUIRE(wordBreakDS4(s, wordDict));
 }
 
 TEST_CASE("Example 3", "[wordBreak]")
@@ -185,4 +258,5 @@ TEST_CASE("Example 3", "[wordBreak]")
     REQUIRE(!wordBreakDS1(s, wordDict));
     REQUIRE(!wordBreakDS2(s, wordDict));
     REQUIRE(!wordBreakDS3(s, wordDict));
+    REQUIRE(!wordBreakDS4(s, wordDict));
 }
