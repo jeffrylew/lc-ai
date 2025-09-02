@@ -1,5 +1,6 @@
 set (
     cpp_files
+    "kth_largest_element_in_an_array"
     "top_k_frequent_elements"
 )
 
