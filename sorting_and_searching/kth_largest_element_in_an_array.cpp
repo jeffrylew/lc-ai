@@ -1,5 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 
+#include <functional>
 #include <queue>
 #include <vector>
 
@@ -23,12 +24,41 @@ static int findKthLargestFA(const std::vector<int>& nums, int k)
     return max_heap.top();
 }
 
+static int findKthLargestDS1(const std::vector<int>& nums, int k)
+{
+    //! @details https://leetcode.com/problems/kth-largest-element-in-an-array
+    //!
+    //!          Time complexity O(N * log k) where N = nums.size(). Operations
+    //!          on a heap cost logarithmic time relative to its size. Our heap
+    //!          is limited to a size of k so operations cost at most O(log k).
+    //!          We iterate over nums, performing one or two heap operations in
+    //!          each iteration.
+    //!          Space complexity O(k) for min_heap.
+
+    std::priority_queue<int,
+                        std::vector<int>,
+                        std::greater<int>> min_heap;
+
+    for (const int num : nums)
+    {
+        min_heap.push(num);
+
+        if (std::ssize(min_heap) > k)
+        {
+            min_heap.pop();
+        }
+    }
+
+    return min_heap.top()
+}
+
 TEST_CASE("Example 1", "[findKthLargest]")
 {
     const std::vector<int> nums {3, 2, 1, 5, 6, 4};
     constexpr int          k {2};
 
     REQUIRE(5 == findKthLargestFA(nums, k));
+    REQUIRE(5 == findKthLargestDS1(nums, k));
 }
 
 TEST_CASE("Example 2", "[findKthLargest]")
@@ -37,4 +67,5 @@ TEST_CASE("Example 2", "[findKthLargest]")
     constexpr int          k {4};
 
     REQUIRE(4 == findKthLargestFA(nums, k));
+    REQUIRE(4 == findKthLargestDS1(nums, k));
 }
