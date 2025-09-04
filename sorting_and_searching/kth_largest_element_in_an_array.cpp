@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <queue>
+#include <random>
 #include <vector>
 
 static int findKthLargestFA(const std::vector<int>& nums, int k)
@@ -52,6 +53,68 @@ static int findKthLargestDS1(const std::vector<int>& nums, int k)
     return min_heap.top()
 }
 
+//! @brief Get kth greatest element in nums
+[[nodiscard]] static int quickselect(const std::vector<int>& nums, int k)
+{
+    const auto nums_size = static_cast<int>(std::ssize(nums));
+
+    //! Obtain a random number from hardware
+    std::random_device rd;
+
+    //! Seed the engine
+    std::mt19937 gen(rd());
+
+    //! Create a uniform int distribution
+    std::uniform_int_distribution<> distrib(0, nums_size - 1);
+
+    const int pivot {distrib(gen)};
+
+    std::vector<int> left;
+    std::vector<int> mid;
+    std::vector<int> right;
+
+    for (const int num : nums)
+    {
+        if (num > pivot)
+        {
+            left.push_back(num);
+        }
+        else if (num < pivot)
+        {
+            right.push_back(num);
+        }
+        else
+        {
+            mid.push_back(num);
+        }
+    }
+
+    const auto left_size = static_cast<int>(std::ssize(left));
+    if (left_size >= k)
+    {
+        return quickselect(left, k);
+    }
+
+    const auto left_mid_size = left_size + static_cast<int>(std::ssize(mid));
+    if (left_mid_size < k)
+    {
+        return quickselect(right, k - left_mid_size);
+    }
+
+    return pivot;
+}
+
+static int findKthLargestDS2(const std::vector<int>& nums, int k)
+{
+    //! @details https://leetcode.com/problems/kth-largest-element-in-an-array
+    //!
+    //!          Time complexity O(N) on average, O(N ^ 2) in the worst case
+    //!          where N = nums.size().
+    //!          Space complexity O(N) to create left, mid, and right.
+
+    return quickselect(nums, k);
+}
+
 TEST_CASE("Example 1", "[findKthLargest]")
 {
     const std::vector<int> nums {3, 2, 1, 5, 6, 4};
@@ -59,6 +122,7 @@ TEST_CASE("Example 1", "[findKthLargest]")
 
     REQUIRE(5 == findKthLargestFA(nums, k));
     REQUIRE(5 == findKthLargestDS1(nums, k));
+    REQUIRE(5 == findKthLargestDS2(nums, k));
 }
 
 TEST_CASE("Example 2", "[findKthLargest]")
@@ -68,4 +132,5 @@ TEST_CASE("Example 2", "[findKthLargest]")
 
     REQUIRE(4 == findKthLargestFA(nums, k));
     REQUIRE(4 == findKthLargestDS1(nums, k));
+    REQUIRE(4 == findKthLargestDS2(nums, k));
 }
