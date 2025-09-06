@@ -109,7 +109,14 @@ static int findKthLargestDS2(const std::vector<int>& nums, int k)
     //! @details https://leetcode.com/problems/kth-largest-element-in-an-array
     //!
     //!          Time complexity O(N) on average, O(N ^ 2) in the worst case
-    //!          where N = nums.size().
+    //!          where N = nums.size(). Each call we make to quickSelect will
+    //!          cost O(N) since we need to iterate over nums to create left,
+    //!          mid, and right. The number of times we call quickSelect depends
+    //!          on how the pivot is chosen. The worst pivots to select are the
+    //!          smallest and largest ones because they reduce the search space
+    //!          by the least amount. The algorithm has a linear runtime since
+    //!          the probability of needing to call quickselect O(N) times is so
+    //!          low that we can ignore it.
     //!          Space complexity O(N) to create left, mid, and right.
 
     return quickselect(nums, k);
