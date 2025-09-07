@@ -1,6 +1,8 @@
 #include <catch2/catch_test_macros.hpp>
 
+#include <algorithm>
 #include <functional>
+#include <limits>
 #include <queue>
 #include <random>
 #include <vector>
@@ -122,6 +124,39 @@ static int findKthLargestDS2(const std::vector<int>& nums, int k)
     return quickselect(nums, k);
 }
 
+static int findKthLargestDS3(const std::vector<int>& nums, int k)
+{
+    //! @details https://leetcode.com/problems/kth-largest-element-in-an-array
+
+    int min_val {std::numeric_limits<int>::max()};
+    int max_val {std::numeric_limits<int>::min()};
+
+    for (const int num : nums)
+    {
+        min_val = std::min(min_val, num);
+        max_val = std::max(max_val, num);
+    }
+
+    const int        counts_size {max_val - min_val + 1};
+    std::vector<int> counts(counts_size);
+    for (const int num : nums)
+    {
+        ++counts[num - min_val];
+    }
+
+    int remain {k};
+    for (int num = counts_size - 1; num >= 0; --num)
+    {
+        remain -= counts[num];
+        if (remain <= 0)
+        {
+            return num + min_val;
+        }
+    }
+
+    return -1;
+}
+
 TEST_CASE("Example 1", "[findKthLargest]")
 {
     const std::vector<int> nums {3, 2, 1, 5, 6, 4};
@@ -130,6 +165,7 @@ TEST_CASE("Example 1", "[findKthLargest]")
     REQUIRE(5 == findKthLargestFA(nums, k));
     REQUIRE(5 == findKthLargestDS1(nums, k));
     REQUIRE(5 == findKthLargestDS2(nums, k));
+    REQUIRE(5 == findKthLargestDS3(nums, k));
 }
 
 TEST_CASE("Example 2", "[findKthLargest]")
@@ -140,4 +176,5 @@ TEST_CASE("Example 2", "[findKthLargest]")
     REQUIRE(4 == findKthLargestFA(nums, k));
     REQUIRE(4 == findKthLargestDS1(nums, k));
     REQUIRE(4 == findKthLargestDS2(nums, k));
+    REQUIRE(4 == findKthLargestDS3(nums, k));
 }
