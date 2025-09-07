@@ -1,5 +1,6 @@
 set (
     cpp_files
+    "longest_substring_without_repeating_characters"
     "two_sum"
 )
 
