@@ -2,6 +2,7 @@ set (
     cpp_files
     "binary_tree_level_order_traversal"
     "binary_tree_zigzag_level_order_traversal"
+    "course_schedule"
     "maximum_depth_of_binary_tree"
     "number_of_islands"
     "symmetric_tree"
