@@ -1,0 +1,131 @@
+#include <catch2/catch_test_macros.hpp>
+
+#include <queue>
+#include <string>
+#include <utility>
+#include <vector>
+
+static bool existFA(const std::vector<std::vector<char>>& board,
+                    const std::string&                    word)
+{
+    //! @details https://leetcode.com/explore/interview/card/amazon/84
+    //!          /recursion/2989/
+    //!
+    //!          First attempt solution does not pass Example 4.
+    //!          Need to backtrack and use recursion instead since visited cells
+    //!          can be revisited later in the word.
+
+    const auto num_rows = static_cast<int>(std::ssize(board));
+    const auto num_cols = static_cast<int>(std::ssize(board[0]));
+
+    const std::vector<std::pair<int, int>> directions {
+        {0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+
+    const auto is_valid = [&](int row, int col) {
+        return row >= 0 && row < num_rows && col >= 0 && col < num_cols;
+    };
+
+    std::queue<std::pair<int, int>> cell_pos_queue;
+
+    int word_idx {};
+
+    for (int row = 0; row < num_rows; ++row)
+    {
+        for (int col = 0; col < num_cols; ++col)
+        {
+            if (board[row][col] != word[0])
+            {
+                continue;
+            }
+
+            //! Avoid creating a 2D vector multiple times
+            std::vector<std::vector<bool>> visited_cells(
+                num_rows, std::vector<bool>(num_cols));
+
+            cell_pos_queue.emplace(row, col);
+
+            while (!cell_pos_queue.empty())
+            {
+                if (word_idx == std::ssize(word) - 1)
+                {
+                    return true;
+                }
+
+                const auto curr_num_cells =
+                    static_cast<int>(std::ssize(cell_pos_queue));
+
+                ++word_idx;
+
+                for (int cell = 0; cell < curr_num_cells; ++cell)
+                {
+                    const auto [curr_row, curr_col] = cell_pos_queue.front();
+                    cell_pos_queue.pop();
+
+                    visited_cells[curr_row][curr_col] = true;
+
+                    for (const auto& [drow, dcol] : directions)
+                    {
+                        const int next_row {curr_row + drow};
+                        const int next_col {curr_col + dcol};
+
+                        if (is_valid(next_row, next_col)
+                            && !visited_cells[next_row][next_col]
+                            && board[next_row][next_col] == word[word_idx])
+                        {
+                            cell_pos_queue.emplace(next_row, next_col);
+                        }
+                    }
+                }
+            }
+
+            word_idx = 0;
+        }
+    }
+
+    return false;
+
+} // static bool existFA( ...
+
+TEST_CASE("Example 1", "[exist]")
+{
+    const std::vector<std::vector<char>> board {{'A', 'B', 'C', 'E'},
+                                                {'S', 'F', 'C', 'S'},
+                                                {'A', 'D', 'E', 'E'}};
+
+    const std::string word {"ABCCED"};
+
+    REQUIRE(existFA(board, word));
+}
+
+TEST_CASE("Example 2", "[exist]")
+{
+    const std::vector<std::vector<char>> board {{'A', 'B', 'C', 'E'},
+                                                {'S', 'F', 'C', 'S'},
+                                                {'A', 'D', 'E', 'E'}};
+
+    const std::string word {"SEE"};
+
+    REQUIRE(existFA(board, word));
+}
+
+TEST_CASE("Example 3", "[exist]")
+{
+    const std::vector<std::vector<char>> board {{'A', 'B', 'C', 'E'},
+                                                {'S', 'F', 'C', 'S'},
+                                                {'A', 'D', 'E', 'E'}};
+
+    const std::string word {"ABCB"};
+
+    REQUIRE(!existFA(board, word));
+}
+
+TEST_CASE("Example 4", "[exist]")
+{
+    const std::vector<std::vector<char>> board {{'A', 'B', 'C', 'E'},
+                                                {'S', 'F', 'E', 'S'},
+                                                {'A', 'D', 'E', 'E'}};
+
+    const std::string word {"ABCESEEEFS"};
+
+    // REQUIRE(existFA(board, word));
+}
