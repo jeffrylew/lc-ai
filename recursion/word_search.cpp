@@ -86,6 +86,76 @@ static bool existFA(const std::vector<std::vector<char>>& board,
 
 } // static bool existFA( ...
 
+static bool existSA(const std::vector<std::vector<char>>& board,
+                    const std::string&                    word)
+{
+    //! @details https://leetcode.com/explore/interview/card/amazon/84
+    //!          /recursion/2989/
+
+    const auto num_rows = static_cast<int>(std::ssize(board));
+    const auto num_cols = static_cast<int>(std::ssize(board[0]));
+
+    const std::vector<std::pair<int, int>> directions {
+        {0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+
+    const auto is_valid = [&](int row, int col) {
+        return row >= 0 && row < num_rows && col >= 0 && col < num_cols;
+    };
+
+    std::vector<std::vector<bool>> visited_cells(
+        num_rows, std::vector<bool>(num_cols));
+
+    const std::function<bool(int, int, int)> word_exists =
+        [&](int row, int col, int word_idx) {
+            visited_cells[row][col] = true;
+
+            if (word_idx == std::ssize(word) - 1)
+            {
+                return word.back() == board[row][col];
+            }
+
+            if (word[word_idx] != board[row][col])
+            {
+                return false;
+            }
+
+            bool exists {};
+
+            for (const auto& [drow, dcol] : directions)
+            {
+                const int next_row {row + drow};
+                const int next_col {col + dcol};
+
+                if (is_valid(next_row, next_col)
+                    && !visited_cells[next_row][next_col])
+                {
+                    exists =
+                        exists || word_exists(next_row, next_col, word_idx + 1);
+
+                    visited_cells[next_row][next_col] = false;
+                }
+            }
+
+            return exists;
+        };
+
+    for (int row = 0; row < num_rows; ++row)
+    {
+        for (int col = 0; col < num_cols; ++col)
+        {
+            if (word_exists(row, col, 0))
+            {
+                return true;
+            }
+
+            visited_cells = std::vector<std::vector<bool>>(
+                num_rows, std::vector<bool>(num_cols));
+        }
+    }
+
+    return false;
+}
+
 TEST_CASE("Example 1", "[exist]")
 {
     const std::vector<std::vector<char>> board {{'A', 'B', 'C', 'E'},
@@ -95,6 +165,7 @@ TEST_CASE("Example 1", "[exist]")
     const std::string word {"ABCCED"};
 
     REQUIRE(existFA(board, word));
+    REQUIRE(existSA(board, word));
 }
 
 TEST_CASE("Example 2", "[exist]")
@@ -106,6 +177,7 @@ TEST_CASE("Example 2", "[exist]")
     const std::string word {"SEE"};
 
     REQUIRE(existFA(board, word));
+    REQUIRE(existSA(board, word));
 }
 
 TEST_CASE("Example 3", "[exist]")
@@ -117,6 +189,7 @@ TEST_CASE("Example 3", "[exist]")
     const std::string word {"ABCB"};
 
     REQUIRE(!existFA(board, word));
+    REQUIRE(!existSA(board, word));
 }
 
 TEST_CASE("Example 4", "[exist]")
@@ -128,4 +201,5 @@ TEST_CASE("Example 4", "[exist]")
     const std::string word {"ABCESEEEFS"};
 
     // REQUIRE(existFA(board, word));
+    // REQUIRE(existSA(board, word));
 }
