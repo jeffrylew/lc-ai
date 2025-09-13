@@ -71,6 +71,37 @@ static ListNode* reverseKGroupFA(ListNode* head, int k)
     return sentinel_head;
 }
 
+static ListNode* reverseLinkedList(ListNode* head, int k)
+{
+    //! @todo
+}
+
+static ListNode* reverseKGroupDS1(ListNode* head, int k)
+{
+    //! @details leetcode.com/problems/reverse-nodes-in-k-group/editorial
+
+    int node_count {};
+
+    ListNode* ptr = head;
+
+    while (node_count < k && ptr != nullptr)
+    {
+        ptr = ptr->next;
+        ++node_count;
+    }
+
+    if (node_count == k)
+    {
+        auto* reversed_head = reverseLinkedList(head, k);
+
+        head->next = reverseKGroupDS1(ptr, k);
+
+        return reversed_head;
+    }
+
+    return head;
+}
+
 TEST_CASE("Example 1", "[reverseKGroup]")
 {
     constexpr int k {2};
