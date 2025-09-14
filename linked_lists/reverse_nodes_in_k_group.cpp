@@ -124,6 +124,52 @@ static ListNode* reverseKGroupDS1(ListNode* head, int k)
     return head;
 }
 
+static ListNode* reverseKGroupDS2(ListNode* head, int k)
+{
+    //! @details leetcode.com/problems/reverse-nodes-in-k-group/editorial
+
+    auto*     node = head;
+    ListNode* ktail {nullptr};
+    ListNode* new_head {nullptr};
+
+    while (node != nullptr)
+    {
+        int node_count {};
+        node = head;
+
+        while (node_count < k && node != nullptr)
+        {
+            node = node->next;
+            ++node_count;
+        }
+
+        if (node_count == k)
+        {
+            auto* reversed_head = reverseLinkedList(head, k);
+
+            if (new_head == nullptr)
+            {
+                new_head = reversed_head;
+            }
+
+            if (ktail != nullptr)
+            {
+                ktail->next = reversed_head;
+            }
+
+            ktail = head;
+            head  = node;
+        }
+    }
+
+    if (ktail != nullptr)
+    {
+        ktail->next = head;
+    }
+
+    return new_head == nullptr ? head : new_head;
+}
+
 TEST_CASE("Example 1", "[reverseKGroup]")
 {
     constexpr int k {2};
@@ -151,6 +197,14 @@ TEST_CASE("Example 1", "[reverseKGroup]")
          REQUIRE(nullptr != head_ds1);
          REQUIRE(node == head_ds1->val);
          head_ds1 = head_ds1->next;
+     }
+
+     auto* head_ds2 = reverseKGroupDS2(&one, k);
+     for (const int node : expected_output)
+     {
+         REQUIRE(nullptr != head_ds2);
+         REQUIRE(node == head_ds2->val);
+         head_ds2 = head_ds2->next;
      }
      */
 }
@@ -183,6 +237,14 @@ TEST_CASE("Example 2", "[reverseKGroup]")
          REQUIRE(node == head_ds1->val);
          head_ds1 = head_ds1->next;
      }
+
+     auto* head_ds2 = reverseKGroupDS2(&one, k);
+     for (const int node : expected_output)
+     {
+         REQUIRE(nullptr != head_ds2);
+         REQUIRE(node == head_ds2->val);
+         head_ds2 = head_ds2->next;
+     }
      */
 }
 
@@ -214,6 +276,14 @@ TEST_CASE("Example 3", "[reverseKGroup]")
          REQUIRE(node == head_ds1->val);
          head_ds1 = head_ds1->next;
      }
+
+     auto* head_ds2 = reverseKGroupDS2(&one, k);
+     for (const int node : expected_output)
+     {
+         REQUIRE(nullptr != head_ds2);
+         REQUIRE(node == head_ds2->val);
+         head_ds2 = head_ds2->next;
+     }
      */
 }
 
@@ -241,6 +311,14 @@ TEST_CASE("Example 4", "[reverseKGroup]")
          REQUIRE(nullptr != head_ds1);
          REQUIRE(node == head_ds1->val);
          head_ds1 = head_ds1->next;
+     }
+
+     auto* head_ds2 = reverseKGroupDS2(&one, k);
+     for (const int node : expected_output)
+     {
+         REQUIRE(nullptr != head_ds2);
+         REQUIRE(node == head_ds2->val);
+         head_ds2 = head_ds2->next;
      }
      */
 }
