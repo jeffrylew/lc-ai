@@ -127,6 +127,9 @@ static ListNode* reverseKGroupDS1(ListNode* head, int k)
 static ListNode* reverseKGroupDS2(ListNode* head, int k)
 {
     //! @details leetcode.com/problems/reverse-nodes-in-k-group/editorial
+    //!
+    //!          Time complexity O(N) where N = number of nodes in linked list.
+    //!          Space complexity O(1)
 
     auto*     node = head;
     ListNode* ktail {nullptr};
