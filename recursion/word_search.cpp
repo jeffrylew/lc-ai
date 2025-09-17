@@ -156,6 +156,35 @@ static bool existSA(const std::vector<std::vector<char>>& board,
     return false;
 }
 
+static bool existDS1(const std::vector<std::vector<char>>& board,
+                     const std::string&                    word)
+{
+    //! @details https://leetcode.com/problems/word-search/editorial/
+
+    auto board_copy = board;
+
+    const auto num_rows = static_cast<int>(std::ssize(board_copy));
+    const auto num_cols = static_cast<int>(std::ssize(board_copy[0]));
+
+    std::function<bool(int, int, const std::string&, int)> backtrack =
+        [&](int row, int col, const std::string& word, int index) {
+            //! @todo
+        };
+
+    for (int row = 0; row < num_rows; ++row)
+    {
+        for (int col = 0; col < num_cols; ++col)
+        {
+            if (backtrack(row, col, word, 0))
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 TEST_CASE("Example 1", "[exist]")
 {
     const std::vector<std::vector<char>> board {{'A', 'B', 'C', 'E'},
@@ -166,6 +195,7 @@ TEST_CASE("Example 1", "[exist]")
 
     REQUIRE(existFA(board, word));
     REQUIRE(existSA(board, word));
+    REQUIRE(existDS1(board, word));
 }
 
 TEST_CASE("Example 2", "[exist]")
@@ -178,6 +208,7 @@ TEST_CASE("Example 2", "[exist]")
 
     REQUIRE(existFA(board, word));
     REQUIRE(existSA(board, word));
+    REQUIRE(existDS1(board, word));
 }
 
 TEST_CASE("Example 3", "[exist]")
@@ -190,6 +221,7 @@ TEST_CASE("Example 3", "[exist]")
 
     REQUIRE(!existFA(board, word));
     REQUIRE(!existSA(board, word));
+    REQUIRE(!existDS1(board, word));
 }
 
 TEST_CASE("Example 4", "[exist]")
@@ -202,4 +234,5 @@ TEST_CASE("Example 4", "[exist]")
 
     // REQUIRE(existFA(board, word));
     // REQUIRE(existSA(board, word));
+    // REQUIRE(existDS1(board, word));
 }
