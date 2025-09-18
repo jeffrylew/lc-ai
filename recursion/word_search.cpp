@@ -166,9 +166,44 @@ static bool existDS1(const std::vector<std::vector<char>>& board,
     const auto num_rows = static_cast<int>(std::ssize(board_copy));
     const auto num_cols = static_cast<int>(std::ssize(board_copy[0]));
 
-    std::function<bool(int, int, const std::string&, int)> backtrack =
-        [&](int row, int col, const std::string& word, int index) {
-            //! @todo
+    std::function<bool(int, int, int)> backtrack =
+        [&](int row, int col, int index) {
+            if (index >= std::ssize(word))
+            {
+                return true;
+            }
+
+            if (row < 0
+                || row == num_rows
+                || col < 0
+                || col == num_cols
+                || board_copy[row][col] != word[index])
+            {
+                return false;
+            }
+
+            bool word_exists {};
+
+            //! Mark path before exploring neighbors
+            board_copy[row][col] = '#';
+
+            const std::vector<std::pair<int, int>> offsets {
+                {0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+
+            for (const auto& [row_offset, col_offset] : offsets)
+            {
+                word_exists = backtrack(row + row_offset,
+                                        col + col_offset,
+                                        word,
+                                        index + 1);
+                if (word_exists)
+                {
+                    break;
+                }
+            }
+
+            board_copy[row][col] = word[index];
+            return word_exists;
         };
 
     for (int row = 0; row < num_rows; ++row)
@@ -234,5 +269,5 @@ TEST_CASE("Example 4", "[exist]")
 
     // REQUIRE(existFA(board, word));
     // REQUIRE(existSA(board, word));
-    // REQUIRE(existDS1(board, word));
+    REQUIRE(existDS1(board, word));
 }
