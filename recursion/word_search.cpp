@@ -160,6 +160,15 @@ static bool existDS1(const std::vector<std::vector<char>>& board,
                      const std::string&                    word)
 {
     //! @details https://leetcode.com/problems/word-search/editorial/
+    //!
+    //!          Time complexity O(N * 3 ^ L) where N = number of cells in the
+    //!          board and L is the length of the word to match. For the
+    //!          backtracking function, we have 3 directions to explore since we
+    //!          can't go back to where we came from. Therefore, in the worst
+    //!          case, the total number of invocations would be the number of
+    //!          nodes in a full 3-ary tree, which is about 3 ^ L.
+    //!          Space complexity O(L) for the maximum length of the call stack,
+    //!          which is the length of the word.
 
     auto board_copy = board;
 
@@ -192,25 +201,33 @@ static bool existDS1(const std::vector<std::vector<char>>& board,
 
             for (const auto& [row_offset, col_offset] : offsets)
             {
+                /*
                 word_exists = backtrack(row + row_offset,
                                         col + col_offset,
-                                        word,
                                         index + 1);
                 if (word_exists)
                 {
                     break;
                 }
+                 */
+
+                //! Alternatively, without restoring board or board_copy
+                if (backtrack(row + row_offset, col + col_offset, index + 1))
+                {
+                    return true;
+                }
             }
 
             board_copy[row][col] = word[index];
-            return word_exists;
+            // return word_exists;
+            return false;
         };
 
     for (int row = 0; row < num_rows; ++row)
     {
         for (int col = 0; col < num_cols; ++col)
         {
-            if (backtrack(row, col, word, 0))
+            if (backtrack(row, col, 0))
             {
                 return true;
             }
