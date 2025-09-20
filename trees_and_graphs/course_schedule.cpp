@@ -115,6 +115,47 @@ static bool canFinishDS1(int                                  numCourses,
     return taken_courses == numCourses;
 }
 
+static bool canFinishDS2(int                                  numCourses,
+                         const std::vector<std::vector<int>>& prerequisites)
+{
+    //! @details https://leetcode.com/problems/course-schedule/editorial
+
+    std::vector<std::vector<int>> adj(numCourses);
+
+    for (const auto& prereq : prerequisites)
+    {
+        adj[prereq[1]].push_back(prereq[0]);
+    }
+
+    std::vector<bool> taken_courses(numCourses);
+    std::vector<bool> in_stack(numCourses);
+
+    std::function<bool(int)> dfs = [&](int course) {
+        //! If the course is already in the stack then we have a cycle
+        if (in_stack[course])
+        {
+            return true;
+        }
+
+        if (taken_courses[course])
+        {
+            return false;
+        }
+
+        //! @todo
+    };
+
+    for (int course = 0; course < numCourses; ++course)
+    {
+        if (dfs(course))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 TEST_CASE("Example 1", "[canFinish]")
 {
     constexpr int numCourses {2};
@@ -123,6 +164,7 @@ TEST_CASE("Example 1", "[canFinish]")
 
     // REQUIRE(canFinishFA(numCourses, prerequisites));
     REQUIRE(canFinishDS1(numCourses, prerequisites));
+    REQUIRE(canFinishDS2(numCourses, prerequisites));
 }
 
 TEST_CASE("Example 2", "[canFinish]")
@@ -133,4 +175,5 @@ TEST_CASE("Example 2", "[canFinish]")
 
     // REQUIRE(!canFinishFA(numCourses, prerequisites));
     REQUIRE(!canFinishDS1(numCourses, prerequisites));
+    REQUIRE(!canFinishDS2(numCourses, prerequisites));
 }
