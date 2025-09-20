@@ -39,18 +39,18 @@ static bool canFinishDS1(int                                  numCourses,
 {
     //! @details https://leetcode.com/problems/course-schedule/editorial/
     //!
-    //!          Time complexity O(M + N) where M = prerequisites.size() and
-    //!          N = number of courses. Initializing prereq_and_courses takes
-    //!          O(M) to go through all edges. Initializing course_indegrees
-    //!          also takes O(M). Each queue operation takes O(1) and a single
-    //!          course/node will be pushed once, leading to O(N) operations for
-    //!          N courses/nodes. We iterate over the neighbors of each course
+    //!          Time complexity O(V + E) where V = numCourses and E = number of
+    //!          edges in prerequisites. Initializing prereq_and_courses takes
+    //!          O(E) to go through all edges. Initializing course_indegrees
+    //!          takes O(V). Each queue operation takes O(1) and a single
+    //!          course/node will be pushed once, leading to O(V) operations for
+    //!          V courses/nodes. We iterate over the neighbors of each course
     //!          /node that is popped out of the queue iterating over all the
-    //!          edges once. Since there are a total of M edges, it would take
-    //!          O(M) to iterate over the edges.
-    //!          Space complexity O(M + N). course_indegrees and
-    //!          prereq_and_courses take O(M) space. course_queue can have no
-    //!          more than N elements in the worst-case scenario.
+    //!          edges once. Since there are a total of E edges, it would take
+    //!          O(E) to iterate over the edges.
+    //!          Space complexity O(V + E). course_indegrees takes O(V) and
+    //!          prereq_and_courses takes O(E) space. course_queue can have no
+    //!          more than V elements in the worst-case scenario.
 
     //! Map of <course, number of prereqs/edges entering course>
     std::unordered_map<int, int> course_indegrees;
@@ -120,9 +120,9 @@ static bool canFinishDS2(int                                  numCourses,
 {
     //! @details https://leetcode.com/problems/course-schedule/editorial
     //!
-    //!          Time complexity O(V + E) where V = numCourses and E is the size
-    //!          of prerequisites. Initializing the prereq_and_courses adjacency
-    //!          list takes O(E) to iterate through all edges. Initializing the
+    //!          Time complexity O(V + E) where V = numCourses and E = number of
+    //!          edges in prerequisites. Initializing the prereq_and_courses
+    //!          adjacency list takes O(E) to iterate through all edges and the
     //!          indegrees vector takes O(V). Each queue operation takes O(1)
     //!          and each course is pushed once when its indegrees is zero,
     //!          resulting in O(V) operations for V courses. We iterate over the
@@ -190,35 +190,79 @@ static bool canFinishDS3(int                                  numCourses,
                          const std::vector<std::vector<int>>& prerequisites)
 {
     //! @details https://leetcode.com/problems/course-schedule/editorial
+    //!
+    //!          Time complexity O(V + E) where V = numCourses and E = number of
+    //!          edges in prerequisites. Initializing the prereq_and_courses
+    //!          adjacency list takes O(E) to iterate through all edges.
+    //!          Initializing the courses_taken and courses_in_stack vectors
+    //!          take O(V). The DFS has_cyclic_dependency function handles each
+    //!          course once, which takes O(V) in total. We iterate over all
+    //!          outgoing edges of each course, which takes O(E) to iterate over
+    //!          the total of E edges.
+    //!          Space complexity O(V + E). The prereq_and_courses adjacency
+    //!          list takes O(E) space. The courses_taken and courses_in_stack
+    //!          vectors take O(V) space. The recursion call stack used by
+    //!          has_cyclic_dependency can have no more than V elements in the
+    //!          worst-case scenario.
 
-    std::vector<std::vector<int>> adj(numCourses);
+    //! prereq_and_courses[i] contains all courses that have i as a prerequisite
+    //! Adjacency list: All courses with an incoming edge from prerequisite i
+    std::vector<std::vector<int>> prereq_and_courses(numCourses);
 
-    for (const auto& prereq : prerequisites)
+    for (const auto& course_and_prereq : prerequisites)
     {
-        adj[prereq[1]].push_back(prereq[0]);
+        const int course {course_and_prereq[0]};
+        const int prereq {course_and_prereq[1]};
+
+        prereq_and_courses[prereq].push_back(course);
     }
 
-    std::vector<bool> taken_courses(numCourses);
-    std::vector<bool> in_stack(numCourses);
+    //! Keep track of courses taken/visited
+    std::vector<bool> courses_taken(numCourses);
 
-    std::function<bool(int)> dfs = [&](int course) {
+    //! Courses in recursion stack for current path (for cycle detection)
+    std::vector<bool> courses_in_stack(numCourses);
+
+    //! If has_cyclic_dependency (DFS) returns true then there is a cycle
+    std::function<bool(int)> has_cyclic_dependency = [&](int course) {
         //! If the course is already in the stack then we have a cycle
-        if (in_stack[course])
+        if (courses_in_stack[course])
         {
             return true;
         }
 
-        if (taken_courses[course])
+        //! Already took/visited this course and didn't find a cycle earlier
+        if (courses_taken[course])
         {
             return false;
         }
 
-        //! @todo
+        //! Mark current course as taken/visited and as part of recursion stack
+        courses_taken[course]    = true;
+        courses_in_stack[course] = true;
+
+        //! Iterate over outgoing edges of course and recursively call
+        //! has_cyclic_dependency. If we get a cycle from dependent_course then
+        //! return true
+        for (const int dependent_course : prereq_and_courses[course])
+        {
+            if (has_cyclic_dependency(dependent_course))
+            {
+                return true;
+            }
+        }
+
+        //! After processing all outgoing edges of course, mark course as no
+        //! longer in the recursion stack, i.e. courses_in_stack[course] = false
+        courses_in_stack[course] = false;
+
+        //! Did not find a cycle so return false
+        return false;
     };
 
     for (int course = 0; course < numCourses; ++course)
     {
-        if (dfs(course))
+        if (has_cyclic_dependency(course))
         {
             return false;
         }
