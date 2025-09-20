@@ -119,6 +119,77 @@ static bool canFinishDS2(int                                  numCourses,
                          const std::vector<std::vector<int>>& prerequisites)
 {
     //! @details https://leetcode.com/problems/course-schedule/editorial
+    //!
+    //!          Time complexity O(V + E) where V = numCourses and E is the size
+    //!          of prerequisites. Initializing the prereq_and_courses adjacency
+    //!          list takes O(E) to iterate through all edges. Initializing the
+    //!          indegrees vector takes O(V). Each queue operation takes O(1)
+    //!          and each course is pushed once when its indegrees is zero,
+    //!          resulting in O(V) operations for V courses. We iterate over the
+    //!          dependent courses of each prerequisite course that is popped in
+    //!          O(E) since there are E edges total.
+    //!          Space complexity O(V + E). The prereq_and_courses adjacency
+    //!          list takes O(E) space and the indegrees vector takes O(V).
+    //!          The queue can store no more than V courses in the worst case so
+    //!          it would use O(V).
+
+    //! Indegrees for each course
+    std::vector<int> indegrees(numCourses);
+
+    //! prereq_and_courses[i] contains all courses that have i as a prerequisite
+    //! Adjacency list: All courses with an incoming edge from prerequisite i
+    std::vector<std::vector<int>> prereq_and_courses(numCourses);
+
+    for (const auto& course_and_prereq : prerequisites)
+    {
+        const int course {course_and_prereq[0]};
+        const int prereq {course_and_prereq[1]};
+
+        prereq_and_courses[prereq].push_back(course);
+        ++indegrees[course];
+    }
+
+    //! Queue for BFS moving from leaf courses/nodes to parent courses/nodes
+    //! A leaf course/node has indegree zero/no prerequisites
+    std::queue<int> course_queue;
+
+    //! Add all courses with indegree zero (no prerequisites) to course_queue
+    for (int course = 0; course < numCourses; ++course)
+    {
+        if (indegrees[course] == 0)
+        {
+            course_queue.push(course);
+        }
+    }
+
+    //! Count number of courses visited/taken
+    int courses_taken {};
+
+    while (!course_queue.empty())
+    {
+        const int prereq {course_queue.front()};
+        course_queue.pop();
+        ++courses_taken;
+
+        for (const int dependent_course : prereq_and_courses[prereq])
+        {
+            //! Delete the edge from "prereq -> dependent_course"
+            --indegrees[dependent_course];
+
+            if (indegrees[dependent_course] == 0)
+            {
+                course_queue.push(dependent_course);
+            }
+        }
+    }
+
+    return courses_taken == numCourses;
+}
+
+static bool canFinishDS3(int                                  numCourses,
+                         const std::vector<std::vector<int>>& prerequisites)
+{
+    //! @details https://leetcode.com/problems/course-schedule/editorial
 
     std::vector<std::vector<int>> adj(numCourses);
 
@@ -165,6 +236,7 @@ TEST_CASE("Example 1", "[canFinish]")
     // REQUIRE(canFinishFA(numCourses, prerequisites));
     REQUIRE(canFinishDS1(numCourses, prerequisites));
     REQUIRE(canFinishDS2(numCourses, prerequisites));
+    REQUIRE(canFinishDS3(numCourses, prerequisites));
 }
 
 TEST_CASE("Example 2", "[canFinish]")
@@ -176,4 +248,5 @@ TEST_CASE("Example 2", "[canFinish]")
     // REQUIRE(!canFinishFA(numCourses, prerequisites));
     REQUIRE(!canFinishDS1(numCourses, prerequisites));
     REQUIRE(!canFinishDS2(numCourses, prerequisites));
+    REQUIRE(!canFinishDS3(numCourses, prerequisites));
 }
