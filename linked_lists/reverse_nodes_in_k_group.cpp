@@ -129,12 +129,32 @@ static ListNode* reverseKGroupDS2(ListNode* head, int k)
     //! @details leetcode.com/problems/reverse-nodes-in-k-group/editorial
     //!
     //!          Time complexity O(N) where N = number of nodes in linked list.
+    //!          We process each node exactly twice - once when we count the
+    //!          number of nodes in the inner while loop and once when reversing
+    //!          the sub-linked list.
     //!          Space complexity O(1)
 
+    //! Maintain four variables
+    //! - head: Points to original head of next set of k nodes. It becomes the
+    //!         new tail AFTER reversal
+    //! - reversed_head: Tail node of original set of k nodes. It becomes the
+    //!                  new head AFTER reversal
+    //! - ktail: Tail node of previous set of k nodes AFTER reversal
+    //! - new_head: Head of the final list that is returned. It is the kth node
+    //!             from the beginning of the original list
     auto*     node = head;
     ListNode* ktail {nullptr};
     ListNode* new_head {nullptr};
 
+    /*
+     * Algorithm:
+     * - Given head, count k nodes. If we find at least k nodes, reverse them
+     *   and get reversed_head
+     * - If ktail is not nullptr, set ktail->next to reversed_head. Then point
+     *   ktail to the tail of the reversed set of just processed k nodes. Since
+     *   head becomes the new tail, set ktail = head
+     * - Repeat until we reach the end of the list or there are < k nodes left
+     */
     while (node != nullptr)
     {
         int node_count {};
