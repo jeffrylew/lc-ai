@@ -66,8 +66,8 @@ static int lengthOfLongestSubstringDS2(std::string s)
     //!          Space complexity O(min(N, S)) where S is the size of the
     //!          charset. We need O(K) space for checking if a substring has no
     //!          duplicate characters, where K = char_count.size(). The size of
-    //!          char_count is upper bounded by the size of the string N and the
-    //!          size of the charset S.
+    //!          char_count is upper bounded by the size N of the string and the
+    //!          size S of the charset.
 
     std::unordered_map<char, int> char_count;
 
@@ -93,20 +93,59 @@ static int lengthOfLongestSubstringDS2(std::string s)
     return longest_substr_len;
 }
 
+static int lengthOfLongestSubstringDS3(std::string s)
+{
+    //! @details https://leetcode.com/problems
+    //!          /longest-substring-without-repeating-characters/editorial
+    //!
+    //!          Time complexity O(N) where N = s.size(). right_idx iterates N
+    //!          times.
+    //!          Space complexity O(min(N, S)) where S is the size of the
+    //!          charset. We need O(K) space for checking if a substring has no
+    //!          duplicate characters, where K = char_to_next_idx.size(). The
+    //!          size of char_to_next_idx is upper bounded by the size N of the
+    //!          string and the size S of the charset.
+
+    std::unordered_map<char, int> char_to_next_idx;
+
+    int longest_substr_len {};
+    int left_idx {};
+
+    for (int right_idx = 0; right_idx < std::ssize(s); ++right_idx)
+    {
+        const char right_char {s[right_idx]};
+
+        if (char_to_next_idx.contains(right_char))
+        {
+            left_idx = std::max(left_idx, char_to_next_idx[right_char]);
+        }
+
+        longest_substr_len =
+            std::max(longest_substr_len, right_idx - left_idx + 1);
+
+        char_to_next_idx[right_char] = right_idx + 1;
+    }
+
+    return longest_substr_len;
+}
+
 TEST_CASE("Example 1", "[lengthOfLongestSubstring]")
 {
     REQUIRE(3 == lengthOfLongestSubstringFA("abcabcbb"));
     REQUIRE(3 == lengthOfLongestSubstringDS2("abcabcbb"));
+    REQUIRE(3 == lengthOfLongestSubstringDS3("abcabcbb"));
 }
 
 TEST_CASE("Example 2", "[lengthOfLongestSubstring]")
 {
     REQUIRE(1 == lengthOfLongestSubstringFA("bbbbb"));
     REQUIRE(1 == lengthOfLongestSubstringDS2("bbbbb"));
+    REQUIRE(1 == lengthOfLongestSubstringDS3("bbbbb"));
 }
 
 TEST_CASE("Example 3", "[lengthOfLongestSubstring]")
 {
     REQUIRE(3 == lengthOfLongestSubstringFA("pwwkew"));
     REQUIRE(3 == lengthOfLongestSubstringDS2("pwwkew"));
+    REQUIRE(3 == lengthOfLongestSubstringDS3("pwwkew"));
 }
