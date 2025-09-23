@@ -1,5 +1,6 @@
 set (
     cpp_files
+    "reverse_linked_list"
     "reverse_nodes_in_k_group"
 )
 
