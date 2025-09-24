@@ -29,6 +29,10 @@ static ListNode* reverseListFA(ListNode* head)
 static ListNode* reverseListDS2(ListNode* head)
 {
     //! @details https://leetcode.com/problems/reverse-linked-list/editorial/
+    //!
+    //!          Time complexity O(N) where N = number of nodes in linked list.
+    //!          Space complexity O(N) due to implicit stack space for recursion
+    //!          that can go up to N levels deep.
 
     if (head == nullptr || head->next == nullptr)
     {
