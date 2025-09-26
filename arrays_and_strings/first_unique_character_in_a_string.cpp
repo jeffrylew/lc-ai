@@ -13,6 +13,9 @@ static int firstUniqCharFA(std::string s)
     //!          first unique character if it exists.
     //!          Space complexity O(N) in the worst case when s only contains
     //!          unique characters.
+    //!
+    //!          Discussion solution says space complexity is O(1) because the
+    //!          English alphabet contains 26 letters.
 
     std::unordered_map<char, int> char_count;
 
