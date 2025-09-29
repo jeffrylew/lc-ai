@@ -117,6 +117,79 @@ static std::vector<int> prisonAfterNDaysDS1(const std::vector<int>& cells,
     return prison_cells;
 }
 
+[[nodiscard]] constexpr int prison_tomorrow_DS2(int bitmap_of_cells)
+{
+    //! curr_day    =   0 | 1 0 1 1 0 0 | 1
+    //! left_shift  = 0 1 | 0 1 1 0 0 1 | 0   curr_day << 1
+    //! ~left_shift =   0 | 1 0 0 1 1 0 | 1   ~(curr_day << 1)
+    //! right_shift =     | 0 1 0 1 1 0 | 0 1 curr_day >> 1
+    //! next_day    =   0 | 1 1 0 0 0 0 | 0   (~left_shift ^ right_shift) & 0x7e
+    bitmap_of_cells = ~(bitmap_of_cells << 1) ^ (bitmap_of_cells >> 1);
+
+    //! Set the first and last cell to zero by ANDing with 0b0111 1110 = 0x7e
+    bitmap_of_cells &= 0x7e;
+
+    return bitmap_of_cells;
+}
+
+static std::vector<int> prisonAfterNDaysDS2(const std::vector<int>& cells,
+                                            int                     n)
+{
+    //! @details leetcode.com/problems/prison-cells-after-n-days/editorial
+
+    std::unordered_map<int, int> visited_states;
+
+    int  remaining_days {n};
+    bool is_fast_forwarded {};
+
+    //! Step 1) Convert the cells to a bitmap
+    int bitmap_of_cells {};
+    for (const int cell : cells)
+    {
+        bitmap_of_cells <<= 1;
+        bitmap_of_cells |= cell;
+    }
+
+    //! Step 2) Run the simulation with the visited_states hash map
+    while (remaining_days > 0)
+    {
+        if (!is_fast_forwarded)
+        {
+            if (visited_states.contains(bitmap_of_cells))
+            {
+                //! The length of the cycle is
+                //! visited_states[bitmap_of_cells] - remaining_days
+                const int days_in_cycle {
+                    visited_states[bitmap_of_cells] - remaining_days};
+
+                remaining_days %= days_in_cycle;
+                is_fast_forwarded = true;
+            }
+            else
+            {
+                visited_states[bitmap_of_cells] = remaining_days;
+            }
+        }
+
+        //! Check if there are still days left with or without fast-forwarding
+        if (remaining_days > 0)
+        {
+            --remaining_days;
+            bitmap_of_cells = prison_tomorrow_DS2(bitmap_of_cells);
+        }
+    }
+
+    //! Step 3) Convert the bitmap back to the row of cells
+    std::vector<int> prison_cells(cells.size());
+    for (int cell = std::ssize(cells) - 1; cell >= 0; --cell)
+    {
+        prison_cells[cell] = bitmap_of_cells & 1;
+        bitmap_of_cells >>= 1;
+    }
+
+    return prison_cells;
+}
+
 TEST_CASE("Example 1", "[prisonAfterNDays]")
 {
     const std::vector<int> cells {0, 1, 0, 1, 1, 0, 0, 1};
@@ -136,6 +209,7 @@ TEST_CASE("Example 1", "[prisonAfterNDays]")
 
     REQUIRE(expected_output == prisonAfterNDaysFA(cells, n));
     REQUIRE(expected_output == prisonAfterNDaysDS1(cells, n));
+    REQUIRE(expected_output == prisonAfterNDaysDS2(cells, n));
 }
 
 TEST_CASE("Example 2", "[prisonAfterNDays]")
@@ -147,4 +221,5 @@ TEST_CASE("Example 2", "[prisonAfterNDays]")
 
     REQUIRE(expected_output == prisonAfterNDaysFA(cells, n));
     REQUIRE(expected_output == prisonAfterNDaysDS1(cells, n));
+    REQUIRE(expected_output == prisonAfterNDaysDS2(cells, n));
 }
