@@ -136,6 +136,16 @@ static std::vector<int> prisonAfterNDaysDS2(const std::vector<int>& cells,
                                             int                     n)
 {
     //! @details leetcode.com/problems/prison-cells-after-n-days/editorial
+    //!
+    //!          Time complexity O(min(n, 2 ^ K)) where K = cells.size() and n
+    //!          is the number of days/steps. We assume K <= 31. We can have
+    //!          2 ^ K possible states at most so we need to run min(n, 2 ^ K)
+    //!          days without fast-forwarding in the worst case. Each simulation
+    //!          step takes O(1) time to process due to bit operations instead
+    //!          of iterating.
+    //!          Space complexity O(2 ^ K) for the visited_states hash map used
+    //!          to track cell states. The max number of entries is 2 ^ K and
+    //!          each state consumes a constant O(1) space.
 
     std::unordered_map<int, int> visited_states;
 
