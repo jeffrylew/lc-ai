@@ -1,6 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <algorithm>
+#include <array>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -75,6 +76,56 @@ static std::vector<std::vector<std::string>>
     return anagram_groups;
 }
 
+static std::vector<std::vector<std::string>>
+    groupAnagramsDS2(const std::vector<std::string>& strs)
+{
+    //! @details https://leetcode.com/problems/group-anagrams/editorial/
+    //!
+    //!          Time complexity O(N * K + N * C) where N = strs.size(), K is
+    //!          the max length of a string in strs, and C is the size of the
+    //!          charset. Getting the char count in each string takes O(K) and
+    //!          iterating over the charset to form group_key takes O(C). We
+    //!          perform both for O(N) strings.
+    //!          Space complexity O(N * K + N * C). anagram_map uses O(N * K)
+    //!          for the grouped anagrams and O(N * C) for the keys.
+
+    if (strs.empty())
+    {
+        return {};
+    }
+
+    std::unordered_map<std::string, std::vector<std::string>> anagram_map;
+
+    for (const auto& str : strs)
+    {
+        std::array<int, 26> char_counts {};
+        for (const char ch : str)
+        {
+            ++char_counts[static_cast<int>(ch - 'a')];
+        }
+
+        std::string group_key;
+
+        for (const int char_count : char_counts)
+        {
+            group_key += '|';
+            group_key += std::to_string(char_count);
+        }
+
+        anagram_map[std::move(group_key)].push_back(str);
+    }
+
+    std::vector<std::vector<std::string>> anagram_groups;
+    anagram_groups.reserve(anagram_map.size());
+
+    for (auto& key_and_group : anagram_map)
+    {
+        anagram_groups.push_back(std::move(key_and_group.second));
+    }
+
+    return anagram_groups;
+}
+
 TEST_CASE("Example 1", "[groupAnagrams]")
 {
     const std::vector<std::string> strs {
@@ -85,6 +136,7 @@ TEST_CASE("Example 1", "[groupAnagrams]")
 
     REQUIRE(expected_output == groupAnagramsFA(strs));
     REQUIRE(expected_output == groupAnagramsDS1(strs));
+    REQUIRE(expected_output == groupAnagramsDS2(strs));
 }
 
 TEST_CAST("Example 2", "[groupAnagrams]")
@@ -95,6 +147,7 @@ TEST_CAST("Example 2", "[groupAnagrams]")
 
     REQUIRE(expected_output == groupAnagramsFA(strs));
     REQUIRE(expected_output == groupAnagramsDS1(strs));
+    REQUIRE(expected_output == groupAnagramsDS2(strs));
 }
 
 TEST_CAST("Example 3", "[groupAnagrams]")
@@ -105,4 +158,5 @@ TEST_CAST("Example 3", "[groupAnagrams]")
 
     REQUIRE(expected_output == groupAnagramsFA(strs));
     REQUIRE(expected_output == groupAnagramsDS1(strs));
+    REQUIRE(expected_output == groupAnagramsDS2(strs));
 }
