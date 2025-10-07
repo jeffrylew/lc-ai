@@ -11,6 +11,9 @@ static TreeNode* lowestCommonAncestorDS1(TreeNode* root,
     //!          https://leetcode.com/problems
     //!          /lowest-common-ancestor-of-a-binary-tree/solutions/6750643
     //!          /video-for-everyone-who-doesnt-understand-oxf6/
+    //!
+    //!          Time complexity O(N) where N = number of nodes in the tree.
+    //!          Space complexity O(H) where H is the height of the tree.
 
     if (root == nullptr)
     {
