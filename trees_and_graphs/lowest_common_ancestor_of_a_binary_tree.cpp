@@ -2,6 +2,8 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+#include <functional>
+
 static TreeNode* lowestCommonAncestorDS1(TreeNode* root,
                                          TreeNode* p,
                                          TreeNode* q)
@@ -41,6 +43,23 @@ static TreeNode* lowestCommonAncestorDS1(TreeNode* root,
     return right;
 }
 
+static TreeNode* lowestCommonAncestorDS2(TreeNode* root,
+                                         TreeNode* p,
+                                         TreeNode* q)
+{
+    //! @details https://leetcode.com/problems
+    //!          /lowest-common-ancestor-of-a-binary-tree/editorial/
+
+    TreeNode* lca_node {nullptr};
+
+    std::function<bool(TreeNode*)> recurse_tree = [&](TreeNode* node) {
+        //! @todo
+    };
+
+    recurse_tree(root);
+    return lca_node;
+}
+
 TEST_CASE("Example 1", "[lowestCommonAncestor]")
 {
     TreeNode zero {0};
@@ -55,9 +74,13 @@ TEST_CASE("Example 1", "[lowestCommonAncestor]")
     TreeNode five {5, &six, &two};
     TreeNode three {3, &five, &one};
 
-    auto* lca_fa = lowestCommonAncestorDS1(&three, &five, &one);
-    REQUIRE(lca_fa != nullptr);
-    REQUIRE(lca_fa->val == 3);
+    auto* lca_ds1 = lowestCommonAncestorDS1(&three, &five, &one);
+    REQUIRE(lca_ds1 != nullptr);
+    REQUIRE(lca_ds1->val == 3);
+
+    auto* lca_ds2 = lowestCommonAncestorDS2(&three, &five, &one);
+    REQUIRE(lca_ds2 != nullptr);
+    REQUIRE(lca_ds2->val == 3);
 }
 
 TEST_CASE("Example 2", "[lowestCommonAncestor]")
@@ -74,9 +97,13 @@ TEST_CASE("Example 2", "[lowestCommonAncestor]")
     TreeNode five {5, &six, &two};
     TreeNode three {3, &five, &one};
 
-    auto* lca_fa = lowestCommonAncestorDS1(&three, &five, &four);
-    REQUIRE(lca_fa != nullptr);
-    REQUIRE(lca_fa->val == 5);
+    auto* lca_ds1 = lowestCommonAncestorDS1(&three, &five, &four);
+    REQUIRE(lca_ds1 != nullptr);
+    REQUIRE(lca_ds1->val == 5);
+
+    auto* lca_ds2 = lowestCommonAncestorDS1(&three, &five, &four);
+    REQUIRE(lca_ds2 != nullptr);
+    REQUIRE(lca_ds2->val == 5);
 }
 
 TEST_CASE("Example 3", "[lowestCommonAncestor]")
@@ -84,7 +111,11 @@ TEST_CASE("Example 3", "[lowestCommonAncestor]")
     TreeNode two {2};
     TreeNode one {1, &two, nullptr};
 
-    auto* lca_fa = lowestCommonAncestorDS1(&one, &one, &two);
-    REQUIRE(lca_fa != nullptr);
-    REQUIRE(lca_fa->val == 1);
+    auto* lca_ds1 = lowestCommonAncestorDS1(&one, &one, &two);
+    REQUIRE(lca_ds1 != nullptr);
+    REQUIRE(lca_ds1->val == 1);
+
+    auto* lca_ds2 = lowestCommonAncestorDS1(&one, &one, &two);
+    REQUIRE(lca_ds2 != nullptr);
+    REQUIRE(lca_ds2->val == 1);
 }
