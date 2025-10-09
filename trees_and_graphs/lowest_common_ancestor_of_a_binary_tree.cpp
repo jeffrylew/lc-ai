@@ -53,7 +53,21 @@ static TreeNode* lowestCommonAncestorDS2(TreeNode* root,
     TreeNode* lca_node {nullptr};
 
     std::function<bool(TreeNode*)> recurse_tree = [&](TreeNode* node) {
-        //! @todo
+        if (node == nullptr || lca_node != nullptr)
+        {
+            return false;
+        }
+
+        const int left {recurse_tree(node->left) ? 1 : 0};
+        const int right {recurse_tree(node->right) ? 1 : 0};
+        const int mid {(node == p || node == q) ? 1 : 0};
+
+        if (mid + left + right == 2)
+        {
+            lca_node = node;
+        }
+
+        return (mid + left + right > 0);
     };
 
     recurse_tree(root);
