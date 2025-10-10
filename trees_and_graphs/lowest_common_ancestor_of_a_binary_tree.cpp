@@ -49,6 +49,12 @@ static TreeNode* lowestCommonAncestorDS2(TreeNode* root,
 {
     //! @details https://leetcode.com/problems
     //!          /lowest-common-ancestor-of-a-binary-tree/editorial/
+    //!
+    //!          Time complexity O(N) where N = number of nodes in the binary
+    //!          tree. In the worst case, we visit all nodes of the tree.
+    //!          Space complexity O(N). The max amount of space used by the
+    //!          recursion stack would be N since the height of a skewed binary
+    //!          tree could be N.
 
     TreeNode* lca_node {nullptr};
 
