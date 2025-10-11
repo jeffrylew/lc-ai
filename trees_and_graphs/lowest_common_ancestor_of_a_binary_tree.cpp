@@ -21,12 +21,9 @@ static TreeNode* lowestCommonAncestorDS1(TreeNode* root,
     //!          Time complexity O(N) where N = number of nodes in the tree.
     //!          Space complexity O(H) where H is the height of the tree.
 
-    if (root == nullptr)
-    {
-        return nullptr;
-    }
-
-    if (root == p || root == q)
+    //! root == nullptr: Neither p nor q can exist so return nullptr
+    //! root == p || root == q: If root is either p or q then return root
+    if (root == nullptr || root == p || root == q)
     {
         return root;
     }
