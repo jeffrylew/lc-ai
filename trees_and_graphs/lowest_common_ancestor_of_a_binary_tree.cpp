@@ -89,6 +89,13 @@ static TreeNode* lowestCommonAncestorDS3(TreeNode* root,
 {
     //! @details https://leetcode.com/problems
     //!          /lowest-common-ancestor-of-a-binary-tree/editorial/
+    //!
+    //!          Time complexity O(N) where N = number of nodes in binary tree.
+    //!          In the worst case, we visit all nodes of the binary tree.
+    //!          Space complexity O(N). In the worst case of a skewed binary
+    //!          with height N, the child_to_parent_map and p_ancestors set use
+    //!          O(N) space. The node_stack uses O(N) in the worst case when p
+    //!          and q are leaves at opposite ends of a complete binary tree.
 
     //! Stack for tree traversal
     std::stack<TreeNode*> node_stack;
