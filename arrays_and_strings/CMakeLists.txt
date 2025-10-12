@@ -3,6 +3,7 @@ set (
     "first_unique_character_in_a_string"
     "group_anagrams"
     "longest_substring_without_repeating_characters"
+    "string_to_integer_atoi"
     "two_sum"
 )
 
