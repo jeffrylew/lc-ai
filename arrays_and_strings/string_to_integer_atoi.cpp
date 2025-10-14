@@ -22,17 +22,21 @@ static int myAtoiFA(std::string s)
 
     for (const char ch : s)
     {
+        //! Current character is a letter or period
         if (std::isalpha(ch) != 0 || ch == '.')
+        {
+            return static_cast<int>(s_long);
+        }
+
+        //! Previous character was a digit and current character is space or +/-
+        if (0 != std::isdigit(prev_char)
+            && (ch == ' ' || ch == '+' || ch == '-'))
         {
             return static_cast<int>(s_long);
         }
 
         if (ch == ' ' || (ch == '0' && s_long == 0L))
         {
-            // if (prev_char != '\0' && prev_char)
-            {
-
-            }
             continue;
         }
 
