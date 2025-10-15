@@ -23,20 +23,36 @@ static int myAtoiFA(std::string s)
     for (const char ch : s)
     {
         //! Current character is a letter or period
-        if (std::isalpha(ch) != 0 || ch == '.')
+        if (std::isalpha(static_cast<unsigned char>(ch)) != 0 || ch == '.')
         {
-            return static_cast<int>(s_long);
+            return (is_negative && s_long != 0L)
+                ? static_cast<int>(-1L * s_long)
+                : static_cast<int>(s_long);
         }
 
         //! Previous character was a digit and current character is space or +/-
-        if (0 != std::isdigit(prev_char)
+        if (0 != std::isdigit(static_cast<unsigned char>(prev_char))
             && (ch == ' ' || ch == '+' || ch == '-'))
         {
-            return static_cast<int>(s_long);
+            return (is_negative && s_long != 0L)
+                ? static_cast<int>(-1L * s_long)
+                : static_cast<int>(s_long);
         }
 
-        if (ch == ' ' || (ch == '0' && s_long == 0L))
+        if (ch == ' ')
         {
+            if (prev_char == '+' || prev_char == '-')
+            {
+                return 0;
+            }
+
+            prev_char = ch;
+            continue;
+        }
+
+        if (ch == '0' && s_long == 0L)
+        {
+            prev_char = ch;
             continue;
         }
 
@@ -44,30 +60,29 @@ static int myAtoiFA(std::string s)
         {
             if (++num_signs > 1)
             {
-                return static_cast<int>(s_long);
+                return (is_negative && s_long != 0L)
+                    ? static_cast<int>(-1L * s_long)
+                    : static_cast<int>(s_long);
             }
 
             if (ch == '-')
             {
                 is_negative = true;
             }
+
+            prev_char = ch;
+            continue;
         }
 
         s_long *= 10L;
         s_long += static_cast<long>(ch - '0');
 
-        if (is_negative && s_long != 0L)
-        {
-            s_long *= -1L;
-            is_negative = false;
-        }
-
-        if (s_long < min_int)
+        if (is_negative && s_long != 0L && s_long * -1L < min_int)
         {
             return min_int;
         }
 
-        if (s_long > max_int)
+        if (!is_negative && s_long > max_int)
         {
             return max_int;
         }
@@ -75,7 +90,9 @@ static int myAtoiFA(std::string s)
         prev_char = ch;
     }
 
-    return static_cast<int>(s_long);
+    return (is_negative && s_long != 0L)
+        ? static_cast<int>(-1L * s_long)
+        : static_cast<int>(s_long);
 
 } // static int myAtoiFA( ...
 
