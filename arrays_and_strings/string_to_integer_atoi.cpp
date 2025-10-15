@@ -120,3 +120,13 @@ TEST_CASE("Example 5", "[myAtoi]")
 {
     REQUIRE(0 == myAtoiFA("words and 987"));
 }
+
+TEST_CASE("Example 6", "[myAtoi]")
+{
+    REQUIRE(-2147483648 == myAtoiFA("-2147483648"));
+}
+
+TEST_CASE("Example 7", "[myAtoi]")
+{
+    REQUIRE(0 == myAtoiFA("  +  413");)
+}
