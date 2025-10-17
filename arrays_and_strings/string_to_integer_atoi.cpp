@@ -96,37 +96,51 @@ static int myAtoiFA(std::string s)
 
 } // static int myAtoiFA( ...
 
+static int myAtoiDS1(std::string s)
+{
+    //! @details https://leetcode.com/problems/string-to-integer-atoi/editorial
+
+    //! @todo
+}
+
 TEST_CASE("Example 1", "[myAtoi]")
 {
     REQUIRE(42 == myAtoiFA("42"));
+    REQUIRE(42 == myAtoiDS1("42"));
 }
 
 TEST_CASE("Example 2", "[myAtoi]")
 {
     REQUIRE(-42 == myAtoiFA(" -042"));
+    REQUIRE(-42 == myAtoiDS1(" -042"));
 }
 
 TEST_CASE("Example 3", "[myAtoi]")
 {
     REQUIRE(1337 == myAtoiFA("1337c0d3"));
+    REQUIRE(1337 == myAtoiDS1("1337c0d3"));
 }
 
 TEST_CASE("Example 4", "[myAtoi]")
 {
     REQUIRE(0 == myAtoiFA("0-1"));
+    REQUIRE(0 == myAtoiDS1("0-1"));
 }
 
 TEST_CASE("Example 5", "[myAtoi]")
 {
     REQUIRE(0 == myAtoiFA("words and 987"));
+    REQUIRE(0 == myAtoiDS1("words and 987"));
 }
 
 TEST_CASE("Example 6", "[myAtoi]")
 {
     REQUIRE(-2147483648 == myAtoiFA("-2147483648"));
+    REQUIRE(-2147483648 == myAtoiDS1("-2147483648"));
 }
 
 TEST_CASE("Example 7", "[myAtoi]")
 {
     REQUIRE(0 == myAtoiFA("  +  413");)
+    REQUIRE(0 == myAtoiDS1("  +  413");)
 }
