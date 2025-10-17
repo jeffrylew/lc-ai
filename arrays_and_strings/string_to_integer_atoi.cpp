@@ -99,9 +99,71 @@ static int myAtoiFA(std::string s)
 static int myAtoiDS1(std::string s)
 {
     //! @details https://leetcode.com/problems/string-to-integer-atoi/editorial
+    //!
+    //!          Time complexity O(N) where N = s.size(). We visit each char in
+    //!          s at most once and processing each char takes O(1).
+    //!          Space complexity O(1) for constant space to store the sign and
+    //!          result.
 
-    //! @todo
-}
+    //! Stores the 32-bit integer result
+    int result {};
+
+    //! Store the sign of the final result
+    int sign {1};
+
+    int        index {};
+    const auto num_chars = static_cast<int>(std::ssize(s));
+
+    //! Discard all spaces from the beginning of the input string
+    while (index < num_chars && s[index] == ' ')
+    {
+        ++index;
+    }
+
+    //! sign = +1 if it is a positive number, else sign = -1
+    if (index < num_chars)
+    {
+        if (s[index] == '+')
+        {
+            sign = 1;
+            ++index;
+        }
+        else if (s[index] == '-')
+        {
+            sign = -1;
+            ++index;
+        }
+    }
+
+    constexpr int int_min {std::numeric_limits<int>::min()};
+    constexpr int int_max {std::numeric_limits<int>::max()};
+
+    //! Traverse subsequent chars of s and stop when the char is not a digit
+    while (index < num_chars
+           && std::isdigit(static_cast<unsigned char>(s[index])))
+    {
+        const auto digit = static_cast<int>(s[index] - '0');
+
+        //! Check overflow and underflow conditions
+        if ((result > int_max / 10)
+            || (result == int_max / 10 && digit > int_max % 10))
+        {
+            //! If integer overflowed then return 2^31 - 1
+            //! Otherwise, if integer underflowed then return -2^31
+            return sign == 1 ? int_max : int_min;
+        }
+
+        //! Append current digit
+        result = 10 * result + digit;
+        ++index;
+
+    } // while (index < num_chars && ...
+
+    //! We formed a valid number without any overflow/underflow.
+    //! Multiply it by sign and return it
+    return sign * result;
+
+} // static int myAtoiDS1( ...
 
 TEST_CASE("Example 1", "[myAtoi]")
 {
