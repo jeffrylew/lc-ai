@@ -165,44 +165,162 @@ static int myAtoiDS1(std::string s)
 
 } // static int myAtoiDS1( ...
 
+enum class State
+{
+    q0,
+    q1,
+    q2,
+    qd
+};
+
+class StateMachine
+{
+public:
+    StateMachine() = default;
+
+    //! Return the final result with the correct sign
+    [[nodiscard]] int get_integer() const
+    {
+        return sign * result;
+    }
+
+    //! Get current state
+    [[nodiscard]] State get_state() const
+    {
+        return current_state;
+    }
+
+    //! Change state based on current input character
+    void transition_state(char ch)
+    {
+        //! @todo
+    }
+
+private:
+    //! Store current state
+    State current_state {};
+
+    //! Store result and its sign
+    int result {};
+    int sign {1};
+
+    //! Transition to state q1
+    void to_state_q1(char ch)
+    {
+        sign          = (ch == '-') ? -1 : 1;
+        current_state = State::q1;
+    }
+
+    //! Transition to state q2
+    void to_state_q2(int digit)
+    {
+        current_state = State::q2;
+        append_digit(digit);
+    }
+
+    //! Transition to dead state qd
+    void to_state_qd()
+    {
+        current_state = State::qd;
+    }
+
+    //! Append digit to result. If out of range, return clamped value
+    void append_digit(int digit)
+    {
+        static constexpr int int_min {std::numeric_limits<int>::min()};
+        static constexpr int int_max {std::numeric_limits<int>::max()};
+
+        if (result > int_max / 10
+            || (result == int_max / 10 && digit > int_max % 10))
+        {
+            if (sign == 1)
+            {
+                //! If sign is 1, clamp result to int_max
+                result = int_max;
+            }
+            else
+            {
+                //! If sign is -1, clamp result to int_min
+                result = int_min;
+                sign   = 1;
+            }
+
+            //! When the 32-bit int range is exceeded, a dead state is reached
+            to_state_qd();
+        }
+        else
+        {
+            //! Append current digit to the result
+            result = result * 10 + digit;
+        }
+    }
+
+}; // class StateMachine
+
+static int myAtoiDS2(std::string s)
+{
+    //! @details https://leetcode.com/problems/string-to-integer-atoi/editorial
+
+    StateMachine state_machine;
+
+    for (const char ch : s)
+    {
+        if (state_machine.get_state() == State::qd)
+        {
+            break;
+        }
+
+        state_machine.transition_state(ch);
+    }
+
+    return state_machine.get_integer();
+}
+
 TEST_CASE("Example 1", "[myAtoi]")
 {
     REQUIRE(42 == myAtoiFA("42"));
     REQUIRE(42 == myAtoiDS1("42"));
+    REQUIRE(42 == myAtoiDS2("42"));
 }
 
 TEST_CASE("Example 2", "[myAtoi]")
 {
     REQUIRE(-42 == myAtoiFA(" -042"));
     REQUIRE(-42 == myAtoiDS1(" -042"));
+    REQUIRE(-42 == myAtoiDS2(" -042"));
 }
 
 TEST_CASE("Example 3", "[myAtoi]")
 {
     REQUIRE(1337 == myAtoiFA("1337c0d3"));
     REQUIRE(1337 == myAtoiDS1("1337c0d3"));
+    REQUIRE(1337 == myAtoiDS2("1337c0d3"));
 }
 
 TEST_CASE("Example 4", "[myAtoi]")
 {
     REQUIRE(0 == myAtoiFA("0-1"));
     REQUIRE(0 == myAtoiDS1("0-1"));
+    REQUIRE(0 == myAtoiDS2("0-1"));
 }
 
 TEST_CASE("Example 5", "[myAtoi]")
 {
     REQUIRE(0 == myAtoiFA("words and 987"));
     REQUIRE(0 == myAtoiDS1("words and 987"));
+    REQUIRE(0 == myAtoiDS2("words and 987"));
 }
 
 TEST_CASE("Example 6", "[myAtoi]")
 {
     REQUIRE(-2147483648 == myAtoiFA("-2147483648"));
     REQUIRE(-2147483648 == myAtoiDS1("-2147483648"));
+    REQUIRE(-2147483648 == myAtoiDS2("-2147483648"));
 }
 
 TEST_CASE("Example 7", "[myAtoi]")
 {
     REQUIRE(0 == myAtoiFA("  +  413");)
     REQUIRE(0 == myAtoiDS1("  +  413");)
+    REQUIRE(0 == myAtoiDS2("  +  413");)
 }
