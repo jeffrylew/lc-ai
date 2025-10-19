@@ -167,10 +167,10 @@ static int myAtoiDS1(std::string s)
 
 enum class State
 {
-    q0,
-    q1,
-    q2,
-    qd
+    initial, // q0
+    sign,    // q1
+    digit,   // q2
+    dead     // qd
 };
 
 class StateMachine
@@ -193,8 +193,46 @@ public:
     //! Change state based on current input character
     void transition_state(char ch)
     {
-        //! @todo
-    }
+        if (current_state == State::initial)
+        {
+            //! Initial state of the string (or some whitespaces are skipped)
+            if (ch == ' ')
+            {
+                //! Current char is whitespace so remain in same state
+                return;
+            }
+            else if (ch == '-' || ch == '+')
+            {
+                //! Current char is a sign
+                to_state_sign(ch);
+            }
+            else if (std::isdigit(static_cast<unsigned char>(ch)))
+            {
+                //! Current char is a digit
+                to_state_digit(static_cast<int>(ch - '0'));
+            }
+            else
+            {
+                //! Current char is not a space, sign, or digit
+                to_state_dead();
+            }
+        }
+        else if (current_state == State::sign || current_state == State::digit)
+        {
+            //! Previous char was a sign or digit
+            if (std::isdigit(ch))
+            {
+                //! Current char is a digit
+                to_state_digit(static_cast<int>(ch - '0'));
+            }
+            else
+            {
+                //! Current char is not a digit. Reached a dead state.
+                to_state_dead();
+            }
+        }
+
+    } // void transition_state(char ch)
 
 private:
     //! Store current state
@@ -204,24 +242,24 @@ private:
     int result {};
     int sign {1};
 
-    //! Transition to state q1
-    void to_state_q1(char ch)
+    //! Transition to state sign (q1)
+    void to_state_sign(char ch)
     {
         sign          = (ch == '-') ? -1 : 1;
-        current_state = State::q1;
+        current_state = State::sign;
     }
 
-    //! Transition to state q2
-    void to_state_q2(int digit)
+    //! Transition to state digit (q2)
+    void to_state_digit(int digit)
     {
-        current_state = State::q2;
+        current_state = State::digit;
         append_digit(digit);
     }
 
-    //! Transition to dead state qd
-    void to_state_qd()
+    //! Transition to dead state
+    void to_state_dead()
     {
-        current_state = State::qd;
+        current_state = State::dead;
     }
 
     //! Append digit to result. If out of range, return clamped value
@@ -246,7 +284,7 @@ private:
             }
 
             //! When the 32-bit int range is exceeded, a dead state is reached
-            to_state_qd();
+            to_state_dead();
         }
         else
         {
@@ -265,7 +303,7 @@ static int myAtoiDS2(std::string s)
 
     for (const char ch : s)
     {
-        if (state_machine.get_state() == State::qd)
+        if (state_machine.get_state() == State::dead)
         {
             break;
         }
