@@ -298,6 +298,11 @@ private:
 static int myAtoiDS2(std::string s)
 {
     //! @details https://leetcode.com/problems/string-to-integer-atoi/editorial
+    //!
+    //!          Time complexity O(N) where N = s.size(). We iterate over the
+    //!          input string exactly once and each state transition takes O(1).
+    //!          Space complexity O(1). We used constant space to store the
+    //!          state, sign, and result.
 
     StateMachine state_machine;
 
