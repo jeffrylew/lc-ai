@@ -7,6 +7,9 @@ static int maxAreaDS2(const std::vector<int>& height)
 {
     //! @details https://leetcode.com/explore/interview/card/amazon/76
     //!          /array-and-strings/2963/
+    //!
+    //!          Time complexity O(N) where N = height.size().
+    //!          Space complexity O(1).
 
     int max_water {};
 
