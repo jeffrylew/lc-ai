@@ -6,6 +6,10 @@
 static int maxAreaDS1(const std::vector<int>& height)
 {
     //! @details leetcode.com/problems/container-with-most-water/editorial
+    //!
+    //!          Time complexity O(N ^ 2) where N = height.size() to calculate
+    //!          all N * (N - 1) / 2 height pairs.
+    //!          Space complexity O(1).
 
     int max_water {};
 
