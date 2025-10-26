@@ -3,6 +3,7 @@ set (
     "container_with_most_water"
     "first_unique_character_in_a_string"
     "group_anagrams"
+    "integer_to_roman"
     "longest_substring_without_repeating_characters"
     "string_to_integer_atoi"
     "two_sum"
