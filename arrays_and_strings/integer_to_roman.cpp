@@ -10,6 +10,14 @@ static std::string intToRomanDS1(int num)
     //! @details https://leetcode.com/explore/interview/card/amazon/76
     //!          /array-and-strings/2964/
     //!          https://leetcode.com/problems/integer-to-roman/editorial/
+    //!
+    //!          Time complexity O(1). There is a finite set of roman numerals
+    //!          so there is a hard upper limit on how many times the loop can
+    //!          iterate. This upper limit is 15 times, and it occurs for the
+    //!          number 3888, which has the representation MMMDCCCLXXXVIII.
+    //!          Therefore, we say the time complexity is constant.
+    //!          Space complexity O(1). The amount of memory used does not
+    //!          change with the size of the input integer.
 
     std::string num_to_roman_numeral;
 
