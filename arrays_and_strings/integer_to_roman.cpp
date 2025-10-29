@@ -1,5 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 
+#include <array>
 #include <string>
 #include <string_view>
 #include <utility>
@@ -55,6 +56,27 @@ static std::string intToRomanDS1(int num)
     return num_to_roman_numeral;
 }
 
+static std::string intToRomanDS2(int num)
+{
+    //! @details https://leetcode.com/problems/integer-to-roman/editorial/
+
+    constexpr std::array<std::string_view, 4U> thousands {"", "M", "MM", "MMM"};
+
+    constexpr std::array<std::string_view, 10U> hundreds {
+        "", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"};
+
+    constexpr std::array<std::string_view, 10U> tens {
+        "", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};
+
+    constexpr std::array<std::string_view, 10U> ones {
+        "", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
+
+    return std::string {thousands[num / 1000]}
+        + std::string {hundreds[num % 1000 / 100]}
+        + std::string {tens[num % 100 / 10]}
+        + std::string {ones[num % 10]};
+}
+
 TEST_CASE("Example 1", "[intToRoman]")
 {
     //! 3000 = MMM as 1000 (M) + 1000 (M) + 1000 (M)
@@ -62,6 +84,7 @@ TEST_CASE("Example 1", "[intToRoman]")
     //!   40 = XL as 10 (X) less than 50 (L)
     //!    9 = IX as 1 (I) less than 10 (X)
     REQUIRE("MMMDCCXLIX" == intToRomanDS1(3749));
+    REQUIRE("MMMDCCXLIX" == intToRomanDS2(3749));
 }
 
 TEST_CASE("Example 2", "[intToRoman]")
@@ -69,6 +92,7 @@ TEST_CASE("Example 2", "[intToRoman]")
     //! 50 = L
     //!  8 = VIII
     REQUIRE("LVIII" == intToRomanDS1(58));
+    REQUIRE("LVIII" == intToRomanDS2(58));
 }
 
 TEST_CASE("Example 3", "[intToRoman]")
@@ -77,4 +101,5 @@ TEST_CASE("Example 3", "[intToRoman]")
     //!  900 = CM
     //!   90 = XC
     REQUIRE("MCMXCIV" == intToRomanDS1(1994));
+    REQUIRE("MCMXCIV" == intToRomanDS2(1994));
 }
