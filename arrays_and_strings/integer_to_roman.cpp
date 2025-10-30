@@ -59,6 +59,11 @@ static std::string intToRomanDS1(int num)
 static std::string intToRomanDS2(int num)
 {
     //! @details https://leetcode.com/problems/integer-to-roman/editorial/
+    //!
+    //!          Time complexity O(1). The number of operations is constant
+    //!          regardless of the size of the input.
+    //!          Space complexity O(1). The arrays have constant sizes
+    //!          regardless of the size of the input.
 
     constexpr std::array<std::string_view, 4U> thousands {"", "M", "MM", "MMM"};
 
