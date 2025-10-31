@@ -5,6 +5,7 @@ set (
     "group_anagrams"
     "integer_to_roman"
     "longest_substring_without_repeating_characters"
+    "roman_to_integer"
     "string_to_integer_atoi"
     "two_sum"
 )
