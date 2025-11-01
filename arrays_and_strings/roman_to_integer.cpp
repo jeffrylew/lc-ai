@@ -9,6 +9,14 @@ static int romanToIntFA(std::string s)
 {
     //! @details https://leetcode.com/explore/interview/card/amazon/76
     //!          /array-and-strings/2965/
+    //!
+    //!          Time complexity O(N) where N = s.size(). We iterate through
+    //!          each character or pairs of characters in s and check if there
+    //!          is a match in the symbols_and_values vector, which has a fixed
+    //!          size.
+    //!          Space complexity O(1). symbols_and_values remains constant even
+    //!          as the size of the input grows and the roman_numerals
+    //!          string_view uses O(1) space.
 
     int              roman_numeral_to_num {};
     std::string_view roman_numerals {s};
