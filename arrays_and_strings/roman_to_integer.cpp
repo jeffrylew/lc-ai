@@ -104,20 +104,30 @@ static int romanToIntDS1(std::string s)
     return roman_numeral_to_num;
 }
 
+static int romanToIntDS2(std::string s)
+{
+    //! @details https://leetcode.com/problems/roman-to-integer/editorial/
+
+    //! @todo
+}
+
 TEST_CASE("Example 1", "[romanToInt]")
 {
     REQUIRE(3 == romanToIntFA("III"));
     REQUIRE(3 == romanToIntDS1("III"));
+    REQUIRE(3 == romanToIntDS2("III"));
 }
 
 TEST_CASE("Example 2", "[romanToInt]")
 {
     REQUIRE(58 == romanToIntFA("LVIII"));
     REQUIRE(58 == romanToIntDS1("LVIII"));
+    REQUIRE(58 == romanToIntDS2("LVIII"));
 }
 
 TEST_CASE("Example 3", "[romanToInt]")
 {
     REQUIRE(1994 == romanToIntFA("MCMXCIV"));
     REQUIRE(1994 == romanToIntDS1("MCMXCIV"));
+    REQUIRE(1994 == romanToIntDS2("MCMXCIV"));
 }
