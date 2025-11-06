@@ -158,6 +158,9 @@ static int romanToIntDS2(std::string s)
 static int romanToIntDS3(std::string s)
 {
     //! @details https://leetcode.com/problems/roman-to-integer/editorial/
+    //!
+    //!          Time complexity O(1).
+    //!          Space complexity O(1).
 
     const std::unordered_map<char, int> symbols_to_values {
         {'M', 1000},
