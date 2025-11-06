@@ -155,11 +155,49 @@ static int romanToIntDS2(std::string s)
     return roman_numeral_to_num;
 }
 
+static int romanToIntDS3(std::string s)
+{
+    //! @details https://leetcode.com/problems/roman-to-integer/editorial/
+
+    const std::unordered_map<char, int> symbols_to_values {
+        {'M', 1000},
+        {'D', 500},
+        {'C', 100},
+        {'L', 50},
+        {'X', 10},
+        {'V', 5},
+        {'I', 1}};
+
+    const auto s_size = static_cast<int>(std::ssize(s));
+
+    int last_value {symbols_to_values.at(s.back())};
+    int roman_numeral_to_num {last_value};
+
+    for (int idx = s_size - 2; idx >= 0; --idx)
+    {
+        const int curr_value {symbols_to_values.at(s[idx])};
+
+        if (curr_value < last_value)
+        {
+            roman_numeral_to_num -= curr_value;
+        }
+        else
+        {
+            roman_numeral_to_num += curr_value;
+        }
+
+        last_value = curr_value;
+    }
+
+    return roman_numeral_to_num;
+}
+
 TEST_CASE("Example 1", "[romanToInt]")
 {
     REQUIRE(3 == romanToIntFA("III"));
     REQUIRE(3 == romanToIntDS1("III"));
     REQUIRE(3 == romanToIntDS2("III"));
+    REQUIRE(3 == romanToIntDS3("III"));
 }
 
 TEST_CASE("Example 2", "[romanToInt]")
@@ -167,6 +205,7 @@ TEST_CASE("Example 2", "[romanToInt]")
     REQUIRE(58 == romanToIntFA("LVIII"));
     REQUIRE(58 == romanToIntDS1("LVIII"));
     REQUIRE(58 == romanToIntDS2("LVIII"));
+    REQUIRE(58 == romanToIntDS3("LVIII"));
 }
 
 TEST_CASE("Example 3", "[romanToInt]")
@@ -174,4 +213,5 @@ TEST_CASE("Example 3", "[romanToInt]")
     REQUIRE(1994 == romanToIntFA("MCMXCIV"));
     REQUIRE(1994 == romanToIntDS1("MCMXCIV"));
     REQUIRE(1994 == romanToIntDS2("MCMXCIV"));
+    REQUIRE(1994 == romanToIntDS3("MCMXCIV"));
 }
