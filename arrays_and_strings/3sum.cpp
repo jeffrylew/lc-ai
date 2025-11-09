@@ -10,7 +10,12 @@ static std::vector<std::vector<int>> threeSumFA(const std::vector<int>& nums)
     //! @details https://leetcode.com/explore/interview/card/amazon/76
     //!          /array-and-strings/2966/
     //!
-    //!          Time complexity O(N * log N) where N = nums.size()
+    //!          First attempt solution does not pass Example 6.
+    //!
+    //!          Time complexity O(N * log N) where N = nums.size(). Need to
+    //!          sort nums, which takes O(N * log N).
+    //!          Space complexity O(N) for num_count map.
+    //!          std::sort uses O(log N).
 
     std::vector<std::vector<int>> three_sums;
 
@@ -42,6 +47,11 @@ static std::vector<std::vector<int>> threeSumFA(const std::vector<int>& nums)
         if (num_count.contains(target_num) && num_count[target_num] > 0)
         {
             std::vector<int> three_sum {left_num, target_num, right_num};
+            if (target_num > right_num)
+            {
+                std::swap(three_sum[1], three_sum[2]);
+            }
+
             if (three_sums.empty() || three_sums.back() != three_sum)
             {
                 three_sums.push_back(std::move(three_sum));
@@ -137,4 +147,15 @@ TEST_CASE("Example 5", "[threeSum]")
     const std::vector<std::vector<int>> expected_output {{-1, 0, 1}};
 
     REQUIRE(expected_output == threeSumFA(nums));
+}
+
+TEST_CASE("Example 6", "[threeSum]")
+{
+    const std::vector<int> nums {-2, 0, 1, 1, 2};
+
+    const std::vector<std::vector<int>> expected_output {
+        {-2, 0, 2}, {-2, 1, 1}};
+
+    //! First attempt returns {{-2, 0, 2}}
+    REQUIRE(expected_output != threeSumFA(nums));
 }
