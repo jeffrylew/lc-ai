@@ -76,6 +76,68 @@ static std::vector<std::vector<int>> threeSumFA(const std::vector<int>& nums)
     return three_sums;
 }
 
+static void two_sum_II_DS1(const std::vector<int>&        nums,
+                           int                            nums_size,
+                           int                            curr_idx,
+                           std::vector<std::vector<int>>& three_sums)
+{
+    int left_idx {curr_idx + 1};
+    int right_idx {nums_size - 1};
+
+    while (left_idx < right_idx)
+    {
+        const int three_sum {
+            nums.at(curr_idx) + nums.at(left_idx) + nums.at(right_idx)};
+
+        if (three_sum < 0)
+        {
+            ++left_idx;
+        }
+        else if (three_sum > 0)
+        {
+            --right_idx;
+        }
+        else
+        {
+            three_sums.push_back({
+                nums.at(curr_idx), nums.at(left_idx), nums.at(right_idx)});
+
+            ++left_idx;
+            --right_idx;
+
+            //! Increment left_idx to avoid duplicates
+            while (left_idx < right_idx
+                   && nums.at(left_idx - 1) == nums.at(left_idx))
+            {
+                ++left_idx;
+            }
+        }
+    }
+}
+
+static std::vector<std::vector<int>> threeSumDS1(const std::vector<int>& nums)
+{
+    //! @details https://leetcode.com/problems/3sum/editorial/
+
+    const auto nums_size   = static_cast<int>(std::ssize(nums));
+    auto       sorted_nums = nums;
+    std::sort(sorted_nums.begin(), sorted_nums.end());
+
+    std::vector<std::vector<int>> three_sums;
+
+    for (int curr_idx = 0;
+         curr_idx < nums_size && nums.at(curr_idx) <= 0;
+         ++curr_idx)
+    {
+        if (curr_idx == 0 || nums.at(curr_idx - 1) != nums.at(curr_idx))
+        {
+            two_sum_II_DS1(nums, nums_size, curr_idx, three_sums);
+        }
+    }
+
+    return three_sums;
+}
+
 TEST_CASE("Example 1", "[threeSum]")
 {
     // indices:      0   1   2  3  4  5
@@ -97,6 +159,7 @@ TEST_CASE("Example 1", "[threeSum]")
         {-1, -1, 2}, {-1, 0, 1}};
 
     REQUIRE(expected_output == threeSumFA(nums));
+    REQUIRE(expected_output == threeSumDS1(nums));
 }
 
 TEST_CASE("Example 2", "[threeSum]")
@@ -113,6 +176,7 @@ TEST_CASE("Example 2", "[threeSum]")
     const std::vector<int> nums {0, 1, 1};
 
     REQUIRE(threeSumFA(nums).empty());
+    REQUIRE(threeSumDS1(nums).empty());
 }
 
 TEST_CASE("Example 3", "[threeSum]")
@@ -129,6 +193,7 @@ TEST_CASE("Example 3", "[threeSum]")
     const std::vector<std::vector<int>> expected_output {{0, 0, 0}};
 
     REQUIRE(expected_output == threeSumFA(nums))
+    REQUIRE(expected_output == threeSumDS1(nums))
 }
 
 TEST_CASE("Example 4", "[threeSum]")
@@ -138,6 +203,7 @@ TEST_CASE("Example 4", "[threeSum]")
     const std::vector<std::vector<int>> expected_output {{0, 0, 0}};
 
     REQUIRE(expected_output == threeSumFA(nums));
+    REQUIRE(expected_output == threeSumDS1(nums));
 }
 
 TEST_CASE("Example 5", "[threeSum]")
@@ -147,6 +213,7 @@ TEST_CASE("Example 5", "[threeSum]")
     const std::vector<std::vector<int>> expected_output {{-1, 0, 1}};
 
     REQUIRE(expected_output == threeSumFA(nums));
+    REQUIRE(expected_output == threeSumDS1(nums));
 }
 
 TEST_CASE("Example 6", "[threeSum]")
@@ -158,4 +225,5 @@ TEST_CASE("Example 6", "[threeSum]")
 
     //! First attempt returns {{-2, 0, 2}}
     REQUIRE(expected_output != threeSumFA(nums));
+    REQUIRE(expected_output == threeSumDS1(nums));
 }
