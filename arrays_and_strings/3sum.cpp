@@ -118,6 +118,11 @@ static void two_sum_II_DS1(const std::vector<int>&        nums,
 static std::vector<std::vector<int>> threeSumDS1(const std::vector<int>& nums)
 {
     //! @details https://leetcode.com/problems/3sum/editorial/
+    //!
+    //!          Time complexity O(N ^ 2) where N = nums.size(). two_sum_II_DS1
+    //!          is O(N) and we call it N times. Sorting the array takes
+    //!          O(N * log N).
+    //!          Space complexity O(log N) for std::sort.
 
     const auto nums_size   = static_cast<int>(std::ssize(nums));
     auto       sorted_nums = nums;
