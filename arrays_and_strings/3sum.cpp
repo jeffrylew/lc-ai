@@ -131,12 +131,37 @@ static std::vector<std::vector<int>> threeSumDS1(const std::vector<int>& nums)
     std::vector<std::vector<int>> three_sums;
 
     for (int curr_idx = 0;
-         curr_idx < nums_size && nums.at(curr_idx) <= 0;
+         curr_idx < nums_size && sorted_nums.at(curr_idx) <= 0;
          ++curr_idx)
     {
-        if (curr_idx == 0 || nums.at(curr_idx - 1) != nums.at(curr_idx))
+        if (curr_idx == 0
+            || sorted_nums.at(curr_idx - 1) != sorted_nums.at(curr_idx))
         {
-            two_sum_II_DS1(nums, nums_size, curr_idx, three_sums);
+            two_sum_II_DS1(sorted_nums, nums_size, curr_idx, three_sums);
+        }
+    }
+
+    return three_sums;
+}
+
+static std::vector<std::vector<int>> threeSumDS2(const std::vector<int>& nums)
+{
+    //! @details https://leetcode.com/problems/3sum/editorial/
+
+    const auto nums_size   = static_cast<int>(std::ssize(nums));
+    auto       sorted_nums = nums;
+    std::sort(sorted_nums.begin(), sorted_nums.end());
+
+    std::vector<std::vector<int>> three_sums;
+
+    for (int curr_idx = 0;
+         curr_idx < nums_size && sorted_nums.at(curr_idx) <= 0;
+         ++curr_idx)
+    {
+        if (curr_idx == 0
+            || sorted_nums.at(curr_idx - 1) != sorted_nums.at(curr_idx))
+        {
+            two_sum_DS2(sorted_nums, nums_size, curr_idx, three_sums);
         }
     }
 
@@ -165,6 +190,7 @@ TEST_CASE("Example 1", "[threeSum]")
 
     REQUIRE(expected_output == threeSumFA(nums));
     REQUIRE(expected_output == threeSumDS1(nums));
+    REQUIRE(expected_output == threeSumDS2(nums));
 }
 
 TEST_CASE("Example 2", "[threeSum]")
@@ -182,6 +208,7 @@ TEST_CASE("Example 2", "[threeSum]")
 
     REQUIRE(threeSumFA(nums).empty());
     REQUIRE(threeSumDS1(nums).empty());
+    REQUIRE(threeSumDS2(nums).empty());
 }
 
 TEST_CASE("Example 3", "[threeSum]")
@@ -199,6 +226,7 @@ TEST_CASE("Example 3", "[threeSum]")
 
     REQUIRE(expected_output == threeSumFA(nums))
     REQUIRE(expected_output == threeSumDS1(nums))
+    REQUIRE(expected_output == threeSumDS2(nums))
 }
 
 TEST_CASE("Example 4", "[threeSum]")
@@ -209,6 +237,7 @@ TEST_CASE("Example 4", "[threeSum]")
 
     REQUIRE(expected_output == threeSumFA(nums));
     REQUIRE(expected_output == threeSumDS1(nums));
+    REQUIRE(expected_output == threeSumDS2(nums));
 }
 
 TEST_CASE("Example 5", "[threeSum]")
@@ -219,6 +248,7 @@ TEST_CASE("Example 5", "[threeSum]")
 
     REQUIRE(expected_output == threeSumFA(nums));
     REQUIRE(expected_output == threeSumDS1(nums));
+    REQUIRE(expected_output == threeSumDS2(nums));
 }
 
 TEST_CASE("Example 6", "[threeSum]")
@@ -231,4 +261,5 @@ TEST_CASE("Example 6", "[threeSum]")
     //! First attempt returns {{-2, 0, 2}}
     REQUIRE(expected_output != threeSumFA(nums));
     REQUIRE(expected_output == threeSumDS1(nums));
+    REQUIRE(expected_output == threeSumDS2(nums));
 }
