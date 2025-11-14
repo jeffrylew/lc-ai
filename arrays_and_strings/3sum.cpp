@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <unordered_map>
+#include <unordered_set>
 #include <utility>
 #include <vector>
 
@@ -142,6 +143,33 @@ static std::vector<std::vector<int>> threeSumDS1(const std::vector<int>& nums)
     }
 
     return three_sums;
+}
+
+static void two_sum_DS2(const std::vector<int>&        nums,
+                        int                            nums_size,
+                        int                            curr_idx,
+                        std::vector<std::vector<int>>& three_sums)
+{
+    std::unordered_set<int> visited_nums;
+
+    for (int right_idx = curr_idx + 1; right_idx < nums_size; ++right_idx)
+    {
+        const int complement {-nums.at(curr_idx) - nums.at(right_idx)};
+
+        if (visited_nums.contains(complement))
+        {
+            three_sums.push_back({
+                nums.at(curr_idx), complement, nums.at(right_idx)});
+
+            while (right_idx + 1 < nums_size
+                   && nums.at(right_idx) == nums.at(right_idx + 1))
+            {
+                ++right_idx;
+            }
+        }
+
+        visited_nums.insert(nums.at(right_idx));
+    }
 }
 
 static std::vector<std::vector<int>> threeSumDS2(const std::vector<int>& nums)
