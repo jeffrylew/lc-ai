@@ -1,6 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <algorithm>
+#include <set>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -200,6 +201,48 @@ static std::vector<std::vector<int>> threeSumDS2(const std::vector<int>& nums)
     return three_sums;
 }
 
+static std::vector<std::vector<int>> threeSumDS3(const std::vector<int>& nums)
+{
+    //! @details https://leetcode.com/problems/3sum/editorial/
+
+    //! Map of <nums[right_idx], curr_idx>
+    std::unordered_map<int, int> visited_nums_map;
+    std::set<std::vector<int>>   three_sums_set;
+    std::unordered_set<int>      duplicate_nums;
+
+    const auto nums_size = static_cast<int>(std::ssize(nums));
+
+    for (int curr_idx = 0; curr_idx < nums_size; ++curr_idx)
+    {
+        const int curr_num {nums.at(curr_idx)};
+
+        if (duplicate_nums.insert(curr_num).second)
+        {
+            for (int right_idx = curr_idx + 1;
+                 right_idx < nums_size;
+                 ++right_idx)
+            {
+                const int right_num {nums.at(right_idx)};
+                const int complement {-curr_num - right_num};
+
+                auto complement_it = visited_nums_map.find(complement);
+                if (complement_it != visited_nums_map.end()
+                    && complement_it->second == curr_idx)
+                {
+                    std::vector<int> triplet {curr_num, right_num, complement};
+                    std::sort(triplet.begin(), triplet.end());
+                    three_sums_set.insert(std::move(triplet));
+                }
+
+                visited_nums_map[right_num] = curr_idx;
+            }
+        }
+    }
+
+    return std::vector<std::vector<int>>(three_sums_set.begin(),
+                                         three_sums_set.end());
+}
+
 TEST_CASE("Example 1", "[threeSum]")
 {
     // indices:      0   1   2  3  4  5
@@ -223,6 +266,7 @@ TEST_CASE("Example 1", "[threeSum]")
     REQUIRE(expected_output == threeSumFA(nums));
     REQUIRE(expected_output == threeSumDS1(nums));
     REQUIRE(expected_output == threeSumDS2(nums));
+    REQUIRE(expected_output == threeSumDS3(nums));
 }
 
 TEST_CASE("Example 2", "[threeSum]")
@@ -241,6 +285,7 @@ TEST_CASE("Example 2", "[threeSum]")
     REQUIRE(threeSumFA(nums).empty());
     REQUIRE(threeSumDS1(nums).empty());
     REQUIRE(threeSumDS2(nums).empty());
+    REQUIRE(threeSumDS3(nums).empty());
 }
 
 TEST_CASE("Example 3", "[threeSum]")
@@ -259,6 +304,7 @@ TEST_CASE("Example 3", "[threeSum]")
     REQUIRE(expected_output == threeSumFA(nums))
     REQUIRE(expected_output == threeSumDS1(nums))
     REQUIRE(expected_output == threeSumDS2(nums))
+    REQUIRE(expected_output == threeSumDS3(nums))
 }
 
 TEST_CASE("Example 4", "[threeSum]")
@@ -270,6 +316,7 @@ TEST_CASE("Example 4", "[threeSum]")
     REQUIRE(expected_output == threeSumFA(nums));
     REQUIRE(expected_output == threeSumDS1(nums));
     REQUIRE(expected_output == threeSumDS2(nums));
+    REQUIRE(expected_output == threeSumDS3(nums));
 }
 
 TEST_CASE("Example 5", "[threeSum]")
@@ -281,6 +328,7 @@ TEST_CASE("Example 5", "[threeSum]")
     REQUIRE(expected_output == threeSumFA(nums));
     REQUIRE(expected_output == threeSumDS1(nums));
     REQUIRE(expected_output == threeSumDS2(nums));
+    REQUIRE(expected_output == threeSumDS3(nums));
 }
 
 TEST_CASE("Example 6", "[threeSum]")
@@ -294,4 +342,5 @@ TEST_CASE("Example 6", "[threeSum]")
     REQUIRE(expected_output != threeSumFA(nums));
     REQUIRE(expected_output == threeSumDS1(nums));
     REQUIRE(expected_output == threeSumDS2(nums));
+    REQUIRE(expected_output == threeSumDS3(nums));
 }
