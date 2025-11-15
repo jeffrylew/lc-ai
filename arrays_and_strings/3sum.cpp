@@ -175,6 +175,10 @@ static void two_sum_DS2(const std::vector<int>&        nums,
 static std::vector<std::vector<int>> threeSumDS2(const std::vector<int>& nums)
 {
     //! @details https://leetcode.com/problems/3sum/editorial/
+    //!
+    //!          Time complexity O(N ^ 2) where N = nums.size(). two_sum_DS2 is
+    //!          O(N) and we call it N times. Sorting nums takes O(N * log N).
+    //!          Space complexity O(N) for the hashset.
 
     const auto nums_size   = static_cast<int>(std::ssize(nums));
     auto       sorted_nums = nums;
