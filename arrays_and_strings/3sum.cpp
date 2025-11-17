@@ -204,6 +204,10 @@ static std::vector<std::vector<int>> threeSumDS2(const std::vector<int>& nums)
 static std::vector<std::vector<int>> threeSumDS3(const std::vector<int>& nums)
 {
     //! @details https://leetcode.com/problems/3sum/editorial/
+    //!
+    //!          Time complexity O(N ^ 2) where N = nums.size(). We have outer
+    //!          and inner loops, each iterating through N elements.
+    //!          Space complexity O(N) for the hashset and hashmap.
 
     //! Map of <nums[right_idx], curr_idx>
     std::unordered_map<int, int> visited_nums_map;
