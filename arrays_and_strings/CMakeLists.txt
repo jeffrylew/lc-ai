@@ -1,6 +1,7 @@
 set (
     cpp_files
     "3sum"
+    "3sum_closest"
     "container_with_most_water"
     "first_unique_character_in_a_string"
     "group_anagrams"
