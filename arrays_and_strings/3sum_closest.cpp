@@ -1,35 +1,49 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <algorithm>
+#include <limits>
 #include <vector>
 
-static int threeSumClosestFA(const std::vector<int>& nums, int target)
+static int threeSumClosestDS1(const std::vector<int>& nums, int target)
 {
     //! @details https://leetcode.com/explore/interview/card/amazon/76
     //!          /array-and-strings/2967/
 
-    auto sorted_nums = nums;
+    int minimum_difference {std::numeric_limits<int>::max()};
+
+    const auto nums_size   = static_cast<int>(std::ssize(nums));
+    auto       sorted_nums = nums;
     std::ranges::sort(sorted_nums);
 
-    const auto nums_size = static_cast<int>(std::ssize(nums));
-
-    int three_sum_closest {};
-
-    int right_idx {nums_size - 1};
-    for (int curr_idx = 0; curr_idx < nums_size; ++curr_idx)
+    for (int curr_idx = 0;
+         curr_idx < nums_size && minimum_difference != 0;
+         ++curr_idx)
     {
-        if (curr_idx >= right_idx)
+        int left_idx {curr_idx + 1};
+        int right_idx {nums_size - 1};
+
+        while (left_idx < right_idx)
         {
-            break;
+            const int three_sum {
+                nums.at(curr_idx) + nums.at(left_idx) + nums.at(right_idx)};
+
+            if (std::abs(target - three_sum) < std::abs(minimum_difference))
+            {
+                minimum_difference = target - three_sum;
+            }
+
+            if (three_sum < target)
+            {
+                ++left_idx;
+            }
+            else
+            {
+                --right_idx;
+            }
         }
-
-        const int curr_num {sorted_nums.at(curr_idx)};
-        const int right_num {sorted_nums.at(right_idx)};
-
-        //! @todo
     }
 
-    return three_sum_closest;
+    return target - minimum_difference;
 }
 
 TEST_CASE("Example 1", "[threeSumClosest]")
@@ -37,7 +51,7 @@ TEST_CASE("Example 1", "[threeSumClosest]")
     const std::vector<int> nums {-1, 2, 1, -4};
     constexpr int          target {1};
 
-    REQUIRE(2 == threeSumClosestFA(nums, target));
+    REQUIRE(2 == threeSumClosestDS1(nums, target));
 }
 
 TEST_CASE("Example 2", "[threeSumClosest]")
@@ -45,5 +59,5 @@ TEST_CASE("Example 2", "[threeSumClosest]")
     const std::vector<int> nums {0, 0, 0};
     constexpr int          target {1};
 
-    REQUIRE(0 == threeSumClosestFA(nums, target));
+    REQUIRE(0 == threeSumClosestDS1(nums, target));
 }
