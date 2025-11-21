@@ -8,6 +8,11 @@ static int threeSumClosestDS1(const std::vector<int>& nums, int target)
 {
     //! @details https://leetcode.com/explore/interview/card/amazon/76
     //!          /array-and-strings/2967/
+    //!
+    //!          Time complexity O(N ^ 2) where N = nums.size(). We have outer
+    //!          and inner loops, each going through N elements. Sorting the
+    //!          vector takes O(N * log N).
+    //!          Space complexity O(log N) for std::sort
 
     int minimum_difference {std::numeric_limits<int>::max()};
 
