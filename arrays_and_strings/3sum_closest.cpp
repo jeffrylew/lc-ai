@@ -51,12 +51,20 @@ static int threeSumClosestDS1(const std::vector<int>& nums, int target)
     return target - minimum_difference;
 }
 
+static int threeSumClosestDS2(const std::vector<int>& nums, int target)
+{
+    //! @details https://leetcode.com/problems/3sum-closest/editorial/
+
+    //! @todo
+}
+
 TEST_CASE("Example 1", "[threeSumClosest]")
 {
     const std::vector<int> nums {-1, 2, 1, -4};
     constexpr int          target {1};
 
     REQUIRE(2 == threeSumClosestDS1(nums, target));
+    REQUIRE(2 == threeSumClosestDS2(nums, target));
 }
 
 TEST_CASE("Example 2", "[threeSumClosest]")
@@ -65,4 +73,5 @@ TEST_CASE("Example 2", "[threeSumClosest]")
     constexpr int          target {1};
 
     REQUIRE(0 == threeSumClosestDS1(nums, target));
+    REQUIRE(0 == threeSumClosestDS2(nums, target));
 }
