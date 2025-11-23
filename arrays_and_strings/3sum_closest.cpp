@@ -54,6 +54,12 @@ static int threeSumClosestDS1(const std::vector<int>& nums, int target)
 static int threeSumClosestDS2(const std::vector<int>& nums, int target)
 {
     //! @details https://leetcode.com/problems/3sum-closest/editorial/
+    //!
+    //!          Time complexity O(N ^ 2 * log N) where N = nums.size(). Binary
+    //!          search takes O(log N) and we do it N times in the inner loop.
+    //!          Since we go through N elements in the outer loop, the overall
+    //!          complexity is O(N ^ 2 * log N).
+    //!          Space complexity O(log N) for std::sort.
 
     //! @todo
 }
