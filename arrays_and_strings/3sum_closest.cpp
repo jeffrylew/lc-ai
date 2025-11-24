@@ -30,7 +30,9 @@ static int threeSumClosestDS1(const std::vector<int>& nums, int target)
         while (left_idx < right_idx)
         {
             const int three_sum {
-                nums.at(curr_idx) + nums.at(left_idx) + nums.at(right_idx)};
+                sorted_nums.at(curr_idx)
+                + sorted_nums.at(left_idx)
+                + sorted_nums.at(right_idx)};
 
             if (std::abs(target - three_sum) < std::abs(minimum_difference))
             {
