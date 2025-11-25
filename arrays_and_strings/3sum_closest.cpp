@@ -1,6 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <algorithm>
+#include <iterator>
 #include <limits>
 #include <vector>
 
@@ -63,7 +64,47 @@ static int threeSumClosestDS2(const std::vector<int>& nums, int target)
     //!          complexity is O(N ^ 2 * log N).
     //!          Space complexity O(log N) for std::sort.
 
-    //! @todo
+    int minimum_difference {std::numeric_limits<int>::max()};
+
+    const auto nums_size   = static_cast<int>(std::ssize(nums));
+    auto       sorted_nums = nums;
+    std::ranges::sort(sorted_nums);
+
+    for (int curr_idx = 0;
+         curr_idx < nums_size && minimum_difference != 0;
+         ++curr_idx)
+    {
+        for (int next_idx = curr_idx + 1; next_idx < nums_size - 1; ++next_idx)
+        {
+            const int complement {
+                target - sorted_nums.at(curr_idx) - sorted_nums.at(next_idx)};
+
+            auto complement_it =
+                std::upper_bound(sorted_nums.begin() + next_idx + 1,
+                                 sorted_nums.end(),
+                                 complement);
+
+            const int hi_idx {
+                std::distance(sorted_nums.begin(), complement_it)};
+            const int lo_idx {hi_idx - 1};
+
+            if (hi_idx < nums_size
+                && std::abs(complement - sorted_nums.at(hi_idx))
+                    < std::abs(minimum_difference))
+            {
+                minimum_difference = complement - sorted_nums.at(hi_idx);
+            }
+
+            if (lo_idx < next_idx
+                && std::abs(complement - sorted_nums.at(lo_idx))
+                    < std::abs(minimum_difference))
+            {
+                minimum_difference = complement - sorted_nums.at(lo_idx);
+            }
+        }
+    }
+
+    return target - minimum_difference;
 }
 
 TEST_CASE("Example 1", "[threeSumClosest]")
