@@ -84,8 +84,8 @@ static int threeSumClosestDS2(const std::vector<int>& nums, int target)
                                  sorted_nums.end(),
                                  complement);
 
-            const int hi_idx {
-                std::distance(sorted_nums.begin(), complement_it)};
+            const auto hi_idx = static_cast<int>(
+                std::distance(sorted_nums.begin(), complement_it));
             const int lo_idx {hi_idx - 1};
 
             if (hi_idx < nums_size
