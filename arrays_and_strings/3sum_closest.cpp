@@ -95,7 +95,7 @@ static int threeSumClosestDS2(const std::vector<int>& nums, int target)
                 minimum_difference = complement - sorted_nums.at(hi_idx);
             }
 
-            if (lo_idx < next_idx
+            if (lo_idx > next_idx
                 && std::abs(complement - sorted_nums.at(lo_idx))
                     < std::abs(minimum_difference))
             {
