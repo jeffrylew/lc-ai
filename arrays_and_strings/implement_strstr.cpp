@@ -6,6 +6,9 @@ static int strStrFA(std::string haystack, std::string needle)
 {
     //! @details https://leetcode.com/explore/interview/card/amazon/76
     //!          /array-and-strings/2968/
+    //!
+    //!          Time complexity O(H) where H = haystack.size()
+    //!          Space complexity O(1)
 
     const auto haystack_size = static_cast<int>(std::ssize(haystack));
     const auto needle_size   = static_cast<int>(std::ssize(needle));
