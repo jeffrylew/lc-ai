@@ -45,12 +45,21 @@ static int strStrFA(std::string haystack, std::string needle)
     return -1;
 }
 
+static int strStrDS1(std::string haystack, std::string needle)
+{
+    //! @details https://leetcode.com/problems
+    //!          /find-the-index-of-the-first-occurrence-in-a-string/editorial/
+
+    //! @todo
+}
+
 TEST_CASE("Example 1", "[strStr]")
 {
     const std::string haystack {"sadbutsad"};
     const std::string needle {"sad"};
 
     REQUIRE(0 == strStrFA(haystack, needle));
+    REQUIRE(0 == strStrDS1(haystack, needle));
 }
 
 TEST_CASE("Example 2", "[strStr]")
@@ -59,4 +68,5 @@ TEST_CASE("Example 2", "[strStr]")
     const std::string needle {"leeto"};
 
     REQUIRE(-1 == strStrFA(haystack, needle));
+    REQUIRE(-1 == strStrDS1(haystack, needle));
 }
