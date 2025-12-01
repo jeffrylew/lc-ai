@@ -50,7 +50,28 @@ static int strStrDS1(std::string haystack, std::string needle)
     //! @details https://leetcode.com/problems
     //!          /find-the-index-of-the-first-occurrence-in-a-string/editorial/
 
-    //! @todo
+    const auto haystack_size = static_cast<int>(std::ssize(haystack));
+    const auto needle_size   = static_cast<int>(std::ssize(needle));
+
+    for (int window_start = 0;
+         window_start <= haystack_size - needle_size;
+         ++window_start)
+    {
+        for (int window_idx = 0; window_idx < needle_size; ++window_idx)
+        {
+            if (needle[window_idx] != haystack[window_start + window_idx])
+            {
+                break;
+            }
+
+            if (window_idx == needle_size - 1)
+            {
+                return window_start;
+            }
+        }
+    }
+
+    return -1;
 }
 
 TEST_CASE("Example 1", "[strStr]")
