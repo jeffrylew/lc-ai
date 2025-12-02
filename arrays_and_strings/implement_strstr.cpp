@@ -49,6 +49,12 @@ static int strStrDS1(std::string haystack, std::string needle)
 {
     //! @details https://leetcode.com/problems
     //!          /find-the-index-of-the-first-occurrence-in-a-string/editorial/
+    //!
+    //!          Time complexity O(H * N) where H = haystack.size() and
+    //!          N = needle.size(). For every window_start, we may have to
+    //!          iterate at most N times. There are H - N + 1 such window_starts
+    //!          which gives O((H - N + 1) * N) or O(H * N).
+    //!          Space complexity O(1).
 
     const auto haystack_size = static_cast<int>(std::ssize(haystack));
     const auto needle_size   = static_cast<int>(std::ssize(needle));
