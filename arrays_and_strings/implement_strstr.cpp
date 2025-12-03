@@ -1,6 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <string>
+#include <string_view>
 
 static int strStrFA(std::string haystack, std::string needle)
 {
@@ -80,6 +81,58 @@ static int strStrDS1(std::string haystack, std::string needle)
     return -1;
 }
 
+[[nodiscard]] constexpr int hash_value_DS2(std::string_view str_v,
+                                           int              radix,
+                                           int              mod,
+                                           int              needle_size)
+{
+    int  str_v_hash {};
+    long factor {1L};
+
+    for (int idx = needle_size - 1; idx >= 0; --idx)
+    {
+        str_v_hash =
+            (str_v_hash + static_cast<int>(str_v[idx] - 'a') * factor) % mod;
+        factor = (factor * radix) % mod;
+    }
+
+    return str_v_hash;
+}
+
+static int strStrDS2(std::string haystack, std::string needle)
+{
+    //! @details https://leetcode.com/problems
+    //!          /find-the-index-of-the-first-occurrence-in-a-string/editorial/
+
+    const auto needle_size   = static_cast<int>(std::ssize(needle));
+    const auto haystack_size = static_cast<int>(std::ssize(haystack));
+    if (haystack_size < needle_size)
+    {
+        return -1;
+    }
+
+    constexpr int number_system_base_radix {26};
+    constexpr int prime_number_mod {1000000033};
+    long          max_char_weight {1L};
+
+    for (int needle_idx = 0; needle_idx < needle_size; ++needle_idx)
+    {
+        max_char_weight =
+            (max_char_weight * number_system_base_radix) % prime_number_mod;
+    }
+
+    //! Compute hash of needle
+    constexpr long needle_hash {
+        hash_value_DS2(needle,
+                       number_system_base_radix,
+                       prime_number_mod,
+                       needle_size)};
+
+    long haystack_hash {};
+
+    //! @todo
+}
+
 TEST_CASE("Example 1", "[strStr]")
 {
     const std::string haystack {"sadbutsad"};
@@ -87,6 +140,7 @@ TEST_CASE("Example 1", "[strStr]")
 
     REQUIRE(0 == strStrFA(haystack, needle));
     REQUIRE(0 == strStrDS1(haystack, needle));
+    REQUIRE(0 == strStrDS2(haystack, needle));
 }
 
 TEST_CASE("Example 2", "[strStr]")
@@ -96,4 +150,5 @@ TEST_CASE("Example 2", "[strStr]")
 
     REQUIRE(-1 == strStrFA(haystack, needle));
     REQUIRE(-1 == strStrDS1(haystack, needle));
+    REQUIRE(-1 == strStrDS2(haystack, needle));
 }
