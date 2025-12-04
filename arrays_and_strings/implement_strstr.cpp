@@ -130,7 +130,51 @@ static int strStrDS2(std::string haystack, std::string needle)
 
     long haystack_hash {};
 
-    //! @todo
+    //! Check for each needle_size-substring of haystack,
+    //! starting at index window_start
+    for (int window_start = 0;
+         window_start <= haystack_size - needle_size;
+         ++window_start)
+    {
+        if (window_start == 0)
+        {
+            //! Compute hash of the first substring
+            haystack_hash = hash_value_DS2(haystack,
+                                           number_system_base_radix,
+                                           prime_number_mod,
+                                           needle_size);
+        }
+        else
+        {
+            //! Update hash using previous hash value in O(1)
+            haystack_hash =
+                ((haystack_hash * number_system_base_radix) % prime_number_mod
+                - (static_cast<int>(haystack[window_start - 1] - 'a')
+                * max_char_weight) % prime_number_mod
+                + static_cast<int>(haystack[window_start + needle_size - 1]
+                - 'a') + prime_number_mod) % prime_number_mod;
+        }
+
+        //! If the hash matches, check each character
+        //! since spurious hits can exist due to mod
+        if (needle_hash == haystack_hash)
+        {
+            for (int needle_idx = 0; needle_idx < needle_size; ++needle_idx)
+            {
+                if (needle[needle_idx] != haystack[needle_idx + window_start])
+                {
+                    break;
+                }
+
+                if (needle_idx == needle_size - 1)
+                {
+                    return window_start;
+                }
+            }
+        }
+    }
+
+    return -1;
 }
 
 TEST_CASE("Example 1", "[strStr]")
