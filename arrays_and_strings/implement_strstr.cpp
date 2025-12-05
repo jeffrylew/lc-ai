@@ -103,6 +103,9 @@ static int strStrDS2(std::string haystack, std::string needle)
 {
     //! @details https://leetcode.com/problems
     //!          /find-the-index-of-the-first-occurrence-in-a-string/editorial/
+    //!
+    //!          Time complexity O(needle_size * haystack_size).
+    //!          Space complexity O(1).
 
     const auto needle_size   = static_cast<int>(std::ssize(needle));
     const auto haystack_size = static_cast<int>(std::ssize(haystack));
