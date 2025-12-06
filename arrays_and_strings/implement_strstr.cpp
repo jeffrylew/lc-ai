@@ -104,7 +104,18 @@ static int strStrDS2(std::string haystack, std::string needle)
     //! @details https://leetcode.com/problems
     //!          /find-the-index-of-the-first-occurrence-in-a-string/editorial/
     //!
-    //!          Time complexity O(needle_size * haystack_size).
+    //!          Time complexity O(needle_size * haystack_size). In the worst
+    //!          case, needle_hash might match the hash value of all haystack
+    //!          substrings so we'd have to iterate character by character in
+    //!          each window. There are haystack_size - needle_size + 1 such
+    //!          windows of length needle_size. In the best case, if no hash
+    //!          value of the haystack substring matches with needle_hash then
+    //!          we don't have to iterate character by character in each window
+    //!          for O(haystack_size + needle_size). Computing the hash value of
+    //!          haystack and needle takes O(needle_size). Traversing all
+    //!          windows takes O(haystack_size - needle_size). During traversal,
+    //!          we do constant numbers of operations in O(haystack_size -
+    //!          needle_size + 2 * needle_size) = O(haystack_size + needle_size)
     //!          Space complexity O(1).
 
     const auto needle_size   = static_cast<int>(std::ssize(needle));
