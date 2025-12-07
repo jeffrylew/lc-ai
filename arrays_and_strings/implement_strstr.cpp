@@ -116,7 +116,9 @@ static int strStrDS2(std::string haystack, std::string needle)
     //!          windows takes O(haystack_size - needle_size). During traversal,
     //!          we do constant numbers of operations in O(haystack_size -
     //!          needle_size + 2 * needle_size) = O(haystack_size + needle_size)
-    //!          Space complexity O(1).
+    //!          Space complexity O(1). There are a handful of variables like
+    //!          needle_hash, haystack_hash, window_start, etc. that use
+    //!          constant space.
 
     const auto needle_size   = static_cast<int>(std::ssize(needle));
     const auto haystack_size = static_cast<int>(std::ssize(haystack));
