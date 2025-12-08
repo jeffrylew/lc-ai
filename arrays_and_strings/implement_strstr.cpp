@@ -2,6 +2,7 @@
 
 #include <string>
 #include <string_view>
+#include <utility>
 
 static int strStrFA(std::string haystack, std::string needle)
 {
@@ -193,6 +194,38 @@ static int strStrDS2(std::string haystack, std::string needle)
     return -1;
 }
 
+constexpr int radix1 {26};
+constexpr int radix2 {27};
+constexpr int modulus1 {1000000033};
+constexpr int modulus2 {2147483647};
+
+//! @brief Return pair of hash values
+std::pair<long, long> hash_pair_DS3(std::string_view str, int needle_size)
+{
+    long hash1 {};
+    long hash2 {};
+    long factor1 {1};
+    long factor2 {1};
+
+    for (int needle_idx = needle_size - 1; needle_idx >= 0; --needle_idx)
+    {
+        hash1 += (static_cast<int>(str[needle_idx] - 'a') * factor1) % modulus1;
+        factor1 = (factor1 * radix1) % modulus1;
+        hash2 += (static_cast<int>(str[needle_idx] - 'a') * factor2) % modulus2;
+        factor2 = (factor2 * radix2) % modulus2;
+    }
+
+    return {hash1 % modulus1, hash2 % modulus2};
+}
+
+static int strStrDS3(std::string haystack, std::string needle)
+{
+    //! @details https://leetcode.com/problems
+    //!          /find-the-index-of-the-first-occurrence-in-a-string/editorial/
+
+    //! @todo
+}
+
 TEST_CASE("Example 1", "[strStr]")
 {
     const std::string haystack {"sadbutsad"};
@@ -201,6 +234,7 @@ TEST_CASE("Example 1", "[strStr]")
     REQUIRE(0 == strStrFA(haystack, needle));
     REQUIRE(0 == strStrDS1(haystack, needle));
     REQUIRE(0 == strStrDS2(haystack, needle));
+    REQUIRE(0 == strStrDS3(haystack, needle));
 }
 
 TEST_CASE("Example 2", "[strStr]")
@@ -211,4 +245,5 @@ TEST_CASE("Example 2", "[strStr]")
     REQUIRE(-1 == strStrFA(haystack, needle));
     REQUIRE(-1 == strStrDS1(haystack, needle));
     REQUIRE(-1 == strStrDS2(haystack, needle));
+    REQUIRE(-1 == strStrDS3(haystack, needle));
 }
