@@ -223,6 +223,26 @@ static int strStrDS3(std::string haystack, std::string needle)
     //! @details https://leetcode.com/problems
     //!          /find-the-index-of-the-first-occurrence-in-a-string/editorial/
 
+    const auto needle_size   = static_cast<int>(std::ssize(needle));
+    const auto haystack_size = static_cast<int>(std::ssize(haystack));
+    if (haystack_size < needle_size)
+    {
+        return -1;
+    }
+
+    long max_weight1 {1L};
+    long max_weight2 {1L};
+    for (int needle_idx = 0; needle_idx < needle_size; ++needle_idx)
+    {
+        max_weight1 = (max_weight1 * radix1) % modulus1;
+        max_weight2 = (max_weight2 * radix2) % modulus2;
+    }
+
+    //! Compute hash pair of needle
+    const auto& [needle_hash1, needle_hash2] =
+        hash_pair_DS3(needle, needle_size);
+    auto haystack_hash = std::make_pair<long, long>(0L, 0L);
+
     //! @todo
 }
 
