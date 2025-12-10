@@ -243,7 +243,25 @@ static int strStrDS3(std::string haystack, std::string needle)
         hash_pair_DS3(needle, needle_size);
     auto haystack_hash = std::make_pair<long, long>(0L, 0L);
 
-    //! @todo
+    //! Check for each needle_size-substring of haystack,
+    //! starting at index window_start
+    for (int window_start = 0;
+         window_start <= haystack_size - needle_size;
+         ++window_start)
+    {
+        if (window_start == 0)
+        {
+            //! Compute hash_pair_DS3 of first substring
+            haystack_hash = hash_pair_DS3(haystack, needle_size);
+        }
+        else
+        {
+            //! Update hash pair using previous hash value in O(1)
+            //! @todo
+        }
+    }
+
+    return -1;
 }
 
 TEST_CASE("Example 1", "[strStr]")
