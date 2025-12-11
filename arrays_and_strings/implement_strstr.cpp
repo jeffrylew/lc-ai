@@ -257,6 +257,13 @@ static int strStrDS3(std::string haystack, std::string needle)
         else
         {
             //! Update hash pair using previous hash value in O(1)
+            haystack_hash.first =
+                ((haystack_hash.first * radix1) % modulus1
+                - static_cast<int>(haystack[window_start - 1] - 'a')
+                * max_weight1) % modulus1 + static_cast<int>(
+                    haystack[window_start + needle_size - 1] - 'a')
+                + modulus1) % modulus1;
+
             //! @todo
         }
     }
