@@ -264,7 +264,12 @@ static int strStrDS3(std::string haystack, std::string needle)
                     haystack[window_start + needle_size - 1] - 'a')
                 + modulus1) % modulus1;
 
-            //! @todo
+            haystack_hash.second =
+                ((haystack_hash.second * radix2) % modulus2
+                - static_cast<int>(haystack[window_start - 1] - 'a')
+                * max_weight2) % modulus2 + static_cast<int>(
+                    haystack[window_start + needle_size - 1] - 'a')
+                + modulus2) % modulus2;
         }
     }
 
