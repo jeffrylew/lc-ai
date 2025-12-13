@@ -271,6 +271,14 @@ static int strStrDS3(std::string haystack, std::string needle)
                     haystack[window_start + needle_size - 1] - 'a')
                 + modulus2) % modulus2;
         }
+
+        //! If the hash matches, return immediately
+        //! Probability of spurious hit tends to zero
+        if (needle_hash1 == haystack_hash.first
+            && needle_hash2 == haystack_hash.second)
+        {
+            return window_start;
+        }
     }
 
     return -1;
