@@ -222,6 +222,17 @@ static int strStrDS3(std::string haystack, std::string needle)
 {
     //! @details https://leetcode.com/problems
     //!          /find-the-index-of-the-first-occurrence-in-a-string/editorial/
+    //!
+    //!          Time complexity O(N) where N = haystack.size(). We do O(M) work
+    //!          to compute hash pairs of needle, where M = needle.size(). To
+    //!          check for a match, we perform N - M + 1 iterations where we do
+    //!          O(1) work N - M times and O(M) work once. Hence, the total time
+    //!          complexity is O(M + (N - M) * 1 + (1) * M) = O(N + M). We also
+    //!          only proceed when N >= M, resulting in O(N). In this case,
+    //!          O(M + N) has an upper bound of O(2 * N) which is the reason we
+    //!          can ignore the M term. When N < M, we return -1 so N dominates
+    //!          the time complexity.
+    //!          Space complexity O(1).
 
     const auto needle_size   = static_cast<int>(std::ssize(needle));
     const auto haystack_size = static_cast<int>(std::ssize(haystack));
