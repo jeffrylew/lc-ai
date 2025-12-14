@@ -295,6 +295,22 @@ static int strStrDS3(std::string haystack, std::string needle)
     return -1;
 }
 
+static int strStrDS4(std::string haystack, std::string needle)
+{
+    //! @details https://leetcode.com/problems
+    //!          /find-the-index-of-the-first-occurrence-in-a-string/editorial/
+
+    const auto haystack_size = static_cast<int>(std::ssize(haystack));
+    const auto needle_size   = static_cast<int>(std::ssize(needle));
+
+    if (haystack_size < needle_size)
+    {
+        return -1;
+    }
+
+    //! @todo
+}
+
 TEST_CASE("Example 1", "[strStr]")
 {
     const std::string haystack {"sadbutsad"};
@@ -304,6 +320,7 @@ TEST_CASE("Example 1", "[strStr]")
     REQUIRE(0 == strStrDS1(haystack, needle));
     REQUIRE(0 == strStrDS2(haystack, needle));
     REQUIRE(0 == strStrDS3(haystack, needle));
+    REQUIRE(0 == strStrDS4(haystack, needle));
 }
 
 TEST_CASE("Example 2", "[strStr]")
@@ -315,4 +332,5 @@ TEST_CASE("Example 2", "[strStr]")
     REQUIRE(-1 == strStrDS1(haystack, needle));
     REQUIRE(-1 == strStrDS2(haystack, needle));
     REQUIRE(-1 == strStrDS3(haystack, needle));
+    REQUIRE(-1 == strStrDS4(haystack, needle));
 }
