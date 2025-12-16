@@ -308,7 +308,41 @@ static int strStrDS4(std::string haystack, std::string needle)
         return -1;
     }
 
-    //! @todo
+    //! Preprocessing
+
+    std::vector<int> longest_border(needle_size);
+
+    //! Length of longest border for prefix before it
+    int prev_longest_border {};
+
+    //! Iterate from needle_idx - 1. longest_border[0] will always be 0
+    int needle_idx {1};
+
+    while (needle_idx < needle_size)
+    {
+        if (needle[needle_idx] == needle[prev_longest_border])
+        {
+            //! Length of longest border increased
+            ++prev_longest_border;
+            longest_border[needle_idx] = prev_longest_border;
+            ++needle_idx;
+        }
+        else
+        {
+            //! Only empty border exists
+            if (prev_longest_border == 0)
+            {
+                longest_border[needle_idx] = 0;
+                ++needle_idx;
+            }
+            else
+            {
+                //! Try finding longest border for this needle_idx
+                //! with reduced prev_longest_border
+                prev_longest_border = longest_border[prev_longest_border - 1];
+            }
+        }
+    }
 }
 
 TEST_CASE("Example 1", "[strStr]")
