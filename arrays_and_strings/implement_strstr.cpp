@@ -343,6 +343,46 @@ static int strStrDS4(std::string haystack, std::string needle)
             }
         }
     }
+
+    //! Searching
+
+    //! Pointer for haystack
+    int haystack_ptr {};
+
+    //! Pointer for needle. Indicates number of chars matched in current window.
+    int needle_ptr {};
+
+    while (haystack_ptr < haystack_size)
+    {
+        if (haystack[haystack_ptr] == needle[needle_ptr])
+        {
+            //! Matched, increment both
+            ++haystack_ptr;
+            ++needle_ptr;
+
+            //! All chars matched
+            if (needle_ptr == needle_size)
+            {
+                //! needle_size chars behind last match is start of window
+                return haystack_ptr - needle_size;
+            }
+        }
+        else
+        {
+            if (needle_ptr == 0)
+            {
+                //! No match
+                ++haystack_ptr;
+            }
+            else
+            {
+                //! Optimally shift left needle_ptr. Don't change haystack_ptr.
+                needle_ptr = longest_border[needle_ptr - 1];
+            }
+        }
+    }
+
+    return -1;
 }
 
 TEST_CASE("Example 1", "[strStr]")
