@@ -299,6 +299,13 @@ static int strStrDS4(std::string haystack, std::string needle)
 {
     //! @details https://leetcode.com/problems
     //!          /find-the-index-of-the-first-occurrence-in-a-string/editorial/
+    //!
+    //!          Time complexity O(N) where N = haystack.size() and
+    //!          M = needle.size(). If N < M then we immediately return -1 in
+    //!          O(1). Otherwise, preprocessing takes O(M) and searching takes
+    //!          O(N).
+    //!          Space complexity O(M). To store the longest_border vector, we
+    //!          need O(M) extra space.
 
     const auto haystack_size = static_cast<int>(std::ssize(haystack));
     const auto needle_size   = static_cast<int>(std::ssize(needle));
