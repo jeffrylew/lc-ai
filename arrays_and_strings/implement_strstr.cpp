@@ -303,7 +303,22 @@ static int strStrDS4(std::string haystack, std::string needle)
     //!          Time complexity O(N) where N = haystack.size() and
     //!          M = needle.size(). If N < M then we immediately return -1 in
     //!          O(1). Otherwise, preprocessing takes O(M) and searching takes
-    //!          O(N).
+    //!          O(N). In the case of "match" or "mismatch (empty prev border)",
+    //!          we increment needle_idx in O(1) when preprocessing. In the case
+    //!          of "mismatch (non-empty prev border)", we reduce
+    //!          prev_longest_border to longest_border[prev_longest_border - 1].
+    //!          i.e. we try to reduce by the number of while loop iterations,
+    //!          where there are at most M - 1 reductions in O(M).
+    //!          When searching, we never backtrack/reset haystack_ptr and only
+    //!          increment it by 1 in matching or zero-matching. In partial
+    //!          matching, we don't immediately increment and try to reduce to a
+    //!          condition of matching or zero-matching. We set needle_ptr to
+    //!          longest_border[needle_ptr - 1], which always reduces to 0 or
+    //!          matches. The max number of rollbacks of needle_ptr is bounded
+    //!          by needle_ptr. For any mismatch, we can only roll back as much
+    //!          as we have advanced up to the mismatch. Thus, searching is
+    //!          O(2N) = O(N). The time complexity is O(M + N), where N >= M
+    //!          so we can ignore M. The final upper bound is O(2N) = O(N).
     //!          Space complexity O(M). To store the longest_border vector, we
     //!          need O(M) extra space.
 
