@@ -22,14 +22,21 @@ static int compareVersionFA(std::string version1, std::string version2)
         {
             ++v1_dot_count;
         }
+        else
+        {
+            sub_v1_val =
+                10 * sub_v1_val + static_cast<int>(version1[v1_idx] - '0');
+        }
 
         if (version2[v2_idx] == '.')
         {
             ++v2_dot_count;
         }
-
-        sub_v1_val = 10 * sub_v1_val + static_cast<int>(version1[v1_idx] - '0');
-        sub_v2_val = 10 * sub_v2_val + static_cast<int>(version2[v2_idx] - '0');
+        else
+        {
+            sub_v2_val =
+                10 * sub_v2_val + static_cast<int>(version2[v2_idx] - '0');
+        }
 
         if (v1_dot_count > 0 && v1_dot_count == v2_dot_count)
         {
@@ -58,10 +65,13 @@ static int compareVersionFA(std::string version1, std::string version2)
         if (version1[v1_idx] == '.')
         {
             sub_v1_val = 0;
-            ++v1_idx;
+        }
+        else
+        {
+            sub_v1_val =
+                10 * sub_v1_val + static_cast<int>(version1[v1_idx] - '0');
         }
 
-        sub_v1_val = 10 * sub_v1_val + static_cast<int>(version1[v1_idx] - '0');
         if (sub_v1_val > 0)
         {
             return 1;
@@ -75,10 +85,13 @@ static int compareVersionFA(std::string version1, std::string version2)
         if (version2[v2_idx] == '.')
         {
             sub_v2_val = 0;
-            ++v2_idx;
+        }
+        else
+        {
+            sub_v2_val =
+                10 * sub_v2_val + static_cast<int>(version2[v2_idx] - '0');
         }
 
-        sub_v2_val = 10 * sub_v2_val + static_cast<int>(version2[v2_idx] - '0');
         if (sub_v2_val > 0)
         {
             return -1;
