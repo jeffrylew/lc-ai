@@ -1,6 +1,10 @@
 #include <catch2/catch_test_macros.hpp>
 
+#include <algorithm>
+#include <sstream>
 #include <string>
+#include <utility>
+#include <vector>
 
 static int compareVersionFA(std::string version1, std::string version2)
 {
@@ -106,17 +110,59 @@ static int compareVersionFA(std::string version1, std::string version2)
     return 0;
 }
 
+static int compareVersionDS1(std::string version1, std::string version2)
+{
+    //! @details https://leetcode.com/problems/compare-version-numbers/editorial
+
+    std::vector<std::string> tokens1;
+    std::vector<std::string> tokens2;
+    std::istringstream       iss1(version1);
+    std::istringstream       iss2(version2);
+    std::string              token;
+
+    while (std::getline(iss1, token, '.'))
+    {
+        tokens1.push_back(std::move(token));
+    }
+
+    while (std::getline(iss2, token, '.'))
+    {
+        tokens2.push_back(std::move(token));
+    }
+
+    int val1 {};
+    int val2 {};
+    for (std::size_t idx = 0;
+         idx < std::max(tokens1.size(), tokens2.size());
+         ++idx)
+    {
+        val1 = idx < tokens1.size() ? std::stoi(tokens1[idx]) : 0;
+        val2 = idx < tokens2.size() ? std::stoi(tokens2[idx]) : 0;
+
+        if (val1 != val2)
+        {
+            return val1 > val2 ? 1 : -1;
+        }
+    }
+
+    //! The versions are equal
+    return 0;
+}
+
 TEST_CASE("Example 1", "[compareVersion]")
 {
     REQUIRE(-1 == compareVersionFA("1.2", "1.10"));
+    REQUIRE(-1 == compareVersionDS1("1.2", "1.10"));
 }
 
 TEST_CASE("Example 2", "[compareVersion]")
 {
     REQUIRE(0 == compareVersionFA("1.01", "1.001"));
+    REQUIRE(0 == compareVersionDS1("1.01", "1.001"));
 }
 
 TEST_CASE("Example 3", "[compareVersion]")
 {
     REQUIRE(0 == compareVersionFA("1.0", "1.0.0.0"));
+    REQUIRE(0 == compareVersionDS1("1.0", "1.0.0.0"));
 }
