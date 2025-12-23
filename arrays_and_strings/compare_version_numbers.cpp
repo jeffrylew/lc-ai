@@ -4,6 +4,8 @@
 
 static int compareVersionFA(std::string version1, std::string version2)
 {
+    //! @details First attempt solution does not pass Example 1
+
     const auto v1_size = static_cast<int>(std::ssize(version1));
     const auto v2_size = static_cast<int>(std::ssize(version2));
 
@@ -38,6 +40,9 @@ static int compareVersionFA(std::string version1, std::string version2)
                 10 * sub_v2_val + static_cast<int>(version2[v2_idx] - '0');
         }
 
+        /*
+         * This part returns 1 for Example 1 instead of -1
+         *
         if (v1_dot_count > 0 && v1_dot_count == v2_dot_count)
         {
             if (sub_v1_val < sub_v2_val)
@@ -52,13 +57,11 @@ static int compareVersionFA(std::string version1, std::string version2)
             sub_v1_val = 0;
             sub_v2_val = 0;
         }
+         */
 
         ++v1_idx;
         ++v2_idx;
     }
-
-    sub_v1_val = 0;
-    sub_v2_val = 0;
 
     while (v1_idx < v1_size)
     {
