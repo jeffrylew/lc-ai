@@ -114,7 +114,9 @@ static int compareVersionDS1(std::string version1, std::string version2)
 {
     //! @details https://leetcode.com/problems/compare-version-numbers/editorial
     //!
-    //!          Time complexity O(N * M)
+    //!          Time complexity O(N + M) where N and M are lengths of input
+    //!          strings.
+    //!          Space complexity O(N + M) for vectors tokens1 and tokens2
 
     std::vector<std::string> tokens1;
     std::vector<std::string> tokens2;
