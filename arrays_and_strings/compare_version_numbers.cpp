@@ -113,6 +113,8 @@ static int compareVersionFA(std::string version1, std::string version2)
 static int compareVersionDS1(std::string version1, std::string version2)
 {
     //! @details https://leetcode.com/problems/compare-version-numbers/editorial
+    //!
+    //!          Time complexity O(N * M)
 
     std::vector<std::string> tokens1;
     std::vector<std::string> tokens2;
