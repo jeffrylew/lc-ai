@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <sstream>
 #include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 
@@ -153,20 +154,78 @@ static int compareVersionDS1(std::string version1, std::string version2)
     return 0;
 }
 
+[[nodiscard]] static std::pair<int, int>
+    get_next_chunk(std::string_view version,
+                   int              chunk_size,
+                   int              chunk_start_idx)
+{
+    if (chunk_start_idx > chunk_size - 1)
+    {
+        return {0, chunk_start_idx};
+    }
+
+    int chunk_end_idx = chunk_start_idx;
+    while (chunk_end_idx < chunk_size && version[chunk_end_idx] != '.')
+    {
+        ++chunk_end_idx;
+    }
+
+    const std::string subversion_str {
+        version.substr(chunk_start_idx,
+                       chunk_end_idx != chunk_size - 1
+                           ? chunk_end_idx - chunk_start_idx
+                           : chunk_size - chunk_start_idx)};
+    const int subversion {std::stoi(subversion_str)};
+
+    return {subversion, chunk_end_idx + 1};
+}
+
+static int compareVersionDS2(std::string version1, std::string version2)
+{
+    //! @details https://leetcode.com/problems/compare-version-numbers/editorial
+
+    int v1_idx {};
+    int v2_idx {};
+
+    const auto v1_size = static_cast<int>(std::ssize(version1));
+    const auto v2_size = static_cast<int>(std::ssize(version2));
+
+    while (v1_idx < v1_size || v2_idx < v2_size)
+    {
+        const auto [subversion1, version1_idx] =
+            get_next_chunk(version1, v1_size, v1_idx);
+        v1_idx = version1_idx;
+
+        const auto [subversion2, version2_idx] =
+            get_next_chunk(version2, v2_size, v2_idx);
+        v2_idx = version2_idx;
+
+        if (subversion1 != subversion2)
+        {
+            return subversion1 > subversion2 ? 1 : -1;
+        }
+    }
+
+    return 0;
+}
+
 TEST_CASE("Example 1", "[compareVersion]")
 {
     REQUIRE(-1 == compareVersionFA("1.2", "1.10"));
     REQUIRE(-1 == compareVersionDS1("1.2", "1.10"));
+    REQUIRE(-1 == compareVersionDS2("1.2", "1.10"));
 }
 
 TEST_CASE("Example 2", "[compareVersion]")
 {
     REQUIRE(0 == compareVersionFA("1.01", "1.001"));
     REQUIRE(0 == compareVersionDS1("1.01", "1.001"));
+    REQUIRE(0 == compareVersionDS2("1.01", "1.001"));
 }
 
 TEST_CASE("Example 3", "[compareVersion]")
 {
     REQUIRE(0 == compareVersionFA("1.0", "1.0.0.0"));
     REQUIRE(0 == compareVersionDS1("1.0", "1.0.0.0"));
+    REQUIRE(0 == compareVersionDS2("1.0", "1.0.0.0"));
 }
