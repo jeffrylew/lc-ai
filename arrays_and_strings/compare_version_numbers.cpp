@@ -183,6 +183,10 @@ static int compareVersionDS1(std::string version1, std::string version2)
 static int compareVersionDS2(std::string version1, std::string version2)
 {
     //! @details https://leetcode.com/problems/compare-version-numbers/editorial
+    //!
+    //!          Time complexity O(max(N, M)) where N and M are the lengths of
+    //!          the input strings respectively.
+    //!          Space complexity O(max(N, M)).
 
     int v1_idx {};
     int v2_idx {};
