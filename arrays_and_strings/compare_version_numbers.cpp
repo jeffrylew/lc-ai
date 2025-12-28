@@ -186,7 +186,9 @@ static int compareVersionDS2(std::string version1, std::string version2)
     //!
     //!          Time complexity O(max(N, M)) where N and M are the lengths of
     //!          the input strings respectively.
-    //!          Space complexity O(max(N, M)).
+    //!          Space complexity O(max(N, M)). We additional space to store a
+    //!          substring of the input string for integer conversion. In the
+    //!          worst case, the substring could be the original string.
 
     int v1_idx {};
     int v2_idx {};
