@@ -10,6 +10,7 @@ set (
     "integer_to_roman"
     "longest_substring_without_repeating_characters"
     "roman_to_integer"
+    "rotate_image"
     "string_to_integer_atoi"
     "two_sum"
 )
