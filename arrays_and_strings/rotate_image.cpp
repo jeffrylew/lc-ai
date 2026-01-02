@@ -6,6 +6,10 @@ static void rotateDS1(std::vector<std::vector<int>>& matrix)
 {
     //! @details https://leetcode.com/explore/interview/card/amazon/76
     //!          /array-and-strings/2969/
+    //!
+    //!          Time complexity O(M) where M = number of cells in the matrix.
+    //!          Each cell is read and written once.
+    //!          Space complexity O(1).
 
     const auto n = static_cast<int>(std::ssize(matrix));
 
