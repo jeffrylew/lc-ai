@@ -1,5 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 
+#include <algorithm>
 #include <vector>
 
 static void rotateDS1(std::vector<std::vector<int>>& matrix)
@@ -27,6 +28,26 @@ static void rotateDS1(std::vector<std::vector<int>>& matrix)
     }
 }
 
+static void transpose(std::vector<std::vector<int>>& matrix)
+{
+    const auto matrix_size = static_cast<int>(std::ssize(matrix));
+
+    for (int i = 0; i < matrix_size; ++i)
+    {
+        for (int j = i + 1; j < matrix_size; ++j)
+        {
+            std::swap(matrix[j][i], matrix[i][j]);
+        }
+    }
+}
+
+static void rotateDS2(std::vector<std::vector<int>>& matrix)
+{
+    //! @details https://leetcode.com/problems/rotate-image/editorial/
+
+    transpose(matrix);
+}
+
 TEST_CASE("Example 1", "[rotate]")
 {
     const std::vector<std::vector<int>> matrix {
@@ -37,6 +58,7 @@ TEST_CASE("Example 1", "[rotate]")
         {7, 4, 1}, {8, 5, 2}, {9, 6, 3}};
 
     REQUIRE(expected_output == rotateDS1(matrix_copy));
+    REQUIRE(expected_output == rotateDS2(matrix_copy));
 }
 
 TEST_CASE("Example 2", "[rotate]")
@@ -49,4 +71,5 @@ TEST_CASE("Example 2", "[rotate]")
         {15, 13, 2, 5}, {14, 3, 4, 1}, {12, 6, 8, 9}, {16, 7, 10, 11}};
 
     REQUIRE(expected_output == rotateDS1(matrix_copy));
+    REQUIRE(expected_output == rotateDS2(matrix_copy));
 }
