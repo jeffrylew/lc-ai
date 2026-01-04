@@ -57,6 +57,12 @@ static void reflect(std::vector<std::vector<int>>& matrix)
 static void rotateDS2(std::vector<std::vector<int>>& matrix)
 {
     //! @details https://leetcode.com/problems/rotate-image/editorial/
+    //!
+    //!          Time complexity O(M) where M = number of cells in the grid. We
+    //!          transpose the matrix and reverse each row. Transposing the
+    //!          matrix costs O(M) since we're moving the value of each cell
+    //!          once. Reversing each row also costs O(M) for the same reason.
+    //!          Space complexity O(1).
 
     transpose(matrix);
     reflect(matrix);
