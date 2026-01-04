@@ -41,11 +41,25 @@ static void transpose(std::vector<std::vector<int>>& matrix)
     }
 }
 
+static void reflect(std::vector<std::vector<int>>& matrix)
+{
+    const auto matrix_size = static_cast<int>(std::ssize(matrix));
+
+    for (int i = 0; i < matrix_size; ++i)
+    {
+        for (int j = 0; j < matrix_size / 2; ++j)
+        {
+            std::swap(matrix[i][j], matrix[i][matrix_size - j - 1]);
+        }
+    }
+}
+
 static void rotateDS2(std::vector<std::vector<int>>& matrix)
 {
     //! @details https://leetcode.com/problems/rotate-image/editorial/
 
     transpose(matrix);
+    reflect(matrix);
 }
 
 TEST_CASE("Example 1", "[rotate]")
