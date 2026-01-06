@@ -9,6 +9,7 @@ set (
     "implement_strstr"
     "integer_to_roman"
     "longest_substring_without_repeating_characters"
+    "product_of_array_except_self"
     "roman_to_integer"
     "rotate_image"
     "string_to_integer_atoi"
