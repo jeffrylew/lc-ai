@@ -57,12 +57,46 @@ static std::vector<int> productExceptSelfDS1(const std::vector<int>& nums)
     return product_except_self;
 }
 
+static std::vector<int> productExceptSelfDS2(const std::vector<int>& nums)
+{
+    //! @details leetcode.com/problems/product-of-array-except-self/editorial/
+
+    const auto nums_size = static_cast<int>(std::ssize(nums));
+
+    std::vector<int> product_except_self(nums.size());
+
+    //! product_except_self[idx] contains product of all elements to the left
+    //! @note There are no elements left of index 0, product_except_self[0] = 1
+    product_except_self[0] = 1;
+    for (int idx = 1; idx < nums_size; ++idx)
+    {
+        //! product_except_self[idx - 1] already contains the product of
+        //! elements to the left of idx - 1. Multiplying it with nums[idx - 1]
+        //! gives the product of all elements to the left of index idx
+        product_except_self[idx] = nums[idx - 1] * product_except_self[idx - 1];
+    }
+
+    //! right_product contains the product of all elements to the right
+    //! @note There are no elements to the right of nums_size - 1 so
+    //!       right_product = 1
+    int right_product {1};
+    for (int idx = nums_size - 1; idx >= 0; --idx)
+    {
+        //! right_product contains product of all elements to the right of idx
+        product_except_self[idx] *= right_product;
+        right_product *= nums[idx];
+    }
+
+    return product_except_self;
+}
+
 TEST_CASE("Example 1", "[productExceptSelf]")
 {
     const std::vector<int> nums {1, 2, 3, 4};
     const std::vector<int> expected_output {24, 12, 8, 6};
 
     REQUIRE(expected_output == productExceptSelfDS1(nums));
+    REQUIRE(expected_output == productExceptSelfDS2(nums));
 }
 
 TEST_CASE("Example 2", "[productExceptSelf]")
@@ -71,4 +105,5 @@ TEST_CASE("Example 2", "[productExceptSelf]")
     const std::vector<int> expected_output {0, 0, 9, 0, 0};
 
     REQUIRE(expected_output == productExceptSelfDS1(nums));
+    REQUIRE(expected_output == productExceptSelfDS2(nums));
 }
