@@ -7,6 +7,14 @@ static std::vector<int> productExceptSelfDS1(const std::vector<int>& nums)
 {
     //! @details https://leetcode.com/explore/interview/card/amazon/76
     //!          /array-and-strings/499/
+    //!
+    //!          Time complexity O(N) where N = nums.size(). We iterate once to
+    //!          construct left_product, once to construct right_product, and
+    //!          once to construct the answer product_except_self from
+    //!          left_product and right_product.
+    //!          Space complexity O(N) used by the left_product and
+    //!          right_product intermediate vectors to keep track of element
+    //!          products to the left and right.
 
     const auto nums_size = static_cast<int>(std::ssize(nums));
 
