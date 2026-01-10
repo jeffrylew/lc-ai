@@ -60,6 +60,10 @@ static std::vector<int> productExceptSelfDS1(const std::vector<int>& nums)
 static std::vector<int> productExceptSelfDS2(const std::vector<int>& nums)
 {
     //! @details leetcode.com/problems/product-of-array-except-self/editorial/
+    //!
+    //!          Time complexity O(N) where N = nums.size(). We iterate once to
+    //!          construct product_except_self and once to update it.
+    //!          Space complexity O(1).
 
     const auto nums_size = static_cast<int>(std::ssize(nums));
 
