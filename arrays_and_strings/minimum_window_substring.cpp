@@ -61,17 +61,32 @@ static std::string minWindowFA(std::string s, std::string t)
     return std::string {min_window_substrv};
 }
 
+static std::string minWindowDS1(std::string s, std::string t)
+{
+    //! @details leetcode.com/problems/minimum-window-substring/editorial
+
+    if (s.empty() || t.empty())
+    {
+        return {};
+    }
+
+    //! @todo
+}
+
 TEST_CASE("Example 1", "[minWindow]")
 {
     REQUIRE("BANC" == minWindowFA("ADOBECODEBANC", "ABC"));
+    REQUIRE("BANC" == minWindowDS1("ADOBECODEBANC", "ABC"));
 }
 
 TEST_CASE("Example 2", "[minWindow]")
 {
     REQUIRE("a" == minWindowFA("a", "a"));
+    REQUIRE("a" == minWindowDS1("a", "a"));
 }
 
 TEST_CASE("Example 3", "[minWindow]")
 {
     REQUIRE(minWindowFA("a", "aa").empty());
+    REQUIRE(minWindowDS1("a", "aa").empty());
 }
