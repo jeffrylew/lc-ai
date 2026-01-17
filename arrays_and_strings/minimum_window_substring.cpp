@@ -64,6 +64,12 @@ static std::string minWindowFA(std::string s, std::string t)
 static std::string minWindowDS1(std::string s, std::string t)
 {
     //! @details leetcode.com/problems/minimum-window-substring/editorial
+    //!
+    //!          Time complexity O(S + T) where S = s.size() and T = t.size().
+    //!          In the worst case, we might visit every element of s twice,
+    //!          once by left_pos and once by right_pos.
+    //!          Space complexity O(S + T), O(S) when the window size is equal
+    //!          to s.size() and O(T) when t has all unique characters.
 
     if (s.empty() || t.empty())
     {
