@@ -3,6 +3,8 @@
 #include <string>
 #include <string_view>
 #include <unordered_map>
+#include <utility>
+#include <vector>
 
 static std::string minWindowFA(std::string s, std::string t)
 {
@@ -146,8 +148,7 @@ static std::string minWindowDS1(std::string s, std::string t)
 
     return min_window_size == -1
         ? ""
-        : s.substr(min_window_left_pos,
-                   min_window_right_pos - min_window_left_pos + 1);
+        : s.substr(min_window_left_pos, min_window_size);
 }
 
 static std::string minWindowDS2(std::string s, std::string t)
@@ -169,7 +170,69 @@ static std::string minWindowDS2(std::string s, std::string t)
     const auto num_required_unique_chars =
         static_cast<int>(std::ssize(t_char_count));
 
-    //! @todo
+    //! Tracks the number of unique chars from t that are
+    //! in the current window with the desired frequency
+    int num_unique_chars_in_window {};
+
+    //! Map counts all unique chars in current window
+    std::unordered_map<char, int> window_char_count;
+
+    const auto s_size = static_cast<int>(std::ssize(s));
+
+    //! <index, char> of chars in s that are in t
+    std::vector<std::pair<int, char>> s_idx_char;
+    for (int idx = 0; idx < s_size; ++idx)
+    {
+        const char ch {s[idx]};
+        if (t_char_count.contains(ch))
+        {
+            s_idx_char.emplace_back(idx, ch);
+        }
+    }
+
+    int min_window_size {-1};
+    int min_window_start_pos {};
+
+    const auto filtered_s_size = static_cast<int>(std::ssize(s_idx_char));
+    int        left_pos {};
+
+    for (int right_pos = 0; right_pos < filtered_s_size; ++right_pos)
+    {
+        const auto [s_end_idx, right_char] = s_idx_char[right_pos];
+
+        ++window_char_count[right_char];
+        if (window_char_count[right_char] == t_char_count[right_char])
+        {
+            ++num_unique_chars_in_window;
+        }
+
+        while (left_pos <= right_pos
+               && num_unique_chars_in_window == num_required_unique_chars)
+        {
+            const auto [s_start_idx, left_char] = s_idx_char[left_pos];
+
+            if (min_window_size == -1
+                || s_end_idx - s_start_idx + 1 < min_window_size)
+            {
+                min_window_size      = s_end_idx - s_start_idx + 1;
+                min_window_start_pos = s_start_idx;
+            }
+
+            --window_char_count[left_char];
+            if (window_char_count[left_char] < t_char_count[left_char])
+            {
+                --num_unique_chars_in_window;
+            }
+
+            ++left_pos;
+
+        } // while (left_pos <= right_pos && ...
+
+    } // for (int right_pos = 0; ...
+
+    return min_window_size == -1
+        ? ""
+        : s.substr(min_window_start_pos, min_window_size);
 }
 
 TEST_CASE("Example 1", "[minWindow]")
