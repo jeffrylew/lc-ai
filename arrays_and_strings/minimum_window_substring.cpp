@@ -159,6 +159,16 @@ static std::string minWindowDS2(std::string s, std::string t)
         return {};
     }
 
+    std::unordered_map<char, int> t_char_count;
+    for (const char ch : t)
+    {
+        ++t_char_count[ch];
+    }
+
+    //! Number of unique chars in t that need to be present in the window
+    const auto num_required_unique_chars =
+        static_cast<int>(std::ssize(t_char_count));
+
     //! @todo
 }
 
