@@ -154,6 +154,12 @@ static std::string minWindowDS1(std::string s, std::string t)
 static std::string minWindowDS2(std::string s, std::string t)
 {
     //! @details leetcode.com/problems/minimum-window-substring/editorial
+    //!
+    //!          Time complexity O(S + T) where S = s.size() and T = t.size().
+    //!          In cases where filtered_s_size <<< S, the time complexity is
+    //!          reduced because the number of iterations would be
+    //!          2 * filtered_s_size + S + T instead of 2 * S + T.
+    //!          Space complexity O(S + T).
 
     if (s.empty() || t.empty())
     {
