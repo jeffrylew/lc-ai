@@ -10,6 +10,7 @@ set (
     "integer_to_roman"
     "longest_substring_without_repeating_characters"
     "minimum_window_substring"
+    "missing_number"
     "product_of_array_except_self"
     "roman_to_integer"
     "rotate_image"
