@@ -7,6 +7,9 @@ static int missingNumberFA(const std::vector<int>& nums)
 {
     //! @details https://leetcode.com/explore/interview/card/amazon/76
     //!          /array-and-strings/2971/
+    //!
+    //!          Time complexity O(N) where N = nums.size() for std::accumulate.
+    //!          Space complexity O(1).
 
     const auto nums_size = static_cast<int>(std::ssize(nums));
     const int  expected_sum {nums_size * (nums_size + 1) / 2};
