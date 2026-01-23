@@ -1,5 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 
+#include <numeric>
 #include <vector>
 
 static int missingNumberFA(const std::vector<int>& nums)
@@ -7,7 +8,10 @@ static int missingNumberFA(const std::vector<int>& nums)
     //! @details https://leetcode.com/explore/interview/card/amazon/76
     //!          /array-and-strings/2971/
 
-    //! @todo
+    const auto nums_size = static_cast<int>(std::ssize(nums));
+    const int  expected_sum {nums_size * (nums_size + 1) / 2};
+
+    return expected_sum - std::accumulate(nums.begin(), nums.end(), 0);
 }
 
 TEST_CASE("Example 1", "[missingNumber]")
