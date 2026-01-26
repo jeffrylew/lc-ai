@@ -20,6 +20,12 @@ static int missingNumberFA(const std::vector<int>& nums)
 
 static int missingNumberDS1(const std::vector<int>& nums)
 {
+    //! @details https://leetcode.com/problems/missing-number/editorial/
+    //!
+    //!          Time complexity O(N * log N) where N = nums.size(). The main
+    //!          for loop runs in O(N) and std::ranges::sort takes O(N * log N).
+    //!          Space complexity O(N) for the sorted_nums copy.
+
     auto sorted_nums = nums;
     std::ranges::sort(sorted_nums);
 
