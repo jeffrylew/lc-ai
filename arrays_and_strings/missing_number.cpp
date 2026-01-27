@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <numeric>
+#include <unordered_set>
 #include <vector>
 
 static int missingNumberFA(const std::vector<int>& nums)
@@ -56,12 +57,32 @@ static int missingNumberDS1(const std::vector<int>& nums)
     return -1;
 }
 
+static int missingNumberDS2(const std::vector<int>& nums)
+{
+    //! @details https://leetcode.com/problems/missing-number/editorial/
+
+    std::unordered_set<int> nums_set(nums.begin(), nums.end());
+
+    const auto expected_num_count = static_cast<int>(std::ssize(nums)) + 1;
+
+    for (int num = 0; num < expected_num_count; ++num)
+    {
+        if (!nums_set.contains(num))
+        {
+            return num;
+        }
+    }
+
+    return -1;
+}
+
 TEST_CASE("Example 1", "[missingNumber]")
 {
     const std::vector<int> nums {3, 0, 1};
 
     REQUIRE(2 == missingNumberFA(nums));
     REQUIRE(2 == missingNumberDS1(nums));
+    REQUIRE(2 == missingNumberDS2(nums));
 }
 
 TEST_CASE("Example 2", "[missingNumber]")
@@ -70,6 +91,7 @@ TEST_CASE("Example 2", "[missingNumber]")
 
     REQUIRE(2 == missingNumberFA(nums));
     REQUIRE(2 == missingNumberDS1(nums));
+    REQUIRE(2 == missingNumberDS2(nums));
 }
 
 TEST_CASE("Example 3", "[missingNumber]")
@@ -78,4 +100,5 @@ TEST_CASE("Example 3", "[missingNumber]")
 
     REQUIRE(8 == missingNumberFA(nums));
     REQUIRE(8 == missingNumberDS1(nums));
+    REQUIRE(8 == missingNumberDS2(nums));
 }
