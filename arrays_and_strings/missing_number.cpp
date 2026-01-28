@@ -60,6 +60,11 @@ static int missingNumberDS1(const std::vector<int>& nums)
 static int missingNumberDS2(const std::vector<int>& nums)
 {
     //! @details https://leetcode.com/problems/missing-number/editorial/
+    //!
+    //!          Time complexity O(N) where N = nums.size(). The main loop runs
+    //!          in O(N) and creating nums_set takes O(N).
+    //!          Space complexity O(N). nums contains N - 1 distinct elements so
+    //!          nums_set requires O(N).
 
     std::unordered_set<int> nums_set(nums.begin(), nums.end());
 
