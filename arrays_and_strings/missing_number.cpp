@@ -100,6 +100,22 @@ static int missingNumberDS3(const std::vector<int>& nums)
     return missing_num;
 }
 
+static int missingNumberDS4(const std::vector<int>& nums)
+{
+    //! @details https://leetcode.com/problems/missing-number/editorial/
+
+    const auto nums_size = static_cast<int>(std::ssize(nums));
+    const int  expected_sum {nums_size * (nums_size + 1) / 2};
+
+    int actual_sum {};
+    for (const int num : nums)
+    {
+        actual_sum += num;
+    }
+
+    return expected_sum - actual_sum;
+}
+
 TEST_CASE("Example 1", "[missingNumber]")
 {
     const std::vector<int> nums {3, 0, 1};
@@ -108,6 +124,7 @@ TEST_CASE("Example 1", "[missingNumber]")
     REQUIRE(2 == missingNumberDS1(nums));
     REQUIRE(2 == missingNumberDS2(nums));
     REQUIRE(2 == missingNumberDS3(nums));
+    REQUIRE(2 == missingNumberDS4(nums));
 }
 
 TEST_CASE("Example 2", "[missingNumber]")
@@ -118,6 +135,7 @@ TEST_CASE("Example 2", "[missingNumber]")
     REQUIRE(2 == missingNumberDS1(nums));
     REQUIRE(2 == missingNumberDS2(nums));
     REQUIRE(2 == missingNumberDS3(nums));
+    REQUIRE(2 == missingNumberDS4(nums));
 }
 
 TEST_CASE("Example 3", "[missingNumber]")
@@ -128,4 +146,5 @@ TEST_CASE("Example 3", "[missingNumber]")
     REQUIRE(8 == missingNumberDS1(nums));
     REQUIRE(8 == missingNumberDS2(nums));
     REQUIRE(8 == missingNumberDS3(nums));
+    REQUIRE(8 == missingNumberDS4(nums));
 }
