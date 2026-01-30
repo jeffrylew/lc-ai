@@ -84,6 +84,10 @@ static int missingNumberDS2(const std::vector<int>& nums)
 static int missingNumberDS3(const std::vector<int>& nums)
 {
     //! @details https://leetcode.com/problems/missing-number/editorial/
+    //!
+    //!          Time complexity O(N) where N = nums.size(). The algorithm
+    //!          performs N iterations of XOR, a constant time operation.
+    //!          Space complexity O(1).
 
     const auto nums_size = static_cast<int>(std::ssize(nums));
     int        missing_num {nums_size};
