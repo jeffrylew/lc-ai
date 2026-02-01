@@ -103,6 +103,10 @@ static int missingNumberDS3(const std::vector<int>& nums)
 static int missingNumberDS4(const std::vector<int>& nums)
 {
     //! @details https://leetcode.com/problems/missing-number/editorial/
+    //!
+    //!          Time complexity O(N) where N = nums.size(). Gauss' formula can
+    //!          be computed in O(1) but summing nums costs O(N).
+    //!          Space complexity O(1).
 
     const auto nums_size = static_cast<int>(std::ssize(nums));
     const int  expected_sum {nums_size * (nums_size + 1) / 2};
