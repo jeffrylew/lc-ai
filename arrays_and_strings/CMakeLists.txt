@@ -7,6 +7,7 @@ set (
     "first_unique_character_in_a_string"
     "group_anagrams"
     "implement_strstr"
+    "integer_to_english_words"
     "integer_to_roman"
     "longest_substring_without_repeating_characters"
     "minimum_window_substring"
