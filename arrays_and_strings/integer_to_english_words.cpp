@@ -56,8 +56,24 @@ static std::string convertToWords(int num)
 
     if (num < 1000)
     {
-        //! @todo
+        return convertToWords(num / 100) + " Hundred"
+            + (num % 100 ? " " + convertToWords(num % 100) : "");
     }
+
+    if (num < 1000000)
+    {
+        return convertToWords(num / 1000) + " Thousand"
+            + (num % 1000 ? " " + convertToWords(num % 1000) : "");
+    }
+
+    if (num < 1000000000)
+    {
+        return convertToWords(num / 1000000) + " Million"
+            + (num % 1000000 ? " " + convertToWords(num % 1000000) : "");
+    }
+
+    return convertToWords(num / 1000000000) + " Billion"
+        + (num % 1000000000 ? " " + convertToWords(num % 1000000000) : "");
 }
 
 static std::string numberToWordsDS1(int num)
