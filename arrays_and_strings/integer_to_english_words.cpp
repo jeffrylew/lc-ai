@@ -80,6 +80,14 @@ static std::string numberToWordsDS1(int num)
 {
     //! @details https://leetcode.com/explore/interview/card/amazon/76
     //!          /array-and-strings/481/
+    //!
+    //!          Time complexity O(log_10 N) because the number of recursive
+    //!          calls is proportional to the number of digits in the number,
+    //!          which grows logarithmically with the size of the number.
+    //!          Space complexity O(log_10 N) because of the recursion stack.
+    //!          Each recursive call adds a frame to the stack until the base
+    //!          case is reached, leading to space usage proportional to the
+    //!          number of digits in the number.
 
     if (num == 0)
     {
