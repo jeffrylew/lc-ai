@@ -97,12 +97,72 @@ static std::string numberToWordsDS1(int num)
     return convertToWords(num);
 }
 
+static std::string numberToWordsDS2(int num)
+{
+    //! @details leetcode.com/problems/integer-to-english-words/editorial
+
+    if (num == 0)
+    {
+        return "Zero";
+    }
+
+    const std::vector<std::string> ones {
+        "",
+        "One",
+        "Two",
+        "Three",
+        "Four",
+        "Five",
+        "Six",
+        "Seven",
+        "Eight",
+        "Nine",
+        "Ten",
+        "Eleven",
+        "Twelve",
+        "Thirteen",
+        "Fourteen",
+        "Fifteen",
+        "Sixteen",
+        "Seventeen",
+        "Eighteen",
+        "Nineteen"};
+
+    const std::vector<std::string> tens {
+        "",
+        "",
+        "Twenty",
+        "Thirty",
+        "Forty",
+        "Fifty",
+        "Sixty",
+        "Seventy",
+        "Eighty",
+        "Ninety"};
+
+    const std::vector<std::string> thousands {
+        "", "Thousand", "Million", "Billion"};
+
+    std::string result;
+    int         group_idx {};
+
+    //! Process the number in chunks of 1000
+    while (num > 0)
+    {
+        //! @todo
+    }
+
+    //! Remove trailing spaces
+    return result.substr(0, result.find_last_not_of(" ") + 1);
+}
+
 TEST_CASE("Example 1", "[numberToWords]")
 {
     constexpr const char* expected_output {
         "One Hundred Twenty Three"};
 
     REQUIRE(expected_output == numberToWordsDS1(123));
+    REQUIRE(expected_output == numberToWordsDS2(123));
 }
 
 TEST_CASE("Example 2", "[numberToWords]")
@@ -111,6 +171,7 @@ TEST_CASE("Example 2", "[numberToWords]")
         "Twelve Thousand Three Hundred Forty Five"};
 
     REQUIRE(expected_output == numberToWordsDS1(12345));
+    REQUIRE(expected_output == numberToWordsDS2(12345));
 }
 
 TEST_CASE("Example 3", "[numberToWords]")
@@ -120,4 +181,5 @@ TEST_CASE("Example 3", "[numberToWords]")
     };
 
     REQUIRE(expected_output == numberToWordsDS1(1234567));
+    REQUIRE(expected_output == numberToWordsDS2(1234567));
 }
