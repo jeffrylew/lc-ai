@@ -149,7 +149,43 @@ static std::string numberToWordsDS2(int num)
     //! Process the number in chunks of 1000
     while (num > 0)
     {
-        //! @todo
+        //! Process the last three digits
+        if (num % 1000 != 0)
+        {
+            std::string group_result;
+            int         part {num % 1000};
+
+            //! Handle hundreds
+            if (part >= 100)
+            {
+                group_result = ones[part / 100] + " Hundred ";
+                part %= 100;
+            }
+
+            //! Handle tens and units
+            if (part >= 20)
+            {
+                group_result += tens[part / 10] + " ";
+                part %= 10
+            }
+
+            //! Handle units
+            if (part > 0)
+            {
+                group_result += ones[part] + " ";
+            }
+
+            //! Append the scale (thousand, million, billion) for current group
+            group_result += thousands[group_idx] + " ";
+
+            //! Insert the group result at the beginning of the final result
+            result = group_result + result;
+
+        } // if (num % 1000 != 0)
+
+        //! Move to the next chunk of 1000
+        num /= 1000;
+        ++group_idx;
     }
 
     //! Remove trailing spaces
