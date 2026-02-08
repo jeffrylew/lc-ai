@@ -100,6 +100,11 @@ static std::string numberToWordsDS1(int num)
 static std::string numberToWordsDS2(int num)
 {
     //! @details leetcode.com/problems/integer-to-english-words/editorial
+    //!
+    //!          Time complexity O(log_10 N) because num is divided by 1000 each
+    //!          iteration, making the number of iterations proportional to the
+    //!          number of chunks, which is logarithmic.
+    //!          Space complexity O(1).
 
     if (num == 0)
     {
