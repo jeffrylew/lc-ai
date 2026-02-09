@@ -1,6 +1,9 @@
 #include <catch2/catch_test_macros.hpp>
 
+#include <array>
 #include <string>
+#include <string_view>
+#include <utility>
 #include <vector>
 
 static std::string convertToWords(int num)
@@ -197,6 +200,74 @@ static std::string numberToWordsDS2(int num)
     return result.substr(0, result.find_last_not_of(" ") + 1);
 }
 
+static std::string numberToWordsDS3(int num)
+{
+    //! @details leetcode.com/problems/integer-to-english-words/editorial
+
+    //! Array of numeric values to corresponding English words
+    constexpr std::array<std::pair<int, std::string_view>, 31> num_to_words {
+        {1000000000, "Billion"},
+        {1000000, "Million"},
+        {1000, "Thousand"},
+        {100, "Hundred"},
+        {90, "Ninety"},
+        {80, "Eighty"},
+        {70, "Seventy"},
+        {60, "Sixty"},
+        {50, "Fifty"},
+        {40, "Forty"},
+        {30, "Thirty"},
+        {20, "Twenty"},
+        {19, "Nineteen"},
+        {18, "Eighteen"},
+        {17, "Seventeen"},
+        {16, "Sixteen"},
+        {15, "Fifteen"},
+        {14, "Fourteen"},
+        {13, "Thirteen"},
+        {12, "Twelve"},
+        {11, "Eleven"},
+        {10, "Ten"},
+        {9, "Nine"},
+        {8, "Eight"},
+        {7, "Seven"},
+        {6, "Six"},
+        {5, "Five"},
+        {4, "Four"},
+        {3, "Three"},
+        {2, "Two"},
+        {1, "One"}};
+
+    if (num == 0)
+    {
+        return "Zero";
+    }
+
+    for (const auto& [value, word] : num_to_words)
+    {
+        //! Check if the number is greater than or equal to the current unit
+        if (num < value)
+        {
+            continue;
+        }
+
+        //! Convert the quotient to words if the current unit is 100 or greater
+        std::string prefix {
+            num >= 100 ? numberToWordsDS3(num / value) + " " : ""};
+
+        //! Get the word for the current unit
+        std::string unit {word};
+
+        //! Convert the remainder to words if it's not zero
+        std::string suffix {
+            num % value == 0 ? "" : " " + numberToWordsDS3(num % value)};
+
+        return prefix + unit + suffix;
+    }
+
+    return {};
+}
+
 TEST_CASE("Example 1", "[numberToWords]")
 {
     constexpr const char* expected_output {
@@ -204,6 +275,7 @@ TEST_CASE("Example 1", "[numberToWords]")
 
     REQUIRE(expected_output == numberToWordsDS1(123));
     REQUIRE(expected_output == numberToWordsDS2(123));
+    REQUIRE(expected_output == numberToWordsDS3(123));
 }
 
 TEST_CASE("Example 2", "[numberToWords]")
@@ -213,6 +285,7 @@ TEST_CASE("Example 2", "[numberToWords]")
 
     REQUIRE(expected_output == numberToWordsDS1(12345));
     REQUIRE(expected_output == numberToWordsDS2(12345));
+    REQUIRE(expected_output == numberToWordsDS3(12345));
 }
 
 TEST_CASE("Example 3", "[numberToWords]")
@@ -223,4 +296,5 @@ TEST_CASE("Example 3", "[numberToWords]")
 
     REQUIRE(expected_output == numberToWordsDS1(1234567));
     REQUIRE(expected_output == numberToWordsDS2(1234567));
+    REQUIRE(expected_output == numberToWordsDS3(1234567));
 }
