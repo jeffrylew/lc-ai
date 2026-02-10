@@ -203,6 +203,12 @@ static std::string numberToWordsDS2(int num)
 static std::string numberToWordsDS3(int num)
 {
     //! @details leetcode.com/problems/integer-to-english-words/editorial
+    //!
+    //!          Time complexity O(K) where K = number of pairs in num_to_words
+    //!          because the loop iterates through the pairs until it finds a
+    //!          match.
+    //!          Space complexity O(log_10 N) where N = num due to the recursion
+    //!          stack.
 
     //! Array of numeric values to corresponding English words
     constexpr std::array<std::pair<int, std::string_view>, 31> num_to_words {
