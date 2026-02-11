@@ -17,6 +17,7 @@ set (
     "rotate_image"
     "string_to_integer_atoi"
     "two_sum"
+    "valid_parentheses"
 )
 
 foreach (cpp_file in ITEMS ${cpp_files})
