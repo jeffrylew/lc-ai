@@ -8,6 +8,10 @@ static bool isValidFA(std::string s)
 {
     //! @details https://leetcode.com/explore/interview/card/amazon/76
     //!          /array-and-strings/2972/
+    //!
+    //!          Time complexity O(N) where N = s.size().
+    //!          Space complexity O(N) in the worst case for the left_brackets
+    //!          stack where s only contains left brackets.
 
     const std::unordered_map<char, char> matching_brackets {
         {'(', ')'}, {'{', '}'}, {'[', ']'}};
