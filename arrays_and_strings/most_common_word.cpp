@@ -1,0 +1,102 @@
+#include <catch2/catch_test_macros.hpp>
+
+#include <algorithm>
+#include <cctype>
+#include <iterator>
+#include <ranges>
+#include <string>
+#include <string_view>
+#include <unordered_map>
+#include <unordered_set>
+#include <utility>
+#include <vector>
+
+static std::string mostCommonWordFA(std::string                     paragraph,
+                                    const std::vector<std::string>& banned)
+{
+    //! @details https://leetcode.com/explore/interview/card/amazon/76
+    //!          /array-and-strings/2973
+    //!
+    //!          Code won't run in LC because it uses libstdc++ from GCC 14 and
+    //!          I believe std::from_range requires GCC 15. I confirmed the
+    //!          desired behavior with godbolt: https://godbolt.org/z/M79neGTqe
+
+    const std::unordered_set<std::string> banned_words(std::from_range, banned);
+
+    auto tokenize = [](std::string_view words) {
+        auto adjacent_letters = [](unsigned char lhs, unsigned char rhs) {
+            return std::isalpha(lhs) > 0 && std::isalpha(rhs) > 0;
+        };
+
+        auto is_letter = [](auto ch) {
+            return std::isalpha(static_cast<unsigned char>(ch[0])) > 0;
+        };
+
+        return words
+            | std::views::chunk_by(adjacent_letters)
+            | std::views::filter(is_letter);
+    };
+
+    auto to_lowercase_str =
+        [](std::ranges::subrange<const char*,
+                                 const char*,
+                                 std::ranges::subrange_kind::sized>& word_view)
+        {
+            std::string lowercase_str;
+            lowercase_str.reserve(word_view.size());
+
+            auto to_lowercase = [](unsigned char ch) {
+                return static_cast<char>(std::tolower(ch));
+            };
+
+            std::ranges::transform(word_view.begin(),
+                                   word_view.end(),
+                                   std::back_inserter(lowercase_str),
+                                   to_lowercase);
+
+            return lowercase_str;
+        };
+
+    std::unordered_map<std::string, int> word_counts;
+
+    for (auto word_view : tokenize(paragraph))
+    {
+        auto word = to_lowercase_str(word_view);
+
+        if (!banned_words.contains(word))
+        {
+            ++word_counts[std::move(word)];
+        }
+    }
+
+    int         max_word_count {};
+    std::string most_freq_word;
+
+    for (auto& [word, word_count] : word_counts)
+    {
+        if (word_count > max_word_count)
+        {
+            max_word_count = word_count;
+            most_freq_word = std::move(word);
+        }
+    }
+
+    return most_freq_word;
+}
+
+TEST_CASE("Example 1", "[mostCommonWord]")
+{
+    const std::string paragraph {
+        "Bob hit a ball, the hit BALL flew far after it was hit."};
+    const std::vector<std::string> banned {"hit"};
+
+    REQUIRE("ball" == mostCommonWordFA(paragraph, banned));
+}
+
+TEST_CASE("Example 2", "[mostCommonWord]")
+{
+    const std::string              paragraph {"a."};
+    const std::vector<std::string> banned {};
+
+    REQUIRE("a" == mostCommonWordFA(paragraph, banned));
+}
