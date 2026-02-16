@@ -20,6 +20,14 @@ static std::string mostCommonWordFA(std::string                     paragraph,
     //!          Code won't run in LC because it uses libstdc++ from GCC 14 and
     //!          I believe std::from_range requires GCC 15. I confirmed the
     //!          desired behavior with godbolt: https://godbolt.org/z/M79neGTqe
+    //!
+    //!          Time complexity O(P + B) where P = paragraph.size() and
+    //!          B = banned.size(). We iterate through paragraph to tokenize it
+    //!          into lowercase words in O(P) and creating the banned_words set
+    //!          takes O(B).
+    //!          Space complexity O(W + B) where W is the number of unique
+    //!          words in paragraph (excluding banned words) and B is the number
+    //!          of banned words.
 
     const std::unordered_set<std::string> banned_words(std::from_range, banned);
 
