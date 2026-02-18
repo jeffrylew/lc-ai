@@ -98,6 +98,14 @@ static std::string mostCommonWordDS1(std::string                     paragraph,
                                      const std::vector<std::string>& banned)
 {
     //! @details https://leetcode.com/problems/most-common-word/editorial/
+    //!
+    //!          Time complexity O(N + M) where N = paragraph.size() and
+    //!          M = number of characters in the banned list. It takes O(N) time
+    //!          to process each stage of the pipeline. Building a set out of
+    //!          the banned words takes O(M).
+    //!          Space complexity O(N + M). The hashmap counting the frequency
+    //!          of each unique word uses O(N) space. The set of banned words
+    //!          uses O(M) space.
 
     //! 1. Replace the punctuation with spaces and convert letters to lower case
     std::regex  capture_punctuation {"[^a-zA-Z0-9 ]"};
