@@ -4,6 +4,8 @@
 #include <cctype>
 #include <iterator>
 #include <ranges>
+#include <regex>
+#include <sstream>
 #include <string>
 #include <string_view>
 #include <unordered_map>
@@ -92,6 +94,51 @@ static std::string mostCommonWordFA(std::string                     paragraph,
     return most_freq_word;
 }
 
+static std::string mostCommonWordDS1(std::string                     paragraph,
+                                     const std::vector<std::string>& banned)
+{
+    //! @details https://leetcode.com/problems/most-common-word/editorial/
+
+    //! 1. Replace the punctuation with spaces and convert letters to lower case
+    std::regex  capture_punctuation {"[^a-zA-Z0-9 ]"};
+    std::string normalized_paragraph {
+        std::regex_replace(paragraph, capture_punctuation, " ")};
+    std::ranges::transform(normalized_paragraph,
+                           normalized_paragraph.begin(),
+                           [](unsigned char ch) {
+                               return static_cast<char>(std::tolower(ch));
+                           });
+
+    //! 2. Convert banned words vector to a set
+    const std::unordered_set<std::string> banned_words(
+        banned.begin(), banned.end());
+
+    //! 3. Split the string into words and count the appearance of each word,
+    //!    excluding the banned words
+    std::unordered_map<std::string, int> word_counts;
+
+    std::istringstream word_stream(normalized_paragraph);
+    for (std::string word; std::getline(word_stream, word, ' ');)
+    {
+        if (!word.empty() && !banned_words.contains(word))
+        {
+            ++word_counts[std::move(word)];
+        }
+    }
+
+    //! 4. Return the word with the highest frequency
+    auto highest_freq_it =
+        std::max_element(word_counts.begin(),
+                         word_counts.end(),
+                         [](const std::pair<std::string, int>& lhs,
+                            const std::pair<std::string, int>& rhs) {
+                             return lhs.second < rhs.second;
+                         });
+
+    //! highest_freq_it only equals end() if word_counts is empty
+    return highest_freq_it != word_counts.end() ? highest_freq_it->first : "";
+}
+
 TEST_CASE("Example 1", "[mostCommonWord]")
 {
     const std::string paragraph {
@@ -99,6 +146,7 @@ TEST_CASE("Example 1", "[mostCommonWord]")
     const std::vector<std::string> banned {"hit"};
 
     REQUIRE("ball" == mostCommonWordFA(paragraph, banned));
+    REQUIRE("ball" == mostCommonWordDS1(paragraph, banned));
 }
 
 TEST_CASE("Example 2", "[mostCommonWord]")
@@ -107,4 +155,5 @@ TEST_CASE("Example 2", "[mostCommonWord]")
     const std::vector<std::string> banned {};
 
     REQUIRE("a" == mostCommonWordFA(paragraph, banned));
+    REQUIRE("a" == mostCommonWordDS1(paragraph, banned));
 }
