@@ -147,6 +147,58 @@ static std::string mostCommonWordDS1(std::string                     paragraph,
     return highest_freq_it != word_counts.end() ? highest_freq_it->first : "";
 }
 
+static std::string mostCommonWordDS2(std::string                     paragraph,
+                                     const std::vector<std::string>& banned)
+{
+    //! @details https://leetcode.com/problems/most-common-word/editorial/
+
+    const std::unordered_set<std::string> banned_words(
+        banned.begin(), banned.end());
+
+    std::string word_buffer;
+    std::string most_freq_word;
+    int         max_word_count {};
+
+    std::unordered_map<std::string, int> word_counts;
+
+    const auto paragraph_size = static_cast<int>(std::ssize(paragraph));
+
+    for (int pos = 0; pos < paragraph_size; ++pos)
+    {
+        const auto curr_char = static_cast<unsigned char>(paragraph[pos]);
+
+        //! 1. Consume the characters in a word
+        if (std::isalpha(curr_char) != 0)
+        {
+            word_buffer += static_cast<char>(std::tolower(curr_char));
+            if (pos != paragraph_size - 1)
+            {
+                continue;
+            }
+        }
+
+        //! 2.) At the end of a word or at the end of the paragraph
+        if (!word_buffer.empty())
+        {
+            //! Identify the max count while updating word_counts
+            if (!banned_words.contains(word_buffer))
+            {
+                const int curr_word_count {++word_counts[word_buffer]};
+
+                if (curr_word_count > max_word_count)
+                {
+                    most_freq_word = std::move(word_buffer);
+                    max_word_count = curr_word_count;
+                }
+            }
+
+            word_buffer.clear();
+        }
+    }
+
+    return most_freq_word;
+}
+
 TEST_CASE("Example 1", "[mostCommonWord]")
 {
     const std::string paragraph {
@@ -155,6 +207,7 @@ TEST_CASE("Example 1", "[mostCommonWord]")
 
     REQUIRE("ball" == mostCommonWordFA(paragraph, banned));
     REQUIRE("ball" == mostCommonWordDS1(paragraph, banned));
+    REQUIRE("ball" == mostCommonWordDS2(paragraph, banned));
 }
 
 TEST_CASE("Example 2", "[mostCommonWord]")
@@ -164,4 +217,5 @@ TEST_CASE("Example 2", "[mostCommonWord]")
 
     REQUIRE("a" == mostCommonWordFA(paragraph, banned));
     REQUIRE("a" == mostCommonWordDS1(paragraph, banned));
+    REQUIRE("a" == mostCommonWordDS2(paragraph, banned));
 }
