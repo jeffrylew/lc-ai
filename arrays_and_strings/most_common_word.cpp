@@ -153,7 +153,9 @@ static std::string mostCommonWordDS2(std::string                     paragraph,
     //! @details https://leetcode.com/problems/most-common-word/editorial/
     //!
     //!          Time complexity O(N + M) where N = paragraph.size() and M is
-    //!          the number of characters in the banned list.
+    //!          the number of characters in the banned list. We traverse each
+    //!          character in the input string once in O(N). An addition O(M) is
+    //!          needed for building a set out of the list of banned words.
     //!          Space complexity O(N + M). We build a hashmap using O(N) to
     //!          count the frequency of each unique word. We also build a set
     //!          out of the banned words list using O(M).
