@@ -14,6 +14,7 @@ set (
     "missing_number"
     "most_common_word"
     "product_of_array_except_self"
+    "reorder_log_files"
     "roman_to_integer"
     "rotate_image"
     "string_to_integer_atoi"
