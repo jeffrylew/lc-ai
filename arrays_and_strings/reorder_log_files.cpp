@@ -12,6 +12,12 @@ static std::vector<std::string> reorderLogFilesFA(
 {
     //! @details https://leetcode.com/explore/interview/card/amazon/76
     //!          /array-and-strings/2974/
+    //!
+    //!          Time complexity O(N * log N) where N = logs.size(). In the
+    //!          worst case, all logs are letter-logs so we need to sort N logs
+    //!          lexicographically.
+    //!          Space complexity O(N * M) to store N logs with an average of
+    //!          M characters per log.
 
     struct Letter_log
     {
