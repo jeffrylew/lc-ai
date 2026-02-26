@@ -82,6 +82,67 @@ static std::vector<std::string> reorderLogFilesFA(
     return final_order;
 }
 
+static std::vector<std::string> reorderLogFilesDS1(
+    const std::vector<std::string>& logs)
+{
+    //! @details leetcode.com/problems/reorder-data-in-log-files/editorial
+
+    auto reordered_logs = logs;
+
+    const auto is_digit = [](char ch) -> bool {
+        return std::isdigit(static_cast<unsigned char>(ch)) != 0;
+    };
+
+    std::ranges::stable_sort(
+        reordered_logs,
+        [&](std::string_view lhs_log, std::string_view rhs_log) -> bool {
+            const auto lhs_space_pos = lhs_log.find(' ');
+            // assert(lhs_space_pos != std::string_view::npos);
+            std::string_view lhs_identifier {lhs_log.substr(0, lhs_space_pos)};
+            std::string_view lhs_words {lhs_log.substr(lhs_space_pos + 1)};
+
+            const auto rhs_space_pos = rhs_log.find(' ');
+            // assert(rhs_space_pos != std::string_view::npos);
+            std::string_view rhs_identifier {rhs_log.substr(0, rhs_space_pos)};
+            std::string_view rhs_words {rhs_log.substr(rhs_space_pos + 1)};
+
+            //! Case 1) Both logs are letter-logs
+            if (!is_digit(lhs_words[0]) && !is_digit(rhs_words[0]))
+            {
+                //! Log have same content, compare the identifiers
+                if (lhs_words == rhs_words)
+                {
+                    return lhs_identifier < rhs_identifier;
+                }
+
+                //! Logs don't have the same content
+                return lhs_words < rhs_words;
+            }
+
+            //! Case 2) One of the logs is a digit-log
+            if (!is_digit(lhs_words[0]) && is_digit(rhs_words[0]))
+            {
+                //! lhs letter-log comes before the rhs digit-log
+                //! i.e. (lhs_log < rhs_log) is true
+                return true;
+            }
+            else if (is_digit(lhs_words[0]) && !is_digit(rhs_words[0]))
+            {
+                //! lhs digit-log comes after the rhs letter-log
+                //! i.e. (lhs_log < rhs_log) is false
+                return false;
+            }
+
+            //! Case 3) Both logs are digit-logs
+            //! The lhs digit-log should be equal to the rhs digit-log so they
+            //! do not get sorted and instead their relative order is maintained
+            //! i.e. (lhs_log < rhs_log) is false since (lhs_log == rhs_log)
+            return false;
+        });
+
+    return reordered_logs;
+}
+
 TEST_CASE("Example 1", "[reorderLogFiles]")
 {
     const std::vector<std::string> logs {
@@ -99,6 +160,7 @@ TEST_CASE("Example 1", "[reorderLogFiles]")
         "dig2 3 6"};
 
     REQUIRE(expected_output == reorderLogFilesFA(logs));
+    REQUIRE(expected_output == reorderLogFilesDS1(logs));
 }
 
 TEST_CASE("Example 2", "[reorderLogFiles]")
@@ -118,4 +180,5 @@ TEST_CASE("Example 2", "[reorderLogFiles]")
         "zo4 4 7"};
 
     REQUIRE(expected_output == reorderLogFilesFA(logs));
+    REQUIRE(expected_output == reorderLogFilesDS1(logs));
 }
