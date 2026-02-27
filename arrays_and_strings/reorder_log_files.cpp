@@ -86,6 +86,10 @@ static std::vector<std::string> reorderLogFilesDS1(
     const std::vector<std::string>& logs)
 {
     //! @details leetcode.com/problems/reorder-data-in-log-files/editorial
+    //!
+    //!          Time complexity O(M * N * log N) where M = the max length of a
+    //!          single log and N = the number of logs in the list.
+    //!          Space complexity O(M * log N).
 
     auto reordered_logs = logs;
 
