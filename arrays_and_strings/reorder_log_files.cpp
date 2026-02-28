@@ -93,9 +93,8 @@ static std::vector<std::string> reorderLogFilesDS1(
     //!          memory is available (O(N * log^2(N)) otherwise), where the
     //!          lambda is invoked O(N * log N) times. Each invocation can take
     //!          up to O(M) since we compare the contents of the logs.
-    //!          Space complexity O(M * log N) in the worst case when sufficient
-    //!          extra memory is not available, otherwise O(M * N). If enough
-    //!          extra memory is available then std::ranges::sort takes O(N),
+    //!          Space complexity O(M * N) if sufficient extra memory is
+    //!          available (O(M * log N) otherwise). std::ranges::sort uses O(N)
     //!          where N is the number of logs. Since each log can use O(M)
     //!          space, the space complexity is O(M * N). Each invocation of the
     //!          lambda uses O(1) space due to the use of std::string_view.
