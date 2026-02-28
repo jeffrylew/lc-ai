@@ -5,6 +5,7 @@
 #include <ranges>
 #include <string>
 #include <string_view>
+#include <tuple>
 #include <vector>
 
 static std::vector<std::string> reorderLogFilesFA(
@@ -155,6 +156,58 @@ static std::vector<std::string> reorderLogFilesDS1(
     return reordered_logs;
 }
 
+static std::vector<std::string> reorderLogFilesDS2(
+    const std::vector<std::string>& logs)
+{
+    //! @details leetcode.com/problems/reorder-data-in-log-files/editorial
+
+    struct Log
+    {
+        std::string_view non_id_data;
+        std::string_view identifier;
+        bool             is_digit_log {};
+
+        explicit Log(std::string_view log_line)
+        {
+            const auto first_space_pos = log_line.find(' ');
+            
+            non_id_data = log_line.substr(first_space_pos + 1);
+            is_digit_log =
+                std::isdigit(static_cast<unsigned char>(non_id_data[0])) != 0;
+
+            //! Relative order of digit-logs should be preserved so
+            //! reset non_id_data so that two digit logs are equal
+            if (is_digit_log)
+            {
+                non_id_data = std::string_view {};
+            }
+            else
+            {
+                //! We have a letter-log so assign the identifier
+                identifier = log_line.substr(0, first_space_pos);
+            }
+        }
+    };
+
+    auto reordered_logs = logs;
+
+    std::ranges::stable_sort(
+        reordered_logs,
+        [&](std::string_view lhs_view, std::string_view rhs_view) -> bool {
+            const Log lhs_log {lhs_view};
+            const Log rhs_log {rhs_view};
+
+            return std::tie(lhs_log.is_digit_log,
+                            lhs_log.non_id_data,
+                            lhs_log.identifier)
+                < std::tie(rhs_log.is_digit_log,
+                           rhs_log.non_id_data,
+                           rhs_log.identifier);
+        });
+
+    return reordered_logs;
+}
+
 TEST_CASE("Example 1", "[reorderLogFiles]")
 {
     const std::vector<std::string> logs {
@@ -173,6 +226,7 @@ TEST_CASE("Example 1", "[reorderLogFiles]")
 
     REQUIRE(expected_output == reorderLogFilesFA(logs));
     REQUIRE(expected_output == reorderLogFilesDS1(logs));
+    REQUIRE(expected_output == reorderLogFilesDS2(logs));
 }
 
 TEST_CASE("Example 2", "[reorderLogFiles]")
@@ -193,4 +247,5 @@ TEST_CASE("Example 2", "[reorderLogFiles]")
 
     REQUIRE(expected_output == reorderLogFilesFA(logs));
     REQUIRE(expected_output == reorderLogFilesDS1(logs));
+    REQUIRE(expected_output == reorderLogFilesDS2(logs));
 }
