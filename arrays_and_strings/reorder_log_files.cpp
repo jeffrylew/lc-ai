@@ -94,11 +94,11 @@ static std::vector<std::string> reorderLogFilesDS1(
     //!          memory is available (O(N * log^2(N)) otherwise), where the
     //!          lambda is invoked O(N * log N) times. Each invocation can take
     //!          up to O(M) since we compare the contents of the logs.
-    //!          Space complexity O(M * N) if sufficient extra memory is
-    //!          available (O(M * log N) otherwise). std::ranges::sort uses O(N)
-    //!          where N is the number of logs. Since each log can use O(M)
-    //!          space, the space complexity is O(M * N). Each invocation of the
-    //!          lambda uses O(1) space due to the use of std::string_view.
+    //!          Space complexity O(N) if sufficient extra memory is available
+    //!          (O(log N) otherwise). std::ranges::sort uses O(N) space when
+    //!          assuming the space for each element is O(1). Since we are using
+    //!          std::string_view, each log uses O(1) space. We ignore the space
+    //!          required for reordered_logs, the output vector.
 
     auto reordered_logs = logs;
 
@@ -160,6 +160,17 @@ static std::vector<std::string> reorderLogFilesDS2(
     const std::vector<std::string>& logs)
 {
     //! @details leetcode.com/problems/reorder-data-in-log-files/editorial
+    //!
+    //!          Time complexity O(M * N * log N) where M = max log length and
+    //!          N = logs.size(). std::ranges::stable_sort has a time complexity
+    //!          of O(N * log N) when extra memory is available. Since the tuple
+    //!          keys essentially contain the logs, the comparison between two
+    //!          keys can take up to O(M) time.
+    //!          Space complexity O(N). std::ranges::stable_sort has a space
+    //!          complexity of O(N) when extra memory is available and assuming
+    //!          the space for each element is O(1). Since we are using
+    //!          std::string_view, each Log object uses O(1) space. We ignore
+    //!          the space required for reordered_logs, the output vector.
 
     struct Log
     {
