@@ -1,5 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 
+#include <algorithm>
 #include <queue>
 #include <utility>
 #include <vector>
@@ -14,6 +15,14 @@ static int cutOffTreeFA(const std::vector<std::vector<int>>& forest)
     auto       forest_copy = forest;
 
     int min_steps {};
+
+    //! Keep track of whether a tree at an index has been cut
+    //! If the value at a cell is 0 or 1 then is_cut will store true
+    std::vector<bool> is_tree_cut(num_rows * num_cols, false);
+
+    constexpr auto pos_to_index = [=](int row, int col) -> int {
+        return row * num_cols + col;
+    };
 
     const std::vector<std::pair<int, int>> directions {
         {-1, 0}, {0, -1}, {0, 1}, {1, 0}};
@@ -34,15 +43,40 @@ static int cutOffTreeFA(const std::vector<std::vector<int>>& forest)
             const auto [curr_row, curr_col] = pos_queue.front();
             pos_queue.pop();
 
-            auto& cell_value = forest_copy[curr_row][curr_col];
+            auto&     cell_value = forest_copy[curr_row][curr_col];
+            const int curr_idx {pos_to_index(curr_row, curr_col)};
+
             if (cell_value == 0)
             {
+                is_tree_cut[curr_idx] = true;
                 continue;
             }
 
-            //! @todo
+            is_tree_cut[curr_idx] = true;
+
+            cell_value = 1;
+
+            for (const auto& [drow, dcol] : directions)
+            {
+                const int next_row {curr_row + drow};
+                const int next_col {curr_col + dcol};
+
+                if (!is_pos_valid(next_row, next_col)
+                    || forest_copy[next_row][next_col] == 0)
+                {
+                    continue;
+                }
+
+                //! @todo
+            }
         }
+
+        ++min_steps;
     }
+
+    return std::ranges::any_of(is_tree_cut, [](bool is_cut) { return !is_cut; })
+        ? -1
+        : min_steps;
 }
 
 TEST_CASE("Example 1", "[cutOffTree]")
