@@ -1,7 +1,9 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <algorithm>
+#include <functional>
 #include <queue>
+#include <tuple>
 #include <utility>
 #include <vector>
 
@@ -15,6 +17,7 @@ static int cutOffTreeFA(const std::vector<std::vector<int>>& forest)
     auto       forest_copy = forest;
 
     int min_steps {};
+    int prev_tree_height {1};
 
     //! Keep track of whether a tree at an index has been cut
     //! If the value at a cell is 0 or 1 then is_cut will store true
@@ -31,6 +34,12 @@ static int cutOffTreeFA(const std::vector<std::vector<int>>& forest)
         return row >= 0 && row < num_rows && col >= 0 && col < num_cols;
     };
 
+    //! Min heap/priority queue of tuple<tree height, row, col>
+    //! where the smallest tree height is at the top
+    std::priority_queue<std::tuple<int, int, int>,
+                        std::vector<std::tuple<int, int, int>>,
+                        std::greater<std::tuple<int, int, int>>> neighbors;
+
     std::queue<std::pair<int, int>> pos_queue;
     pos_queue.emplace(0, 0);
 
@@ -43,10 +52,10 @@ static int cutOffTreeFA(const std::vector<std::vector<int>>& forest)
             const auto [curr_row, curr_col] = pos_queue.front();
             pos_queue.pop();
 
-            auto&     cell_value = forest_copy[curr_row][curr_col];
+            auto&     curr_height = forest_copy[curr_row][curr_col];
             const int curr_idx {pos_to_index(curr_row, curr_col)};
 
-            if (cell_value == 0)
+            if (curr_height == 0)
             {
                 is_tree_cut[curr_idx] = true;
                 continue;
@@ -54,7 +63,13 @@ static int cutOffTreeFA(const std::vector<std::vector<int>>& forest)
 
             is_tree_cut[curr_idx] = true;
 
-            cell_value = 1;
+            if (curr_height > prev_tree_height)
+            {
+                prev_tree_height = curr_height;
+            }
+
+            curr_height = 1;
+            neighbors   = {};
 
             for (const auto& [drow, dcol] : directions)
             {
@@ -62,13 +77,25 @@ static int cutOffTreeFA(const std::vector<std::vector<int>>& forest)
                 const int next_col {curr_col + dcol};
 
                 if (!is_pos_valid(next_row, next_col)
-                    || forest_copy[next_row][next_col] == 0)
+                    || forest_copy[next_row][next_col] == 0
+                    || is_tree_cut[pos_to_index(next_row, next_col)])
                 {
                     continue;
                 }
 
-                //! @todo
+                const int next_height {forest_copy[next_row][next_col]};
+
+                if (next_height == 1)
+                {
+                    pos_queue.emplace(next_row, next_col);
+                    continue;
+                }
+
+                neighbors.emplace(next_height, next_row, next_col);
             }
+
+            const auto [min_height, min_row, min_col] = neighbors.top();
+            pos_queue.emplace(min_row, min_col);
         }
 
         ++min_steps;
