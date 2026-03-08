@@ -111,6 +111,11 @@ static int cutOffTreeFA(const std::vector<std::vector<int>>& forest)
         : min_steps;
 }
 
+static int cutOffTreeDS(const std::vector<std::vector<int>>& forest)
+{
+    //! @details leetcode.com/problems/cut-off-trees-for-golf-event/editorial
+}
+
 TEST_CASE("Example 1", "[cutOffTree]")
 {
     // 1 -> 2 -> 3
@@ -123,6 +128,7 @@ TEST_CASE("Example 1", "[cutOffTree]")
 
     REQUIRE(-1 == cutOffTreeFA(forest));
     REQUIRE(6 != cutOffTreeFA(forest));
+    REQUIRE(6 == cutOffTreeDS(forest));
 }
 
 TEST_CASE("Example 2", "[cutOffTree]")
@@ -134,6 +140,7 @@ TEST_CASE("Example 2", "[cutOffTree]")
         {1, 2, 3}, {0, 0, 0}, {7, 6, 5}};
 
     // REQUIRE(-1 == cutOffTreeFA(forest));
+    REQUIRE(-1 == cutOffTreeDS(forest));
 }
 
 TEST_CASE("Example 3", "[cutOffTree]")
@@ -147,4 +154,5 @@ TEST_CASE("Example 3", "[cutOffTree]")
         {2, 3, 4}, {0, 0, 5}, {8, 7, 6}};
 
     // REQUIRE(6 == cutOffTreeFA(forest));
+    REQUIRE(6 == cutOffTreeDS(forest));
 }
