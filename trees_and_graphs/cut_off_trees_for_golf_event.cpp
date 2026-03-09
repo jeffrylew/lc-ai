@@ -111,9 +111,42 @@ static int cutOffTreeFA(const std::vector<std::vector<int>>& forest)
         : min_steps;
 }
 
-static int cutOffTreeDS(const std::vector<std::vector<int>>& forest)
+static int cutOffTreeDS1(const std::vector<std::vector<int>>& forest)
 {
-    //! @details leetcode.com/problems/cut-off-trees-for-golf-event/editorial
+    //! @details https://leetcode.com/problems/cut-off-trees-for-golf-event
+    //!          /solutions/107403/c-sort-bfs-with-explanation-by-zestypand-8ebp
+
+    if (forest.empty() || forest.front().empty())
+    {
+        return 0;
+    }
+
+    const auto num_rows = static_cast<int>(std::ssize(forest));
+    const auto num_cols = static_cast<int>(std::ssize(forest.front()));
+
+    //! Stores <tree height, row, col>
+    std::vector<std::tuple<int, int, int>> trees;
+
+    //! Get all the tree positions and sort based on height
+    for (int row = 0; row < num_rows; ++row)
+    {
+        for (int col = 0; col < num_cols; ++col)
+        {
+            if (forest.at(row).at(col) > 1)
+            {
+                trees.emplace_back(forest.at(row).at(col), row, col);
+            }
+        }
+    }
+
+    //! Default comparator for tuples compares the first element before others
+    std::ranges::sort(trees);
+
+    int min_steps {};
+
+    //! @todo
+
+    return min_steps;
 }
 
 TEST_CASE("Example 1", "[cutOffTree]")
@@ -128,7 +161,7 @@ TEST_CASE("Example 1", "[cutOffTree]")
 
     REQUIRE(-1 == cutOffTreeFA(forest));
     REQUIRE(6 != cutOffTreeFA(forest));
-    REQUIRE(6 == cutOffTreeDS(forest));
+    REQUIRE(6 == cutOffTreeDS1(forest));
 }
 
 TEST_CASE("Example 2", "[cutOffTree]")
@@ -140,7 +173,7 @@ TEST_CASE("Example 2", "[cutOffTree]")
         {1, 2, 3}, {0, 0, 0}, {7, 6, 5}};
 
     // REQUIRE(-1 == cutOffTreeFA(forest));
-    REQUIRE(-1 == cutOffTreeDS(forest));
+    REQUIRE(-1 == cutOffTreeDS1(forest));
 }
 
 TEST_CASE("Example 3", "[cutOffTree]")
@@ -154,5 +187,5 @@ TEST_CASE("Example 3", "[cutOffTree]")
         {2, 3, 4}, {0, 0, 5}, {8, 7, 6}};
 
     // REQUIRE(6 == cutOffTreeFA(forest));
-    REQUIRE(6 == cutOffTreeDS(forest));
+    REQUIRE(6 == cutOffTreeDS1(forest));
 }
