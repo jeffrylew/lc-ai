@@ -4,6 +4,7 @@
 #include <functional>
 #include <queue>
 #include <tuple>
+#include <unordered_set>
 #include <utility>
 #include <vector>
 
@@ -142,11 +143,47 @@ static int cutOffTreeDS1(const std::vector<std::vector<int>>& forest)
     //! Default comparator for tuples compares the first element before others
     std::ranges::sort(trees);
 
-    int min_steps {};
+    const auto is_pos_valid = [=](int row, int col) -> bool {
+        return row >= 0 && row < nums_rows && col >= 0 && col < num_cols;
+    };
 
-    //! @todo
+    const auto min_steps_between_trees = [&](int start_row,
+                                             int start_col,
+                                             int end_row,
+                                             int end_col) -> int {
+        if (start_row == end_row && start_col == end_col)
+        {
+            return 0;
+        }
 
-    return min_steps;
+        std::queue<std::pair<int, int>> pos_queue;
+        pos_queue.emplace(start_row, start_col);
+
+        std::unordered_set<std::pair<int, int>> visited_pos;
+        visited_pos.emplace(start_row, start_col);
+    };
+
+    int total_min_steps {};
+    int curr_row {};
+    int curr_col {};
+
+    for (const auto& [next_tree_height, next_row, next_col] : trees)
+    {
+        const int min_steps {
+            min_steps_between_trees(curr_row, curr_col, next_row, next_col)};
+
+        //! If next tree cannot be reached then min_steps = -1
+        if (min_steps == -1)
+        {
+            return -1;
+        }
+
+        total_min_steps += min_steps;
+        curr_row = next_row;
+        curr_col = next_col;
+    }
+
+    return total_min_steps;
 }
 
 TEST_CASE("Example 1", "[cutOffTree]")
