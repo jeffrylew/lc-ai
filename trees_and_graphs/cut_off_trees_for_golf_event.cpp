@@ -143,6 +143,9 @@ static int cutOffTreeDS1(const std::vector<std::vector<int>>& forest)
     //! Default comparator for tuples compares the first element before others
     std::ranges::sort(trees);
 
+    const std::vector<std::pair<int, int>> directions {
+        {-1, 0}, {0, -1}, {0, 1}, {1, 0}};
+
     const auto is_pos_valid = [=](int row, int col) -> bool {
         return row >= 0 && row < nums_rows && col >= 0 && col < num_cols;
     };
@@ -161,6 +164,44 @@ static int cutOffTreeDS1(const std::vector<std::vector<int>>& forest)
 
         std::unordered_set<std::pair<int, int>> visited_pos;
         visited_pos.emplace(start_row, start_col);
+
+        int min_steps {};
+
+        while (!pos_queue.empty())
+        {
+            ++min_steps;
+
+            const auto pos_queue_size = static_cast<int>(std::ssize(pos_queue));
+
+            for (int num_cells = 0; num_cells < pos_queue_size; ++num_cells)
+            {
+                const auto [curr_row, curr_col] = pos_queue.front();
+                pos_queue.pop();
+
+                for (const auto& [drow, dcol] : directions)
+                {
+                    const int next_row {curr_row + drow};
+                    const int next_col {curr_col + dcol};
+
+                    if (!is_pos_valid(next_row, next_col)
+                        || visited_pos.contains({next_row, next_col})
+                        || forest.at(next_row).at(next_col) == 0)
+                    {
+                        continue;
+                    }
+
+                    if (next_row == end_row && next_col == end_col)
+                    {
+                        return min_steps;
+                    }
+
+                    visited_pos.emplace(next_row, next_col);
+                    pos_queue.emplace(next_row, next_col);
+                }
+            }
+        }
+
+        return -1;
     };
 
     int total_min_steps {};
