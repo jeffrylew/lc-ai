@@ -116,6 +116,10 @@ static int cutOffTreeDS1(const std::vector<std::vector<int>>& forest)
 {
     //! @details https://leetcode.com/problems/cut-off-trees-for-golf-event
     //!          /solutions/107403/c-sort-bfs-with-explanation-by-zestypand-8ebp
+    //!
+    //!          Time complexity is O(M^2 * N^2) in the worst case, where M is
+    //!          the number of rows in forest and N is the number of columns.
+    //!          Space complexity is O(M * N) for trees and visited_pos.
 
     if (forest.empty() || forest.front().empty())
     {
