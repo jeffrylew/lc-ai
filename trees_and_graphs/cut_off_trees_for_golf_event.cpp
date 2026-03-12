@@ -3,8 +3,8 @@
 #include <algorithm>
 #include <functional>
 #include <queue>
+#include <set>
 #include <tuple>
-#include <unordered_set>
 #include <utility>
 #include <vector>
 
@@ -147,7 +147,7 @@ static int cutOffTreeDS1(const std::vector<std::vector<int>>& forest)
         {-1, 0}, {0, -1}, {0, 1}, {1, 0}};
 
     const auto is_pos_valid = [=](int row, int col) -> bool {
-        return row >= 0 && row < nums_rows && col >= 0 && col < num_cols;
+        return row >= 0 && row < num_rows && col >= 0 && col < num_cols;
     };
 
     const auto min_steps_between_trees = [&](int start_row,
@@ -162,7 +162,7 @@ static int cutOffTreeDS1(const std::vector<std::vector<int>>& forest)
         std::queue<std::pair<int, int>> pos_queue;
         pos_queue.emplace(start_row, start_col);
 
-        std::unordered_set<std::pair<int, int>> visited_pos;
+        std::set<std::pair<int, int>> visited_pos;
         visited_pos.emplace(start_row, start_col);
 
         int min_steps {};
