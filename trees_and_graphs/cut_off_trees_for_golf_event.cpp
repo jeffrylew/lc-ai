@@ -3,8 +3,8 @@
 #include <algorithm>
 #include <functional>
 #include <queue>
-#include <set>
 #include <tuple>
+#include <unordered_set>
 #include <utility>
 #include <vector>
 
@@ -154,6 +154,10 @@ static int cutOffTreeDS1(const std::vector<std::vector<int>>& forest)
         return row >= 0 && row < num_rows && col >= 0 && col < num_cols;
     };
 
+    const auto pos_to_index = [=](int row, int col) -> int {
+        return row * num_cols + col;
+    };
+
     const auto min_steps_between_trees = [&](int start_row,
                                              int start_col,
                                              int end_row,
@@ -166,8 +170,8 @@ static int cutOffTreeDS1(const std::vector<std::vector<int>>& forest)
         std::queue<std::pair<int, int>> pos_queue;
         pos_queue.emplace(start_row, start_col);
 
-        std::set<std::pair<int, int>> visited_pos;
-        visited_pos.emplace(start_row, start_col);
+        std::unordered_set<int> visited_pos_idx;
+        visited_pos_idx.emplace(pos_to_index(start_row, start_col));
 
         int min_steps {};
 
@@ -186,9 +190,10 @@ static int cutOffTreeDS1(const std::vector<std::vector<int>>& forest)
                 {
                     const int next_row {curr_row + drow};
                     const int next_col {curr_col + dcol};
+                    const int next_pos_idx {pos_to_index(next_row, next_col)};
 
                     if (!is_pos_valid(next_row, next_col)
-                        || visited_pos.contains({next_row, next_col})
+                        || visited_pos_idx.contains(next_pos_idx)
                         || forest.at(next_row).at(next_col) == 0)
                     {
                         continue;
@@ -199,7 +204,7 @@ static int cutOffTreeDS1(const std::vector<std::vector<int>>& forest)
                         return min_steps;
                     }
 
-                    visited_pos.emplace(next_row, next_col);
+                    visited_pos_idx.emplace(next_pos_idx);
                     pos_queue.emplace(next_row, next_col);
                 }
             }
