@@ -10,6 +10,7 @@ set (
     "symmetric_tree"
     "validate_binary_search_tree"
     "word_ladder"
+    "word_ladder_ii"
 )
 
 foreach (cpp_file in ITEMS ${cpp_files})
