@@ -34,6 +34,8 @@ static std::vector<std::vector<std::string>> findLaddersFA(
 
     std::vector<std::vector<std::string>> shortest_sequences;
 
+    std::queue<std::vector<std::string>> seq_queue;
+
     const auto begin_word_size = static_cast<int>(std::ssize(beginWord));
     for (int begin_idx = 0; begin_idx < begin_word_size; ++begin_idx)
     {
@@ -45,8 +47,35 @@ static std::vector<std::vector<std::string>> findLaddersFA(
             continue;
         }
 
-        //! @todo
+        seq_queue.clear();
+        seq_queue.emplace({std::move(begin_word_neighbor)});
+
+        while (!seq_queue.empty())
+        {
+            const auto seq_queue_size = static_cast<int>(std::ssize(seq_queue));
+
+            for (int seq_idx = 0; seq_idx < seq_queue_size; ++seq_idx)
+            {
+                auto seq_vec = std::move(seq_queue.front());
+                seq_queue.pop();
+
+                if (seq_vec.back() == endWord)
+                {
+                    shortest_sequences.push_back(std::move(seq_vec));
+                    continue;
+                }
+
+                for (const auto neighbor_sv : word_neighbor_map[seq_vec.back()])
+                {
+                    auto next_seq_vec = seq_vec;
+                    nex_seq_vec.emplace_back(std::string {neighbor_sv});
+                    seq_queue.push(std::move(next_seq_vec));
+                }
+            }
+        }
     }
+
+    //! @todo
 
     return shortest_sequences;
 }
