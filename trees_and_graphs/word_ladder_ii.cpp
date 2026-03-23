@@ -14,6 +14,8 @@ static std::vector<std::vector<std::string>> findLaddersFA(
 {
     //! @details https://leetcode.com/explore/interview/card/amazon/78
     //!          /trees-and-graphs/483/
+    //!
+    //!          First attempt solution results in Memory Limit Exceeded
 
     //! Map of <word neighbor, word>
     std::unordered_map<std::string, std::vector<std::string_view>>
@@ -33,49 +35,63 @@ static std::vector<std::vector<std::string>> findLaddersFA(
     }
 
     std::vector<std::vector<std::string>> shortest_sequences;
+    std::queue<std::vector<std::string>>  seq_queue;
+    seq_queue.push({beginWord});
 
-    std::queue<std::vector<std::string>> seq_queue;
-
-    const auto begin_word_size = static_cast<int>(std::ssize(beginWord));
-    for (int begin_idx = 0; begin_idx < begin_word_size; ++begin_idx)
+    while (!seq_queue.empty())
     {
-        std::string begin_word_neighbor {beginWord};
-        begin_word_neighbor[begin_idx] = '#';
+        const auto seq_queue_size = static_cast<int>(std::ssize(seq_queue));
 
-        if (!word_neighbor_map.contains(begin_word_neighbor))
+        for (int seq_idx = 0; seq_idx < seq_queue_size; ++seq_idx)
         {
-            continue;
-        }
+            auto seq_vec = std::move(seq_queue.front());
+            seq_queue.pop();
 
-        seq_queue.clear();
-        seq_queue.emplace({std::move(begin_word_neighbor)});
-
-        while (!seq_queue.empty())
-        {
-            const auto seq_queue_size = static_cast<int>(std::ssize(seq_queue));
-
-            for (int seq_idx = 0; seq_idx < seq_queue_size; ++seq_idx)
+            const auto& last_word = seq_vec.back();
+            if (last_word == endWord)
             {
-                auto seq_vec = std::move(seq_queue.front());
-                seq_queue.pop();
+                shortest_sequences.push_back(std::move(seq_vec));
+                continue;
+            }
 
-                if (seq_vec.back() == endWord)
+            const auto last_word_size = static_cast<int>(std::ssize(last_word));
+            for (int word_idx = 0; word_idx < last_word_size; ++word_idx)
+            {
+                std::string last_word_neighbor {last_word};
+                last_word_neighbor[word_idx] = '#';
+
+                if (!word_neighbor_map.contains(last_word_neighbor))
                 {
-                    shortest_sequences.push_back(std::move(seq_vec));
                     continue;
                 }
 
-                for (const auto neighbor_sv : word_neighbor_map[seq_vec.back()])
+                for (const auto neighbor_sv
+                     : word_neighbor_map[last_word_neighbor])
                 {
                     auto next_seq_vec = seq_vec;
-                    nex_seq_vec.emplace_back(std::string {neighbor_sv});
+                    next_seq_vec.emplace_back(std::string {neighbor_sv});
                     seq_queue.push(std::move(next_seq_vec));
                 }
             }
         }
     }
 
-    //! @todo
+    int  min_sequence_size {1000};
+    auto sequence_it {shortest_sequences.begin()};
+
+    while (sequence_it != shortest_sequences.end())
+    {
+        const auto curr_seq_size = static_cast<int>(std::ssize(*sequence_it));
+        if (curr_seq_size <= min_sequence_size)
+        {
+            min_sequence_size = curr_seq_size;
+            ++sequence_it;
+            continue;
+        }
+
+        break;
+    }
+    shortest_sequences.erase(sequence_it, shortest_sequences.end());
 
     return shortest_sequences;
 }
