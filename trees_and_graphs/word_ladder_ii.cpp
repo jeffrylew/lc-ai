@@ -38,6 +38,8 @@ static std::vector<std::vector<std::string>> findLaddersFA(
     std::queue<std::vector<std::string>>  seq_queue;
     seq_queue.push({beginWord});
 
+    int min_sequence_size {1000};
+
     while (!seq_queue.empty())
     {
         const auto seq_queue_size = static_cast<int>(std::ssize(seq_queue));
@@ -50,6 +52,13 @@ static std::vector<std::vector<std::string>> findLaddersFA(
             const auto& last_word = seq_vec.back();
             if (last_word == endWord)
             {
+                const auto seq_vec_size = static_cast<int>(std::ssize(seq_vec));
+                if (seq_vec_size > min_sequence_size)
+                {
+                    break;
+                }
+
+                min_sequence_size = seq_vec_size;
                 shortest_sequences.push_back(std::move(seq_vec));
                 continue;
             }
@@ -75,23 +84,6 @@ static std::vector<std::vector<std::string>> findLaddersFA(
             }
         }
     }
-
-    int  min_sequence_size {1000};
-    auto sequence_it {shortest_sequences.begin()};
-
-    while (sequence_it != shortest_sequences.end())
-    {
-        const auto curr_seq_size = static_cast<int>(std::ssize(*sequence_it));
-        if (curr_seq_size <= min_sequence_size)
-        {
-            min_sequence_size = curr_seq_size;
-            ++sequence_it;
-            continue;
-        }
-
-        break;
-    }
-    shortest_sequences.erase(sequence_it, shortest_sequences.end());
 
     return shortest_sequences;
 }
