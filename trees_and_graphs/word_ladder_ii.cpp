@@ -88,6 +88,16 @@ static std::vector<std::vector<std::string>> findLaddersFA(
     return shortest_sequences;
 }
 
+static std::vector<std::vector<std::string>> findLaddersDS1(
+    std::string                     beginWord,
+    std::string                     endWord,
+    const std::vector<std::string>& wordList)
+{
+    //! @details https://leetcode.com/problems/word-ladder-ii/editorial/
+
+    //! @todo
+}
+
 TEST_CASE("Example 1", "[findLadders]")
 {
     const std::vector<std::string> wordList {
@@ -98,6 +108,7 @@ TEST_CASE("Example 1", "[findLadders]")
         {"hit", "hot", "lot", "log", "cog"}};
 
     REQUIRE(expected_output == findLaddersFA("hit", "cog", wordList));
+    REQUIRE(expected_output == findLaddersDS1("hit", "cog", wordList));
 }
 
 TEST_CASE("Example 2", "[findLadders]")
@@ -106,4 +117,5 @@ TEST_CASE("Example 2", "[findLadders]")
         "hot", "dot", "dog", "lot", "log"};
 
     REQUIRE(findLaddersFA("hit", "cog", wordList).empty());
+    REQUIRE(findLaddersDS1("hit", "cog", wordList).empty());
 }
