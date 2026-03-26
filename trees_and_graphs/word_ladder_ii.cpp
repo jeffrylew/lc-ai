@@ -4,6 +4,7 @@
 #include <string>
 #include <string_view>
 #include <unordered_map>
+#include <unordered_set>
 #include <utility>
 #include <vector>
 
@@ -88,6 +89,36 @@ static std::vector<std::vector<std::string>> findLaddersFA(
     return shortest_sequences;
 }
 
+[[nodiscard]] static std::vector<std::string> find_neighbors(
+    std::string                            word,
+    const std::unordered_set<std::string>& word_set)
+{
+    std::vector<std::string> neighbors;
+
+    for (auto& word_char : word)
+    {
+        const char orig_char {word_char};
+
+        //! Replace word_char with all letters from
+        //! a to z except for the original character
+        for (char replacement = 'a'; replacement <= 'z'; ++replacement)
+        {
+            word_char = replacement;
+
+            if (replacement == orig_char || !word_set.contains(word))
+            {
+                continue;
+            }
+
+            neighbors.push_back(word);
+        }
+
+        word_char = orig_char;
+    }
+
+    return neighbors;
+}
+
 static std::vector<std::vector<std::string>> findLaddersDS1(
     std::string                     beginWord,
     std::string                     endWord,
@@ -95,7 +126,20 @@ static std::vector<std::vector<std::string>> findLaddersDS1(
 {
     //! @details https://leetcode.com/problems/word-ladder-ii/editorial/
 
-    //! @todo
+    std::unordered_set<std::string> word_set(wordList.begin(), wordList.end());
+
+    std::vector<std::vector<std::string>> shortest_paths;
+
+    //! Build the DAG using BFS
+    build_dag_using_bfs(beginWord, endWord, word_set);
+
+    //! Every path will start from endWord
+    std::vector<std::string> curr_path {endWord};
+
+    //! Traverse the DAG to find all paths between endWord and beginWord
+    backtrack_to_traverse_dag(endWord, beginWord);
+
+    return shortest_paths;
 }
 
 TEST_CASE("Example 1", "[findLadders]")
