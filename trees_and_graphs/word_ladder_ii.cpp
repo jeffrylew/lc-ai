@@ -119,6 +119,31 @@ static std::vector<std::vector<std::string>> findLaddersFA(
     return neighbors;
 }
 
+static void backtrack_to_traverse_dag(
+    std::string_view                                                 source,
+    std::string_view                                                 dest,
+    std::vector<std::string>&                                        curr_path,
+    std::vector<std::vector<std::string>>&                           min_paths,
+    const std::unordered_map<std::string, std::vector<std::string>>& adj_map)
+{
+    //! Store the path if we reached the destination
+    if (source == dest)
+    {
+        min_paths.emplace_back(curr_path.rbegin(), curr_path.rend());
+    }
+
+    for (const auto& neighbor : adj_map.at(source))
+    {
+        curr_path.push_back(neighbor);
+        backtrack_to_traverse_dag(neighbor,
+                                  dest,
+                                  curr_path,
+                                  min_paths,
+                                  adj_map);
+        curr_path.pop_back();
+    }
+}
+
 static std::vector<std::vector<std::string>> findLaddersDS1(
     std::string                     beginWord,
     std::string                     endWord,
@@ -128,16 +153,22 @@ static std::vector<std::vector<std::string>> findLaddersDS1(
 
     std::unordered_set<std::string> word_set(wordList.begin(), wordList.end());
 
+    std::unordered_map<std::string, std::vector<std::string>> adjacency_map;
+
     std::vector<std::vector<std::string>> shortest_paths;
 
     //! Build the DAG using BFS
     build_dag_using_bfs(beginWord, endWord, word_set);
 
     //! Every path will start from endWord
-    std::vector<std::string> curr_path {endWord};
+    std::vector<std::string> current_path {endWord};
 
     //! Traverse the DAG to find all paths between endWord and beginWord
-    backtrack_to_traverse_dag(endWord, beginWord);
+    backtrack_to_traverse_dag(endWord,
+                              beginWord,
+                              current_path,
+                              shortest_paths,
+                              adjacency_map);
 
     return shortest_paths;
 }
