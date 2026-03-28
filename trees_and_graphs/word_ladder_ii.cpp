@@ -144,6 +144,15 @@ static void backtrack_to_traverse_dag(
     }
 }
 
+static void build_dag_using_bfs(
+    std::string_view                                           begin_word,
+    std::string_view                                           end_word,
+    std::unordered_set<std::string>&                           word_set,
+    std::unordered_map<std::string, std::vector<std::string>>& adj_map)
+{
+    //! @todo
+}
+
 static std::vector<std::vector<std::string>> findLaddersDS1(
     std::string                     beginWord,
     std::string                     endWord,
@@ -158,7 +167,10 @@ static std::vector<std::vector<std::string>> findLaddersDS1(
     std::vector<std::vector<std::string>> shortest_paths;
 
     //! Build the DAG using BFS
-    build_dag_using_bfs(beginWord, endWord, word_set);
+    build_dag_using_bfs(beginWord,
+                        endWord,
+                        word_set,
+                        adjacency_map);
 
     //! Every path will start from endWord
     std::vector<std::string> current_path {endWord};
