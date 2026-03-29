@@ -150,7 +150,44 @@ static void build_dag_using_bfs(
     std::unordered_set<std::string>&                           word_set,
     std::unordered_map<std::string, std::vector<std::string>>& adj_map)
 {
-    //! @todo
+    std::string begin_word_str {begin_word};
+
+    std::queue<std::string> word_queue;
+    word_queue.push(begin_word_str);
+
+    //! Remove the root word
+    if (word_set.contains(begin_word_str))
+    {
+        word_set.erase(begin_word_str);
+    }
+
+    std::unordered_set<std::string_view> enqueued_words;
+    enqueued_words.insert(begin_word);
+
+    while (!word_queue.empty())
+    {
+        //! visited_words stores words of current layer
+        std::vector<std::string> visited_words;
+
+        const auto word_queue_size = static_cast<int>(std::ssize(word_queue));
+        for (int word_level = 0; word_level < word_queue_size; ++word_level)
+        {
+            std::string curr_word {word_queue.front()};
+            word_queue.pop();
+
+            //! find_neighbors will have the adjacent words of the curr_word
+            auto neighbors = find_neighbors(curr_word, word_set);
+            for (auto& next_word : neighbors)
+            {
+                visited_words.push_back(next_word);
+
+                //! Add the edge from next_word to curr_word
+                adj_map[next_word].push_back(curr_word);
+
+                //! @todo
+            }
+        }
+    }
 }
 
 static std::vector<std::vector<std::string>> findLaddersDS1(
