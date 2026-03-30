@@ -184,7 +184,20 @@ static void build_dag_using_bfs(
                 //! Add the edge from next_word to curr_word
                 adj_map[next_word].push_back(curr_word);
 
-                //! @todo
+                if (!enqueued_words.contains(next_word))
+                {
+                    enqueued_words.emplace(std::string_view {next_word});
+                    word_queue.push(std::move(next_word));
+                }
+            }
+        }
+
+        //! Remove words of the previous layer
+        for (auto& visited_word : visited_words)
+        {
+            if (word_set.contains(visited_word))
+            {
+                word_set.erase(std::move(visited_word));
             }
         }
     }
