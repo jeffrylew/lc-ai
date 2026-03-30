@@ -132,7 +132,13 @@ static void backtrack_to_traverse_dag(
         min_paths.emplace_back(curr_path.rbegin(), curr_path.rend());
     }
 
-    for (const auto& neighbor : adj_map.at(source))
+    const std::string source_str {source};
+    if (!adj_map.contains(source_str))
+    {
+        return;
+    }
+
+    for (const auto& neighbor : adj_map.at(source_str))
     {
         curr_path.push_back(neighbor);
         backtrack_to_traverse_dag(neighbor,
@@ -161,8 +167,8 @@ static void build_dag_using_bfs(
         word_set.erase(begin_word_str);
     }
 
-    std::unordered_set<std::string_view> enqueued_words;
-    enqueued_words.insert(begin_word);
+    std::unordered_set<std::string> enqueued_words;
+    enqueued_words.insert(begin_word_str);
 
     while (!word_queue.empty())
     {
@@ -175,7 +181,7 @@ static void build_dag_using_bfs(
             std::string curr_word {word_queue.front()};
             word_queue.pop();
 
-            //! find_neighbors will have the adjacent words of the curr_word
+            //! find_neighbors will have the adjacent words of curr_word
             auto neighbors = find_neighbors(curr_word, word_set);
             for (auto& next_word : neighbors)
             {
@@ -186,7 +192,7 @@ static void build_dag_using_bfs(
 
                 if (!enqueued_words.contains(next_word))
                 {
-                    enqueued_words.emplace(std::string_view {next_word});
+                    enqueued_words.insert(next_word);
                     word_queue.push(std::move(next_word));
                 }
             }
