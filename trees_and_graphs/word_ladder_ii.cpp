@@ -93,6 +93,9 @@ static std::vector<std::vector<std::string>> findLaddersFA(
     std::string                            word,
     const std::unordered_set<std::string>& word_set)
 {
+    //! Time complexity O(K) where K = max length of a word. For each letter in
+    //! a word, we replace it with 25 other lowercase letters.
+
     std::vector<std::string> neighbors;
 
     for (auto& word_char : word)
@@ -215,6 +218,16 @@ static std::vector<std::vector<std::string>> findLaddersDS1(
     const std::vector<std::string>& wordList)
 {
     //! @details https://leetcode.com/problems/word-ladder-ii/editorial/
+    //!
+    //!          Time complexity O(N * K + alpha) where N = wordList.size(),
+    //!          K = the max word length, and alpha is the number of possible
+    //!          paths from beginWord to endWord in the directed graph. Copying
+    //!          wordList into word_set takes O(N). find_neighbors has a time
+    //!          complexity of O(K) so the total complexity for N words is
+    //!          O(N * K). Each word is enqueued and removed from word_set in
+    //!          O(N). Thus, the total time complexity of BFS is O(N * K). When
+    //!          backtracking, we are essentially finding all paths from
+    //!          beginWord to endWord in O(alpha).
 
     std::unordered_set<std::string> word_set(wordList.begin(), wordList.end());
 
