@@ -228,6 +228,12 @@ static std::vector<std::vector<std::string>> findLaddersDS1(
     //!          O(N). Thus, the total time complexity of BFS is O(N * K). When
     //!          backtracking, we are essentially finding all paths from
     //!          beginWord to endWord in O(alpha).
+    //!          Space complexity O(N * K). Storing the words in word_set takes
+    //!          O(N * K). To build the adjacency_map, O(N) space is required
+    //!          since the BFS will produce a directed graph and there will be
+    //!          N - 1 edges max. During backtracking, stack space can equal the
+    //!          max number of active calls to backtrack_to_traverse_dag, which
+    //!          is O(N) since the path can have all the words in wordList.
 
     std::unordered_set<std::string> word_set(wordList.begin(), wordList.end());
 
