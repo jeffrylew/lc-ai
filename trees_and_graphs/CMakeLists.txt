@@ -4,6 +4,7 @@ set (
     "binary_tree_zigzag_level_order_traversal"
     "course_schedule"
     "cut_off_trees_for_golf_event"
+    "flood_fill"
     "lowest_common_ancestor_of_a_binary_tree"
     "maximum_depth_of_binary_tree"
     "number_of_islands"
