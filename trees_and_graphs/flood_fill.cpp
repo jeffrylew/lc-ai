@@ -1,5 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 
+#include <functional>
 #include <stack>
 #include <unordered_set>
 #include <utility>
@@ -68,6 +69,61 @@ static std::vector<std::vector<int>> floodFillFA(
     return filled_image;
 }
 
+static std::vector<std::vector<int>> floodFillDS1(
+    const std::vector<std::vector<int>>& image,
+    int                                  sr,
+    int                                  sc,
+    int                                  color)
+{
+    //! @details https://leetcode.com/problems/flood-fill/editorial/
+    //!
+    //!          Time complexity O(N) where N = num_rows * num_cols i.e. the
+    //!          number of pixels in the image. We might process every pixel.
+    //!          Space complexity O(N) for the size of the call stack when
+    //!          calling flood_fill_dfs.
+
+    auto       filled_image = image;
+    const auto num_rows     = static_cast<int>(std::ssize(filled_image));
+    const auto num_cols     = static_cast<int>(std::ssize(filled_image[0]));
+    const int  start_color {filled_image[sr][sc]};
+
+    const std::function<void(int, int)> flood_fill_dfs = [&](int row, int col) {
+        if (filled_image[row][col] != start_color)
+        {
+            return;
+        }
+    
+        filled_image[row][col] = color;
+
+        if (row >= 1)
+        {
+            flood_fill_dfs(row - 1, col);
+        }
+
+        if (col >= 1)
+        {
+            flood_fill_dfs(row, col - 1);
+        }
+
+        if (row + 1 < num_rows)
+        {
+            flood_fill_dfs(row + 1, col);
+        }
+
+        if (col + 1 < num_cols)
+        {
+            flood_fill_dfs(row, col + 1);
+        }
+    };
+
+    if (start_color != color)
+    {
+        flood_fill_dfs(sr, sc);
+    }
+
+    return filled_image;
+}
+
 TEST_CASE("Example 1", "[floodFill]")
 {
     constexpr int sr {1};
@@ -79,6 +135,7 @@ TEST_CASE("Example 1", "[floodFill]")
         {2, 2, 2}, {2, 2, 0}, {2, 0, 1}};
 
     REQUIRE(expected_output == floodFillFA(image, sr, sc, color));
+    REQUIRE(expected_output == floodFillDS1(image, sr, sc, color));
 }
 
 TEST_CASE("Example 2", "[floodFill]")
@@ -91,4 +148,5 @@ TEST_CASE("Example 2", "[floodFill]")
     const auto                          expected_output = image;
 
     REQUIRE(expected_output == floodFillFA(image, sr, sc, color));
+    REQUIRE(expected_output == floodFillDS1(image, sr, sc, color));
 }
