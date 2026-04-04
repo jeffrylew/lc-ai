@@ -1,6 +1,8 @@
 #include <catch2/catch_test_macros.hpp>
 
+#include <array>
 #include <functional>
+#include <queue>
 #include <stack>
 #include <unordered_set>
 #include <utility>
@@ -124,6 +126,63 @@ static std::vector<std::vector<int>> floodFillDS1(
     return filled_image;
 }
 
+static std::vector<std::vector<int>> floodFillDS2(
+    const std::vector<std::vector<int>>& image,
+    int                                  sr,
+    int                                  sc,
+    int                                  color)
+{
+    //! @details https://leetcode.com/problems/flood-fill/editorial/
+    //!
+    //!          Time complexity O(R * C) where R = number of rows in image and
+    //!          C = number of cols. In the worst case, every pixel is visited.
+    //!          Space complexity O(min(R, C)). In the worst case when every
+    //!          pixel must be visited, pos_queue can grow up to min(R, C).
+    //!          See https://leetcode.com/problems/number-of-islands/editorial/
+    //!          and https://imgur.com/gallery/bfs-2d-grid-of-m-x-n-M58OKvB.
+
+    const int start_color {image[sr][sc]};
+    if (start_color == color)
+    {
+        return image;
+    }
+
+    auto       filled_image = image;
+    const auto num_rows     = static_cast<int>(std::ssize(image));
+    const auto num_cols     = static_cast<int>(std::ssize(image[0]));
+    filled_image[sr][sc]    = color;
+
+    constexpr std::array<std::pair<int, int>, 4U> neighbors {
+        {0, -1}, {-1, 0}, {0, 1}, {1, 0}};
+
+    std::queue<std::pair<int, int>> pos_queue;
+    pos_queue.emplace(sr, sc);
+
+    while (!pos_queue.empty())
+    {
+        const auto [curr_row, curr_col] = pos_queue.front();
+        pos_queue.pop();
+
+        for (const auto& [drow, dcol] : neighbors)
+        {
+            const int next_row {curr_row + drow};
+            const int next_col {curr_col + dcol};
+
+            if (next_row >= 0
+                && next_col >= 0
+                && next_row < num_rows
+                && next_col < num_cols
+                && filled_image[next_row][next_col] == start_color)
+            {
+                filled_image[next_row][next_col] = color;
+                pos_queue.emplace(next_row, next_col);
+            }
+        }
+    }
+
+    return filled_image;
+}
+
 TEST_CASE("Example 1", "[floodFill]")
 {
     constexpr int sr {1};
@@ -136,6 +195,7 @@ TEST_CASE("Example 1", "[floodFill]")
 
     REQUIRE(expected_output == floodFillFA(image, sr, sc, color));
     REQUIRE(expected_output == floodFillDS1(image, sr, sc, color));
+    REQUIRE(expected_output == floodFillDS2(image, sr, sc, color));
 }
 
 TEST_CASE("Example 2", "[floodFill]")
@@ -149,4 +209,5 @@ TEST_CASE("Example 2", "[floodFill]")
 
     REQUIRE(expected_output == floodFillFA(image, sr, sc, color));
     REQUIRE(expected_output == floodFillDS1(image, sr, sc, color));
+    REQUIRE(expected_output == floodFillDS2(image, sr, sc, color));
 }
