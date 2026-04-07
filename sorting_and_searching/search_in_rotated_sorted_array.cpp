@@ -18,6 +18,11 @@ static int searchFA(const std::vector<int>& nums, int target)
 
     const auto nums_size = static_cast<int>(std::ssize(nums));
 
+    if (nums_size == 1)
+    {
+        return target == nums[0] ? 0 : -1;
+    }
+
     int lo {};
     int hi {nums_size - 1};
     int rotation_idx {-1};
@@ -40,7 +45,31 @@ static int searchFA(const std::vector<int>& nums, int target)
             }
         }
 
-        //! @todo
+        if (rotation_idx == -1)
+        {
+            if (target < nums[mid])
+            {
+                hi = mid - 1;
+            }
+        }
+        else
+        {
+            if (target < nums[rotation_idx] || target > nums[rotation_idx - 1])
+            {
+                //! target is smaller than smallest or larger than largest
+                return -1;
+            }
+
+            if (target > start_value_of_nums_k_to_n_1
+                && target < nums[rotation_idx - 1])
+            {
+                hi = rotation_idx - 1;
+            }
+            else
+            {
+                //! @todo
+            }
+        }
     }
 }
 
