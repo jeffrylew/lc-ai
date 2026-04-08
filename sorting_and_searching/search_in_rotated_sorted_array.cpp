@@ -51,6 +51,14 @@ static int searchFA(const std::vector<int>& nums, int target)
             {
                 hi = mid - 1;
             }
+            else if (target > nums[mid])
+            {
+                lo = mid + 1;
+            }
+            else
+            {
+                return mid;
+            }
         }
         else
         {
@@ -71,6 +79,8 @@ static int searchFA(const std::vector<int>& nums, int target)
             }
         }
     }
+
+    return lo;
 }
 
 TEST_CASE("Example 1", "[search]")
