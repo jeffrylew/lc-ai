@@ -68,13 +68,22 @@ static int searchFA(const std::vector<int>& nums, int target)
                 return -1;
             }
 
-            if (target > start_value_of_nums_k_to_n_1
-                && target < nums[rotation_idx - 1])
+            if (target >= start_value_of_nums_k_to_n_1)
             {
-                hi = rotation_idx - 1;
+                //! Search indices [start_value_of_nums_k_to_n_1, rotation_idx)
+
+                if (target <= nums[rotation_idx - 1])
+                {
+                    hi = rotation_idx - 1
+                }
+                else
+                {
+                    return -1;
+                }
             }
             else
             {
+                //! Search indices [rotation_idx, end_value_of_nums_0_to_k_1]
                 //! @todo
             }
         }
