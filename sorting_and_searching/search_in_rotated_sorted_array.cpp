@@ -84,7 +84,15 @@ static int searchFA(const std::vector<int>& nums, int target)
             else
             {
                 //! Search indices [rotation_idx, end_value_of_nums_0_to_k_1]
-                //! @todo
+
+                if (target >= nums[rotation_idx])
+                {
+                    lo = rotation_idx;
+                }
+                else
+                {
+                    return -1;
+                }
             }
         }
     }
