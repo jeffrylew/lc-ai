@@ -6,6 +6,8 @@ static int searchFA(const std::vector<int>& nums, int target)
 {
     //! @details https://leetcode.com/explore/interview/card/amazon/79
     //!          /sorting-and-searching/2992/
+    //!
+    //!          Time limit exceeded for Example 1.
 
     const int start_value_of_nums_k_to_n_1 {nums.front()};
     const int end_value_of_nums_0_to_k_1 {nums.back()};
@@ -100,11 +102,71 @@ static int searchFA(const std::vector<int>& nums, int target)
     return lo;
 }
 
+static int searchDS1(const std::vector<int>& nums, int target)
+{
+    //! @details leetcode.com/problems/search-in-rotated-sorted-array/editorial
+
+    const auto nums_size = static_cast<int>(std::ssize(nums));
+    int        left {};
+    int        right {nums_size - 1};
+
+    //! Find the index of the pivot element (smallest element)
+    while (left <= right)
+    {
+        const int mid {left + (right - left) / 2};
+        if (nums[mid] > nums[nums_size - 1])
+        {
+            left = mid + 1;
+        }
+        else
+        {
+            right = mid - 1;
+        }
+    }
+
+    //! Binary search over the inclusive range [left_bound, right_bound]
+    const auto binary_search = [&](int left_bound, int right_bound) {
+        int left_idx {left_bound};
+        int right_idx {right_bound};
+
+        while (left_idx <= right_idx)
+        {
+            const int mid_idx {left_idx + (right_idx - left_idx) / 2};
+            if (nums[mid_idx] == target)
+            {
+                return mid_idx;
+            }
+
+            if (nums[mid_idx] > target)
+            {
+                right_idx = mid_idx - 1;
+            }
+            else
+            {
+                left_idx = mid_idx + 1;
+            }
+        }
+
+        return -1;
+    };
+
+    //! Binary search over elements on the pivot element's left
+    const int target_idx {binary_search(0, left - 1)};
+    if (target_idx != -1)
+    {
+        return target_idx;
+    }
+
+    //! Binary search over elements on the pivot element's right
+    return binary_search(left, nums_size - 1);
+}
+
 TEST_CASE("Example 1", "[search]")
 {
     const std::vector<int> nums {4, 5, 6, 7, 0, 1, 2};
     constexpr int          target {};
     REQUIRE(4 == searchFA(nums, target));
+    REQUIRE(4 == searchDS1(nums, target));
 }
 
 TEST_CASE("Example 2", "[search]")
@@ -112,6 +174,7 @@ TEST_CASE("Example 2", "[search]")
     const std::vector<int> nums {4, 5, 6, 7, 0, 1, 2};
     constexpr int          target {3};
     REQUIRE(-1 == searchFA(nums, target));
+    REQUIRE(-1 == searchDS1(nums, target));
 }
 
 TEST_CASE("Example 3", "[search]")
@@ -119,4 +182,5 @@ TEST_CASE("Example 3", "[search]")
     const std::vector<int> nums {1};
     constexpr int          target {};
     REQUIRE(-1 == searchFA(nums, target));
+    REQUIRE(-1 == searchDS1(nums, target));
 }
