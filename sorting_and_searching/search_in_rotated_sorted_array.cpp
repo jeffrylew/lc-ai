@@ -74,7 +74,7 @@ static int searchFA(const std::vector<int>& nums, int target)
 
                 if (target <= nums[rotation_idx - 1])
                 {
-                    hi = rotation_idx - 1
+                    hi = rotation_idx - 1;
                 }
                 else
                 {
