@@ -96,3 +96,43 @@ TEST_CASE("Example 2", "[MedianFinder]")
     median_finder_fa.addNum(-5);                  // arr = [-1, -2, -3, -4, -5]
     CHECK(-3.0 == median_finder_fa.findMedian()); // return -3.0
 }
+
+TEST_CASE("Example 3", "[MedianFinder]")
+{
+    MedianFinderFA median_finder_fa;
+
+    median_finder_fa.addNum(6);                  // arr = [6]
+    CHECK(6.0 == median_finder_fa.findMedian()); // return 6.0
+    median_finder_fa.addNum(10);                 // arr = [6, 10]
+    CHECK(8.0 == median_finder_fa.findMedian()); // return 8.0
+    median_finder_fa.addNum(2);                  // arr = [2, 6, 10]
+    CHECK(6.0 == median_finder_fa.findMedian()); // return 6.0
+    median_finder_fa.addNum(6);                  // arr = [2, 6, 6, 10]
+    CHECK(6.0 == median_finder_fa.findMedian()); // return 6.0
+    median_finder_fa.addNum(5);                  // arr = [2, 5, 6, 6, 10]
+    CHECK(6.0 == median_finder_fa.findMedian()); // return 6.0
+
+    // arr = [0, 2, 5, 6, 6, 10]
+    median_finder_fa.addNum(0);
+    CHECK(5.5 == median_finder_fa.findMedian());
+
+    // arr = [0, 2, 5, 6, 6, 6, 10]
+    median_finder_fa.addNum(6);
+    CHECK(6.0 == median_finder_fa.findMedian());
+
+    // arr = [0, 2, 3, 5, 6, 6, 6, 10]
+    median_finder_fa.addNum(3);
+    CHECK(5.5 == median_finder_fa.findMedian());
+
+    // arr = [0, 1, 2, 3, 5, 6, 6, 6, 10]
+    median_finder_fa.addNum(1);
+    CHECK(5.0 == median_finder_fa.findMedian());
+
+    // arr = [0, 0, 1, 2, 3, 5, 6, 6, 6, 10]
+    median_finder_fa.addNum(0);
+    CHECK(4.0 == median_finder_fa.findMedian());
+
+    // arr = [0, 0, 0, 1, 2, 3, 5, 6, 6, 6, 10]
+    median_finder_fa.addNum(0);
+    CHECK(3.0 == median_finder_fa.findMedian());
+}
