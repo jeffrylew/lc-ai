@@ -59,6 +59,11 @@ private:
 //! @details leetcode.com/problems/find-median-from-data-stream/editorial
 //!
 //!          Simple sorting discussion solution runs into Time Limit Exceeded
+//!          Time complexity O(N * log N) where N = number of elements in data
+//!          stream. Adding a number takes amortized O(1) for a container with
+//!          an efficient resizing scheme. Sorting takes O(N * log N).
+//!          Space complexity O(N) to store the input in a container. No extra
+//!          space is needed since sorting can usually be done in-place.
 class MedianFinderDS1
 {
 public:
