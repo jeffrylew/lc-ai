@@ -1,5 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 
+#include <algorithm>
 #include <functional>
 #include <priority_queue>
 #include <vector>
@@ -52,6 +53,37 @@ public:
 private:
     std::priority_queue<int, std::vector<int>, std::greater<int>> min_heap;
     std::priority_queue<int>                                      max_heap;
+};
+
+//! @class MedianFinderDS1
+//! @details leetcode.com/problems/find-median-from-data-stream/editorial
+//!
+//!          Simple sorting discussion solution runs into Time Limit Exceeded
+class MedianFinderDS1
+{
+public:
+    //! Adds a number into the data stream
+    void addNum(int num)
+    {
+        store.push_back(num);
+    }
+
+    //! Returns the median of the current data stream
+    double findMedian()
+    {
+        std::ranges::sort(store);
+
+        const auto store_size = static_cast<int>(std::ssize(store));
+        const auto half_store = store_size / 2;
+
+        //! If store_size is odd then return middle (store_size % 2 == 1)
+        return store_size & 1
+            ? static_cast<double>(store[half_store])
+            : 0.5 * (store[half_store - 1] + store[half_store]);
+    }
+
+private:
+    std::vector<int> store;
 };
 
 TEST_CASE("Example 1", "[MedianFinder]")
