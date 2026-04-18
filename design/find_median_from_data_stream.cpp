@@ -91,9 +91,15 @@ private:
     std::vector<int> store;
 };
 
-//! @class MedianFinderDS1
+//! @class MedianFinderDS2
 //! @details leetcode.com/problems/find-median-from-data-stream/editorial
-class MedianFinderDS1
+//!
+//!          Time complexity O(N) where N = number of elements in data stream.
+//!          Binary search takes O(log N) to find the correct insertion position
+//!          but insertion can take up to O(N) since elements have to be shifted
+//!          to make room for the new element.
+//!          Space complexity O(N) to hold the input in a container.
+class MedianFinderDS2
 {
 public:
     void addNum(int num)
@@ -142,6 +148,20 @@ TEST_CASE("Example 1", "[MedianFinder]")
     CHECK(1.5 == median_finder_fa.findMedian()); // return 1.5 = (1 + 2) / 2
     median_finder_fa.addNum(3);                  // arr = [1, 2, 3]
     CHECK(2.0 == median_finder_fa.findMedian()); // return 2.0
+
+    MedianFinderDS1 median_finder_ds1;
+    median_finder_ds1.addNum(1);
+    median_finder_ds1.addNum(2);
+    CHECK(1.5 == median_finder_ds1.findMedian());
+    median_finder_ds1.addNum(3);
+    CHECK(2.0 == median_finder_ds1.findMedian());
+
+    MedianFinderDS2 median_finder_ds2;
+    median_finder_ds2.addNum(1);
+    median_finder_ds2.addNum(2);
+    CHECK(1.5 == median_finder_ds2.findMedian());
+    median_finder_ds2.addNum(3);
+    CHECK(2.0 == median_finder_ds2.findMedian());
 }
 
 TEST_CASE("Example 2", "[MedianFinder]")
@@ -168,6 +188,30 @@ TEST_CASE("Example 2", "[MedianFinder]")
     CHECK(-2.5 == median_finder_fa.findMedian()); // return -2.5
     median_finder_fa.addNum(-5);                  // arr = [-1, -2, -3, -4, -5]
     CHECK(-3.0 == median_finder_fa.findMedian()); // return -3.0
+
+    MedianFinderDS1 median_finder_ds1;
+    median_finder_ds1.addNum(-1);
+    CHECK(-1.0 == median_finder_ds1.findMedian());
+    median_finder_ds1.addNum(-2);
+    CHECK(-1.5 == median_finder_ds1.findMedian());
+    median_finder_ds1.addNum(-3);
+    CHECK(-2.0 == median_finder_ds1.findMedian());
+    median_finder_ds1.addNum(-4);
+    CHECK(-2.5 == median_finder_ds1.findMedian());
+    median_finder_ds1.addNum(-5);
+    CHECK(-3.0 == median_finder_ds1.findMedian());
+
+    MedianFinderDS2 median_finder_ds2;
+    median_finder_ds2.addNum(-1);
+    CHECK(-1.0 == median_finder_ds2.findMedian());
+    median_finder_ds2.addNum(-2);
+    CHECK(-1.5 == median_finder_ds2.findMedian());
+    median_finder_ds2.addNum(-3);
+    CHECK(-2.0 == median_finder_ds2.findMedian());
+    median_finder_ds2.addNum(-4);
+    CHECK(-2.5 == median_finder_ds2.findMedian());
+    median_finder_ds2.addNum(-5);
+    CHECK(-3.0 == median_finder_ds2.findMedian());
 }
 
 TEST_CASE("Example 3", "[MedianFinder]")
@@ -208,4 +252,52 @@ TEST_CASE("Example 3", "[MedianFinder]")
     // arr = [0, 0, 0, 1, 2, 3, 5, 6, 6, 6, 10]
     median_finder_fa.addNum(0);
     // CHECK(3.0 == median_finder_fa.findMedian());
+
+    MedianFinderDS1 median_finder_ds1;
+    median_finder_ds1.addNum(6);
+    CHECK(6.0 == median_finder_ds1.findMedian());
+    median_finder_ds1.addNum(10);
+    CHECK(8.0 == median_finder_ds1.findMedian());
+    median_finder_ds1.addNum(2);
+    CHECK(6.0 == median_finder_ds1.findMedian());
+    median_finder_ds1.addNum(6);
+    CHECK(6.0 == median_finder_ds1.findMedian());
+    median_finder_ds1.addNum(5);
+    CHECK(6.0 == median_finder_ds1.findMedian());
+    median_finder_ds1.addNum(0);
+    CHECK(5.5 == median_finder_ds1.findMedian());
+    median_finder_ds1.addNum(6);
+    CHECK(6.0 == median_finder_ds1.findMedian());
+    median_finder_ds1.addNum(3);
+    CHECK(5.5 == median_finder_ds1.findMedian());
+    median_finder_ds1.addNum(1);
+    CHECK(5.0 == median_finder_ds1.findMedian());
+    median_finder_ds1.addNum(0);
+    CHECK(4.0 == median_finder_ds1.findMedian());
+    median_finder_ds1.addNum(0);
+    CHECK(3.0 == median_finder_ds1.findMedian());
+
+    MedianFinderDS2 median_finder_ds2;
+    median_finder_ds2.addNum(6);
+    CHECK(6.0 == median_finder_ds2.findMedian());
+    median_finder_ds2.addNum(10);
+    CHECK(8.0 == median_finder_ds2.findMedian());
+    median_finder_ds2.addNum(2);
+    CHECK(6.0 == median_finder_ds2.findMedian());
+    median_finder_ds2.addNum(6);
+    CHECK(6.0 == median_finder_ds2.findMedian());
+    median_finder_ds2.addNum(5);
+    CHECK(6.0 == median_finder_ds2.findMedian());
+    median_finder_ds2.addNum(0);
+    CHECK(5.5 == median_finder_ds2.findMedian());
+    median_finder_ds2.addNum(6);
+    CHECK(6.0 == median_finder_ds2.findMedian());
+    median_finder_ds2.addNum(3);
+    CHECK(5.5 == median_finder_ds2.findMedian());
+    median_finder_ds2.addNum(1);
+    CHECK(5.0 == median_finder_ds2.findMedian());
+    median_finder_ds2.addNum(0);
+    CHECK(4.0 == median_finder_ds2.findMedian());
+    median_finder_ds2.addNum(0);
+    CHECK(3.0 == median_finder_ds2.findMedian());
 }
