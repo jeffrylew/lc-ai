@@ -91,6 +91,40 @@ private:
     std::vector<int> store;
 };
 
+//! @class MedianFinderDS1
+//! @details leetcode.com/problems/find-median-from-data-stream/editorial
+class MedianFinderDS1
+{
+public:
+    void addNum(int num)
+    {
+        if (store.empty())
+        {
+            store.push_back(num);
+        }
+        else
+        {
+            //! Binary search followed by insertion
+            auto num_lower_bound_it =
+                std::lower_bound(store.begin(), store.end(), num);
+            store.insert(num_lower_bound_it, num);
+        }
+    }
+
+    double findMedian()
+    {
+        const auto store_size = static_cast<int>(std::ssize(store));
+        const auto half_store = store_size / 2;
+
+        return store_size & 1
+            ? static_cast<double>(store[half_store])
+            : 0.5 * (store[half_store - 1] + store[half_store]);
+    }
+
+private:
+    std::vector<int> store;
+};
+
 TEST_CASE("Example 1", "[MedianFinder]")
 {
     MedianFinderFA median_finder_fa;
