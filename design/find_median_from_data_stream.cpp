@@ -131,6 +131,26 @@ private:
     std::vector<int> store;
 };
 
+//! @class MedianFinderDS3
+//! @details leetcode.com/problems/find-median-from-data-stream/editorial
+class MedianFinderDS3
+{
+public:
+    void addNum(int num)
+    {
+        //! @todo
+    }
+
+    double findMedian()
+    {
+        //! @todo
+    }
+
+private:
+    std::priority_queue<int, std::vector<int>, std::greater<int>> min_heap;
+    std::priority_queue<int>                                      max_heap;
+};
+
 TEST_CASE("Example 1", "[MedianFinder]")
 {
     MedianFinderFA median_finder_fa;
