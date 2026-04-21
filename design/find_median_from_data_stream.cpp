@@ -138,12 +138,26 @@ class MedianFinderDS3
 public:
     void addNum(int num)
     {
-        //! @todo
+        //! Add to max heap
+        max_heap.push(num);
+
+        //! Balancing step
+        min_heap.push(max_heap.top());
+        max_heap.pop();
+
+        //! Maintain size property
+        if (max_heap.size() < min_heap.size())
+        {
+            max_heap.push(min_heap.top());
+            min_heap.pop();
+        }
     }
 
     double findMedian()
     {
-        //! @todo
+        return max_heap.size() > min_heap.size()
+            ? static_cast<double>(max_heap.top())
+            : 0.5 * (max_heap.top() + min_heap.top());
     }
 
 private:
