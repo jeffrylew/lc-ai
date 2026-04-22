@@ -161,6 +161,10 @@ public:
     }
 
 private:
+    //! min_heap stores larger half of input numbers
+    //! - All numbers in min_heap are >= to top element of min_heap
+    //! max_heap stores smaller half of input numbers
+    //! - All numbers in max_heap are <= to top element of max_heap
     std::priority_queue<int, std::vector<int>, std::greater<int>> min_heap;
     std::priority_queue<int>                                      max_heap;
 };
@@ -196,6 +200,13 @@ TEST_CASE("Example 1", "[MedianFinder]")
     CHECK(1.5 == median_finder_ds2.findMedian());
     median_finder_ds2.addNum(3);
     CHECK(2.0 == median_finder_ds2.findMedian());
+
+    MedianFinderDS3 median_finder_ds3;
+    median_finder_ds3.addNum(1);
+    median_finder_ds3.addNum(2);
+    CHECK(1.5 == median_finder_ds3.findMedian());
+    median_finder_ds3.addNum(3);
+    CHECK(2.0 == median_finder_ds3.findMedian());
 }
 
 TEST_CASE("Example 2", "[MedianFinder]")
@@ -246,6 +257,18 @@ TEST_CASE("Example 2", "[MedianFinder]")
     CHECK(-2.5 == median_finder_ds2.findMedian());
     median_finder_ds2.addNum(-5);
     CHECK(-3.0 == median_finder_ds2.findMedian());
+
+    MedianFinderDS3 median_finder_ds3;
+    median_finder_ds3.addNum(-1);
+    CHECK(-1.0 == median_finder_ds3.findMedian());
+    median_finder_ds3.addNum(-2);
+    CHECK(-1.5 == median_finder_ds3.findMedian());
+    median_finder_ds3.addNum(-3);
+    CHECK(-2.0 == median_finder_ds3.findMedian());
+    median_finder_ds3.addNum(-4);
+    CHECK(-2.5 == median_finder_ds3.findMedian());
+    median_finder_ds3.addNum(-5);
+    CHECK(-3.0 == median_finder_ds3.findMedian());
 }
 
 TEST_CASE("Example 3", "[MedianFinder]")
