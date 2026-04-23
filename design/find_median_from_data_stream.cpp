@@ -357,4 +357,28 @@ TEST_CASE("Example 3", "[MedianFinder]")
     CHECK(4.0 == median_finder_ds2.findMedian());
     median_finder_ds2.addNum(0);
     CHECK(3.0 == median_finder_ds2.findMedian());
+
+    MedianFinderDS3 median_finder_ds3;
+    median_finder_ds3.addNum(6);
+    CHECK(6.0 == median_finder_ds3.findMedian());
+    median_finder_ds3.addNum(10);
+    CHECK(8.0 == median_finder_ds3.findMedian());
+    median_finder_ds3.addNum(2);
+    CHECK(6.0 == median_finder_ds3.findMedian());
+    median_finder_ds3.addNum(6);
+    CHECK(6.0 == median_finder_ds3.findMedian());
+    median_finder_ds3.addNum(5);
+    CHECK(6.0 == median_finder_ds3.findMedian());
+    median_finder_ds3.addNum(0);
+    CHECK(5.5 == median_finder_ds3.findMedian());
+    median_finder_ds3.addNum(6);
+    CHECK(6.0 == median_finder_ds3.findMedian());
+    median_finder_ds3.addNum(3);
+    CHECK(5.5 == median_finder_ds3.findMedian());
+    median_finder_ds3.addNum(1);
+    CHECK(5.0 == median_finder_ds3.findMedian());
+    median_finder_ds3.addNum(0);
+    CHECK(4.0 == median_finder_ds3.findMedian());
+    median_finder_ds3.addNum(0);
+    CHECK(3.0 == median_finder_ds3.findMedian());
 }
