@@ -133,6 +133,13 @@ private:
 
 //! @class MedianFinderDS3
 //! @details leetcode.com/problems/find-median-from-data-stream/editorial
+//!
+//!          Time complexity O(5 * log N) + O(1) = O(log N) where N = number of
+//!          elements in data stream. At worst, there are three heap insertions
+//!          and two heap deletions from the top. Each takes O(log N). Finding
+//!          the median takes O(1) since the tops of the heaps are directly
+//!          accessible.
+//!          Space complexity O(N) to store the input in containers.
 class MedianFinderDS3
 {
 public:
