@@ -170,7 +170,8 @@ public:
 private:
     //! min_heap stores larger half of input numbers
     //! - All numbers in min_heap are >= to top element of min_heap
-    //! max_heap stores smaller half of input numbers
+    //! max_heap stores smaller half of input numbers. It is allowed to store
+    //! one more element than the min_heap in the worst case.
     //! - All numbers in max_heap are <= to top element of max_heap
     std::priority_queue<int, std::vector<int>, std::greater<int>> min_heap;
     std::priority_queue<int>                                      max_heap;
@@ -388,4 +389,39 @@ TEST_CASE("Example 3", "[MedianFinder]")
     CHECK(4.0 == median_finder_ds3.findMedian());
     median_finder_ds3.addNum(0);
     CHECK(3.0 == median_finder_ds3.findMedian());
+}
+
+TEST_CASE("Two Heaps Example", "[MedianFinder]")
+{
+    MedianFinderDS3 median_finder_ds3;
+
+    //! max_heap: [41]
+    //! min_heap: []
+    median_finder_ds3.addNum(41);
+    CHECK(41.0 == median_finder_ds3.findMedian());
+
+    //! max_heap: [35]
+    //! min_heap: [41]
+    median_finder_ds3.addNum(35);
+    CHECK(38.0 == median_finder_ds3.findMedian());
+
+    //! max_heap: [41, 35]
+    //! min_heap: [62]
+    median_finder_ds3.addNum(62);
+    CHECK(41.0 == median_finder_ds3.findMedian());
+
+    //! max_heap: [35, 4]
+    //! min_heap: [41, 62]
+    median_finder_ds3.addNum(4);
+    CHECK(38.0 == median_finder_ds3.findMedian());
+
+    //! max_heap: [41, 35, 4]
+    //! min_heap: [62, 97]
+    median_finder_ds3.addNum(97);
+    CHECK(41.0 == median_finder_ds3.findMedian());
+
+    //! max_heap: [41, 35, 4]
+    //! min_heap: [62, 97, 108]
+    median_finder_ds3.addNum(108);
+    CHECK(51.5 == median_finder_ds3.findMedian());
 }
