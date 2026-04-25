@@ -177,6 +177,22 @@ private:
     std::priority_queue<int>                                      max_heap;
 };
 
+//! @class MedianFinderDS4
+//! @details leetcode.com/problems/find-median-from-data-stream/editorial
+class MedianFinderDS4
+{
+public:
+    void addNum(int num)
+    {
+        //! @todo
+    }
+
+    double findMedian()
+    {
+        //! @todo
+    }
+};
+
 TEST_CASE("Example 1", "[MedianFinder]")
 {
     MedianFinderFA median_finder_fa;
@@ -215,6 +231,13 @@ TEST_CASE("Example 1", "[MedianFinder]")
     CHECK(1.5 == median_finder_ds3.findMedian());
     median_finder_ds3.addNum(3);
     CHECK(2.0 == median_finder_ds3.findMedian());
+
+    MedianFinderDS4 median_finder_ds4;
+    median_finder_ds4.addNum(1);
+    median_finder_ds4.addNum(2);
+    CHECK(1.5 == median_finder_ds4.findMedian());
+    median_finder_ds4.addNum(3);
+    CHECK(2.0 == median_finder_ds4.findMedian());
 }
 
 TEST_CASE("Example 2", "[MedianFinder]")
@@ -277,6 +300,18 @@ TEST_CASE("Example 2", "[MedianFinder]")
     CHECK(-2.5 == median_finder_ds3.findMedian());
     median_finder_ds3.addNum(-5);
     CHECK(-3.0 == median_finder_ds3.findMedian());
+
+    MedianFinderDS4 median_finder_ds4;
+    median_finder_ds4.addNum(-1);
+    CHECK(-1.0 == median_finder_ds4.findMedian());
+    median_finder_ds4.addNum(-2);
+    CHECK(-1.5 == median_finder_ds4.findMedian());
+    median_finder_ds4.addNum(-3);
+    CHECK(-2.0 == median_finder_ds4.findMedian());
+    median_finder_ds4.addNum(-4);
+    CHECK(-2.5 == median_finder_ds4.findMedian());
+    median_finder_ds4.addNum(-5);
+    CHECK(-3.0 == median_finder_ds4.findMedian());
 }
 
 TEST_CASE("Example 3", "[MedianFinder]")
@@ -389,6 +424,30 @@ TEST_CASE("Example 3", "[MedianFinder]")
     CHECK(4.0 == median_finder_ds3.findMedian());
     median_finder_ds3.addNum(0);
     CHECK(3.0 == median_finder_ds3.findMedian());
+
+    MedianFinderDS4 median_finder_ds4;
+    median_finder_ds4.addNum(6);
+    CHECK(6.0 == median_finder_ds4.findMedian());
+    median_finder_ds4.addNum(10);
+    CHECK(8.0 == median_finder_ds4.findMedian());
+    median_finder_ds4.addNum(2);
+    CHECK(6.0 == median_finder_ds4.findMedian());
+    median_finder_ds4.addNum(6);
+    CHECK(6.0 == median_finder_ds4.findMedian());
+    median_finder_ds4.addNum(5);
+    CHECK(6.0 == median_finder_ds4.findMedian());
+    median_finder_ds4.addNum(0);
+    CHECK(5.5 == median_finder_ds4.findMedian());
+    median_finder_ds4.addNum(6);
+    CHECK(6.0 == median_finder_ds4.findMedian());
+    median_finder_ds4.addNum(3);
+    CHECK(5.5 == median_finder_ds4.findMedian());
+    median_finder_ds4.addNum(1);
+    CHECK(5.0 == median_finder_ds4.findMedian());
+    median_finder_ds4.addNum(0);
+    CHECK(4.0 == median_finder_ds4.findMedian());
+    median_finder_ds4.addNum(0);
+    CHECK(3.0 == median_finder_ds4.findMedian());
 }
 
 TEST_CASE("Two Heaps Example", "[MedianFinder]")
