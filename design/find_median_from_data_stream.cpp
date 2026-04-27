@@ -217,6 +217,72 @@ private:
     auto               mid = data.end();
 };
 
+//! @class MedianFinderDS5
+//! @details leetcode.com/problems/find-median-from-data-stream/editorial
+class MedianFinderDS5
+{
+public:
+    void addNum(int num)
+    {
+        //! Store previous size
+        const auto prev_data_size = static_cast<int>(std::ssize(data));
+
+        data.insert(num);
+
+        if (prev_data_size == 0)
+        {
+            //! No elements previously, one element now
+            lo_median = data.begin();
+            hi_median = lo_median;
+        }
+        else if (prev_data_size % 2 == 1)
+        {
+            //! Odd size before (hi == lo), even size now (hi = lo + 1)
+            if (num < *lo_median)
+            {
+                --lo_median;
+            }
+            else
+            {
+                //! num >= hi_median, insert at end of equal range
+                ++hi_median;
+            }
+        }
+        else
+        {
+            //! Even size before (hi = lo + 1), odd size now (hi == lo)
+            if (num > *lo_median && num < *hi_median)
+            {
+                //! num is between lo and hi
+                ++lo_median;
+                --hi_median;
+            }
+            else if (num >= *hi_median)
+            {
+                //! num is inserted after hi
+                ++lo_median;
+            }
+            else
+            {
+                //! num <= lo < hi, insert at end of equal range
+                --hi_median;
+                lo_median = hi_median;
+            }
+        }
+    }
+
+    double findMedian()
+    {
+        return 0.5 * (*lo_median + *hi_median);
+    }
+
+private:
+    std::multiset<int> data;
+
+    auto lo_median = data.end();
+    auto hi_median = data.end();
+};
+
 TEST_CASE("Example 1", "[MedianFinder]")
 {
     MedianFinderFA median_finder_fa;
@@ -262,6 +328,13 @@ TEST_CASE("Example 1", "[MedianFinder]")
     CHECK(1.5 == median_finder_ds4.findMedian());
     median_finder_ds4.addNum(3);
     CHECK(2.0 == median_finder_ds4.findMedian());
+
+    MedianFinderDS5 median_finder_ds5;
+    median_finder_ds5.addNum(1);
+    median_finder_ds5.addNum(2);
+    CHECK(1.5 == median_finder_ds5.findMedian());
+    median_finder_ds5.addNum(3);
+    CHECK(2.0 == median_finder_ds5.findMedian());
 }
 
 TEST_CASE("Example 2", "[MedianFinder]")
@@ -336,6 +409,18 @@ TEST_CASE("Example 2", "[MedianFinder]")
     CHECK(-2.5 == median_finder_ds4.findMedian());
     median_finder_ds4.addNum(-5);
     CHECK(-3.0 == median_finder_ds4.findMedian());
+
+    MedianFinderDS5 median_finder_ds5;
+    median_finder_ds5.addNum(-1);
+    CHECK(-1.0 == median_finder_ds5.findMedian());
+    median_finder_ds5.addNum(-2);
+    CHECK(-1.5 == median_finder_ds5.findMedian());
+    median_finder_ds5.addNum(-3);
+    CHECK(-2.0 == median_finder_ds5.findMedian());
+    median_finder_ds5.addNum(-4);
+    CHECK(-2.5 == median_finder_ds5.findMedian());
+    median_finder_ds5.addNum(-5);
+    CHECK(-3.0 == median_finder_ds5.findMedian());
 }
 
 TEST_CASE("Example 3", "[MedianFinder]")
@@ -472,6 +557,30 @@ TEST_CASE("Example 3", "[MedianFinder]")
     CHECK(4.0 == median_finder_ds4.findMedian());
     median_finder_ds4.addNum(0);
     CHECK(3.0 == median_finder_ds4.findMedian());
+
+    MedianFinderDS5 median_finder_ds5;
+    median_finder_ds5.addNum(6);
+    CHECK(6.0 == median_finder_ds5.findMedian());
+    median_finder_ds5.addNum(10);
+    CHECK(8.0 == median_finder_ds5.findMedian());
+    median_finder_ds5.addNum(2);
+    CHECK(6.0 == median_finder_ds5.findMedian());
+    median_finder_ds5.addNum(6);
+    CHECK(6.0 == median_finder_ds5.findMedian());
+    median_finder_ds5.addNum(5);
+    CHECK(6.0 == median_finder_ds5.findMedian());
+    median_finder_ds5.addNum(0);
+    CHECK(5.5 == median_finder_ds5.findMedian());
+    median_finder_ds5.addNum(6);
+    CHECK(6.0 == median_finder_ds5.findMedian());
+    median_finder_ds5.addNum(3);
+    CHECK(5.5 == median_finder_ds5.findMedian());
+    median_finder_ds5.addNum(1);
+    CHECK(5.0 == median_finder_ds5.findMedian());
+    median_finder_ds5.addNum(0);
+    CHECK(4.0 == median_finder_ds5.findMedian());
+    median_finder_ds5.addNum(0);
+    CHECK(3.0 == median_finder_ds5.findMedian());
 }
 
 TEST_CASE("Two Heaps Example", "[MedianFinder]")
