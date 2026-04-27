@@ -2,7 +2,9 @@
 
 #include <algorithm>
 #include <functional>
+#include <iterator>
 #include <priority_queue>
+#include <set>
 #include <vector>
 
 //! @class MedianFinderFA
@@ -184,13 +186,35 @@ class MedianFinderDS4
 public:
     void addNum(int num)
     {
-        //! @todo
+        const auto data_size = static_cast<int>(std::ssize(data));
+        data.insert(num);
+
+        if (data_size == 0)
+        {
+            //! First element inserted
+            mid = data.begin();
+        }
+        else if (num < *mid)
+        {
+            //! Median is decreased
+            mid = data_size & 1 ? mid : std::prev(mid);
+        }
+        else
+        {
+            //! Median is increased
+            mid = data_size & 1 ? std::next(mid) : mid;
+        }
     }
 
     double findMedian()
     {
-        //! @todo
+        const auto data_size = static_cast<int>(std::ssize(data));
+        return 0.5 * (*mid + *std::next(mid, data_size % 2 - 1));
     }
+
+private:
+    std::multiset<int> data;
+    auto               mid = data.end();
 };
 
 TEST_CASE("Example 1", "[MedianFinder]")
