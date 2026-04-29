@@ -219,6 +219,12 @@ private:
 
 //! @class MedianFinderDS5
 //! @details leetcode.com/problems/find-median-from-data-stream/editorial
+//!
+//!          Time complexity O(log N) where N = number of elements in data
+//!          stream. Inserting a number takes O(log N) for multiset. Finding the
+//!          mean takes O(1) since the median elements are accessible from the
+//!          two pointers.
+//!          Space complexity O(N) to store the input in the multiset.
 class MedianFinderDS5
 {
 public:
