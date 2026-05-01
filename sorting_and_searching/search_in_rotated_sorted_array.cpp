@@ -105,6 +105,12 @@ static int searchFA(const std::vector<int>& nums, int target)
 static int searchDS1(const std::vector<int>& nums, int target)
 {
     //! @details leetcode.com/problems/search-in-rotated-sorted-array/editorial
+    //!
+    //!          Time complexity O(log N) where N = nums.size(). The algorithm
+    //!          requires one binary search to find the pivot element and at
+    //!          most 2 binary searches to find target. Each binary search takes
+    //!          O(log N).
+    //!          Space complexity O(1) for left, right, and mid.
 
     const auto nums_size = static_cast<int>(std::ssize(nums));
     int        left {};
