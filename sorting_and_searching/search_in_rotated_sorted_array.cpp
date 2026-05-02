@@ -167,12 +167,44 @@ static int searchDS1(const std::vector<int>& nums, int target)
     return binary_search(left, nums_size - 1);
 }
 
+static int searchDS2(const std::vector<int>& nums, int target)
+{
+    //! @details leetcode.com/problems/search-in-rotated-sorted-array/editorial
+
+    const auto nums_size = static_cast<int>(std::ssize(nums));
+
+    int left {};
+    int right {nums_size - 1};
+
+    //! Find the index of the pivot (smallest) element
+    while (left <= right)
+    {
+        const int mid {left + (right - left) / 2};
+
+        if (nums[mid] > nums[nums_size - 1])
+        {
+            left = mid + 1;
+        }
+        else
+        {
+            right = mid - 1;
+        }
+    }
+
+    const auto shifted_binary_search = [&](int pivot) -> int {
+        //! @todo
+    };
+
+    return shifted_binary_search(pivot);
+}
+
 TEST_CASE("Example 1", "[search]")
 {
     const std::vector<int> nums {4, 5, 6, 7, 0, 1, 2};
     constexpr int          target {};
     REQUIRE(4 == searchFA(nums, target));
     REQUIRE(4 == searchDS1(nums, target));
+    REQUIRE(4 == searchDS2(nums, target));
 }
 
 TEST_CASE("Example 2", "[search]")
@@ -181,6 +213,7 @@ TEST_CASE("Example 2", "[search]")
     constexpr int          target {3};
     REQUIRE(-1 == searchFA(nums, target));
     REQUIRE(-1 == searchDS1(nums, target));
+    REQUIRE(-1 == searchDS2(nums, target));
 }
 
 TEST_CASE("Example 3", "[search]")
@@ -189,4 +222,5 @@ TEST_CASE("Example 3", "[search]")
     constexpr int          target {};
     REQUIRE(-1 == searchFA(nums, target));
     REQUIRE(-1 == searchDS1(nums, target));
+    REQUIRE(-1 == searchDS2(nums, target));
 }
