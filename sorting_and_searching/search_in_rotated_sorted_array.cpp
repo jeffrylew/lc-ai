@@ -172,15 +172,13 @@ static int searchDS2(const std::vector<int>& nums, int target)
     //! @details leetcode.com/problems/search-in-rotated-sorted-array/editorial
 
     const auto nums_size = static_cast<int>(std::ssize(nums));
-
-    int left {};
-    int right {nums_size - 1};
+    int        left {};
+    int        right {nums_size - 1};
 
     //! Find the index of the pivot (smallest) element
     while (left <= right)
     {
         const int mid {left + (right - left) / 2};
-
         if (nums[mid] > nums[nums_size - 1])
         {
             left = mid + 1;
@@ -191,11 +189,47 @@ static int searchDS2(const std::vector<int>& nums, int target)
         }
     }
 
+    //! Shift elements in a circular manner, with the pivot element at index 0.
+    //! Then perform a regular binary search.
     const auto shifted_binary_search = [&](int pivot) -> int {
-        //! @todo
+        const int shift {nums_size - pivot};
+
+        //! Boundaries of the sorted search space
+        int sorted_left {(pivot + shift) % nums_size};
+        int sorted_right {(pivot + shift - 1) % nums_size};
+
+        while (sorted_left <= sorted_right)
+        {
+            const int sorted_mid {
+                sorted_left + (sorted_right - sorted_left) / 2};
+
+            //! We had to shift every element to the right by nums_size - pivot
+            //! steps to get the sorted version of nums. Now we need to shift
+            //! the index in the sorted nums to the left by nums_size - pivot to
+            //! find the corresponding index in the original nums. i.e.,
+            //!   orig_mid = sorted_mid - (nums_size - pivot)
+            //!            = sorted_mid - shift (then incorporate modulus)
+            const int orig_mid {(sorted_mid - shift + nums_size) % nums_size};
+
+            if (nums[orig_mid] == target)
+            {
+                return orig_mid;
+            }
+
+            if (nums[orig_mid] > target)
+            {
+                sorted_right = sorted_mid - 1;
+            }
+            else
+            {
+                sorted_left = sorted_mid + 1;
+            }
+        }
+
+        return -1;
     };
 
-    return shifted_binary_search(pivot);
+    return shifted_binary_search(left);
 }
 
 TEST_CASE("Example 1", "[search]")
