@@ -237,6 +237,52 @@ static int searchDS2(const std::vector<int>& nums, int target)
     return shifted_binary_search(left);
 }
 
+static int searchDS3(const std::vector<int>& nums, int target)
+{
+    //! @details leetcode.com/problems/search-in-rotated-sorted-array/editorial
+
+    const auto nums_size = static_cast<int>(std::ssize(nums));
+    int        left {};
+    int        right {nums_size - 1};
+
+    while (left <= right)
+    {
+        const int mid {left + (right - left) / 2};
+        if (nums[mid] == target)
+        {
+            //! Case 1: Found target
+            return mid;
+        }
+
+        //! Case 2: Subarray on mid's left is sorted
+        if (nums[mid] >= nums[left])
+        {
+            if (target >= nums[left] && target < nums[mid])
+            {
+                right = mid - 1;
+            }
+            else
+            {
+                left = mid + 1;
+            }
+        }
+        //! Case 3: Subarray on mid's right is sorted
+        else
+        {
+            if (target <= nums[right] && target > nums[mid])
+            {
+                left = mid + 1;
+            }
+            else
+            {
+                right = mid - 1;
+            }
+        }
+    }
+
+    return -1;
+}
+
 TEST_CASE("Example 1", "[search]")
 {
     const std::vector<int> nums {4, 5, 6, 7, 0, 1, 2};
@@ -244,6 +290,7 @@ TEST_CASE("Example 1", "[search]")
     REQUIRE(4 == searchFA(nums, target));
     REQUIRE(4 == searchDS1(nums, target));
     REQUIRE(4 == searchDS2(nums, target));
+    REQUIRE(4 == searchDS3(nums, target));
 }
 
 TEST_CASE("Example 2", "[search]")
@@ -253,6 +300,7 @@ TEST_CASE("Example 2", "[search]")
     REQUIRE(-1 == searchFA(nums, target));
     REQUIRE(-1 == searchDS1(nums, target));
     REQUIRE(-1 == searchDS2(nums, target));
+    REQUIRE(-1 == searchDS3(nums, target));
 }
 
 TEST_CASE("Example 3", "[search]")
@@ -262,4 +310,5 @@ TEST_CASE("Example 3", "[search]")
     REQUIRE(-1 == searchFA(nums, target));
     REQUIRE(-1 == searchDS1(nums, target));
     REQUIRE(-1 == searchDS2(nums, target));
+    REQUIRE(-1 == searchDS3(nums, target));
 }
