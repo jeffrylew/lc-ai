@@ -3,6 +3,7 @@ set (
     "kth_largest_element_in_an_array"
     "search_in_rotated_sorted_array"
     "top_k_frequent_elements"
+    "two_sum_ii_input_array_is_sorted"
 )
 
 foreach (cpp_file in ITEMS ${cpp_files})
