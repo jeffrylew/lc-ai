@@ -7,7 +7,52 @@ static std::vector<int> twoSumFA(const std::vector<int>& numbers, int target)
     //! @details https://leetcode.com/explore/interview/card/amazon/79
     //!          /sorting-and-searching/2994/
 
-    //! @todo
+    const auto num_size = static_cast<int>(std::ssize(numbers));
+
+    //! Find largest number less than target
+    int left_max_idx {};
+    int right_max_idx {num_size - 1};
+
+    while (left_max_idx <= right_max_idx)
+    {
+        const int mid_max_idx {
+            left_max_idx + (right_max_idx - left_max_idx) / 2};
+
+        if (numbers[mid_max_idx] > target)
+        {
+            right_max_idx = mid_max_idx - 1;
+        }
+        else
+        {
+            left_max_idx = mid_max_idx + 1;
+        }
+    }
+
+    //! right_max_idx is for the largest number less than or equal to target
+    //! Now use two pointers to find indices of numbers that add to target
+    int left_idx {};
+    int right_idx {right_max_idx};
+
+    while (left_idx < right_idx)
+    {
+        const int curr_sum {numbers[left_idx] + numbers[right_idx]};
+
+        if (curr_sum == target)
+        {
+            return {left_idx + 1, right_idx + 1};
+        }
+        else if (curr_sum < target)
+        {
+            ++left_idx;
+        }
+        else
+        {
+            --right_idx;
+        }
+    }
+
+    //! Should not reach this point
+    return {};
 }
 
 TEST_CASE("Example 1", "[twoSumII]")
