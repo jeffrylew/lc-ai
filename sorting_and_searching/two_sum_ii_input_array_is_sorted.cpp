@@ -6,6 +6,8 @@ static std::vector<int> twoSumFA(const std::vector<int>& numbers, int target)
 {
     //! @details https://leetcode.com/explore/interview/card/amazon/79
     //!          /sorting-and-searching/2994/
+    //!
+    //!          First attempt solution does not pass Example 4.
 
     const auto num_size = static_cast<int>(std::ssize(numbers));
 
@@ -32,6 +34,10 @@ static std::vector<int> twoSumFA(const std::vector<int>& numbers, int target)
     //! Now use two pointers to find indices of numbers that add to target
     int left_idx {};
     int right_idx {right_max_idx};
+    if (left_idx == right_idx && right_idx < num_size - 1)
+    {
+        ++right_idx;
+    }
 
     while (left_idx < right_idx)
     {
@@ -80,4 +86,13 @@ TEST_CASE("Example 3", "[twoSumII]")
     constexpr int          target {-1};
 
     REQUIRE(expected_output == twoSumFA(numbers, target));
+}
+
+TEST_CASE("Example 4", "[twoSumII]")
+{
+    const std::vector<int> expected_output {2, 7};
+    const std::vector<int> numbers {-5, -3, 0, 2, 4, 6, 8};
+    constexpr int          target {5};
+
+    REQUIRE_FALSE(expected_output == twoSumFA(numbers, target));
 }
