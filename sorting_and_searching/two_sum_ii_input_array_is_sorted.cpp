@@ -61,6 +61,36 @@ static std::vector<int> twoSumFA(const std::vector<int>& numbers, int target)
     return {};
 }
 
+static std::vector<int> twoSumDS(const std::vector<int>& numbers, int target)
+{
+    //! @details https://leetcode.com/problems/two-sum-ii-input-array-is-sorted
+
+    int low {};
+    int high {static_cast<int>(std::ssize(numbers)) - 1};
+
+    while (low < high)
+    {
+        const int sum {numbers[low] + numbers[high]};
+
+        if (sum == target)
+        {
+            return {low + 1, high + 1};
+        }
+
+        if (sum < target)
+        {
+            ++low;
+        }
+        else
+        {
+            --high;
+        }
+    }
+
+    //! In case there is no solution return {-1, -1}
+    return {-1, -1};
+}
+
 TEST_CASE("Example 1", "[twoSumII]")
 {
     const std::vector<int> expected_output {1, 2};
@@ -68,6 +98,7 @@ TEST_CASE("Example 1", "[twoSumII]")
     constexpr int          target {9};
 
     REQUIRE(expected_output == twoSumFA(numbers, target));
+    REQUIRE(expected_output == twoSumDS(numbers, target));
 }
 
 TEST_CASE("Example 2", "[twoSumII]")
@@ -77,6 +108,7 @@ TEST_CASE("Example 2", "[twoSumII]")
     constexpr int          target {6};
 
     REQUIRE(expected_output == twoSumFA(numbers, target));
+    REQUIRE(expected_output == twoSumDS(numbers, target));
 }
 
 TEST_CASE("Example 3", "[twoSumII]")
@@ -86,6 +118,7 @@ TEST_CASE("Example 3", "[twoSumII]")
     constexpr int          target {-1};
 
     REQUIRE(expected_output == twoSumFA(numbers, target));
+    REQUIRE(expected_output == twoSumDS(numbers, target));
 }
 
 TEST_CASE("Example 4", "[twoSumII]")
@@ -95,4 +128,5 @@ TEST_CASE("Example 4", "[twoSumII]")
     constexpr int          target {5};
 
     REQUIRE_FALSE(expected_output == twoSumFA(numbers, target));
+    REQUIRE_FALSE(expected_output == twoSumDS(numbers, target));
 }
