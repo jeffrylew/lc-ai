@@ -64,6 +64,10 @@ static std::vector<int> twoSumFA(const std::vector<int>& numbers, int target)
 static std::vector<int> twoSumDS(const std::vector<int>& numbers, int target)
 {
     //! @details https://leetcode.com/problems/two-sum-ii-input-array-is-sorted
+    //!
+    //!          Time complexity O(N) where N = numbers.size(). The input vector
+    //!          is traversed at most once.
+    //!          Space complexity O(1) to store the two indices and the sum.
 
     int low {};
     int high {static_cast<int>(std::ssize(numbers)) - 1};
