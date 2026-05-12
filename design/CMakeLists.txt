@@ -1,6 +1,7 @@
 set (
     cpp_files
     "find_median_from_data_stream"
+    "maximum_frequency_stack"
 )
 
 foreach (cpp_file in ITEMS ${cpp_files})
