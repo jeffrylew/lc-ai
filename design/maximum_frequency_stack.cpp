@@ -1,5 +1,15 @@
 #include <catch2/catch_test_macros.hpp>
 
+#include <queue>
+#include <unordered_map>
+#include <vector>
+
+struct Element
+{
+    int              value {-1};
+    std::vector<int> indices;
+};
+
 //! @class FreqStackFA
 //! @details https://leetcode.com/explore/interview/card/amazon/81/design/3001/
 class FreqStackFA
@@ -7,13 +17,22 @@ class FreqStackFA
 public:
     void push(int val)
     {
-        //! @todo
+        val_indices[val].push_back(last_index);
+        ++last_index;
     }
 
     int pop()
     {
         //! @todo
     }
+
+private:
+    int last_index {};
+
+    //! Map of <element value, indices that value is at>
+    std::unordered_map<int, std::vector<int>> val_indices;
+
+    // std::priority_queue<Element, std::vector<Element>, Compare> 
 };
 
 TEST_CASE("Example 1", "[FreqStack]")
