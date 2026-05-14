@@ -2,6 +2,7 @@
 
 #include <queue>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 struct Element
@@ -17,22 +18,56 @@ class FreqStackFA
 public:
     void push(int val)
     {
-        val_indices[val].push_back(last_index);
+        value_indices[val].push_back(last_index);
         ++last_index;
+
+        const int prev_count {value_counts[val]};
+        const int curr_count {++value_counts[val]};
+        if (prev_count > 0)
+        {
+            frequency_values
+        }
     }
 
     int pop()
     {
-        //! @todo
+        //! Get the most frequent element
+        const int most_frequent_element {};
+
+        value_indices[most_frequent_element].pop_back();
+        if (value_indices[most_frequent_element].empty())
+        {
+            value_indices.erase(most_frequent_element);
+        }
+
+        return most_frequent_element;
     }
+
+    // Need to keep track of most frequent element and remove it
+    // Need to keep track of most frequent element closest to the top if tied
+    // Map to keep track of element value and indices that element is at
+    // Max heap of iterators in map that returns iterator to most frequent ele
+    // Map of <element frequency, vector of element values with this frequency>
 
 private:
     int last_index {};
 
     //! Map of <element value, indices that value is at>
-    std::unordered_map<int, std::vector<int>> val_indices;
+    std::unordered_map<int, std::vector<int>> value_indices;
 
-    // std::priority_queue<Element, std::vector<Element>, Compare> 
+    //! Map of <element value, element count>
+    std::unordered_map<int, int> value_counts;
+
+    //! Map of <element frequency, element values at this frequen
+    std::unordered_map<int, std::vector<int>> frequency_values;
+
+    auto element_comparator = [](const Element& lhs, const Element& rhs) {
+        return lhs.indices.size() < rhs.indices.size()
+    };
+
+    std::priority_queue<Element,
+                        std::vector<Element>,
+                         > 
 };
 
 TEST_CASE("Example 1", "[FreqStack]")
