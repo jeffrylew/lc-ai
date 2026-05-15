@@ -63,11 +63,12 @@ private:
 
     auto element_comparator = [](const Element& lhs, const Element& rhs) {
         return lhs.indices.size() < rhs.indices.size()
+            || lhs.indices.back() < rhs.indices.back();
     };
 
     std::priority_queue<Element,
                         std::vector<Element>,
-                         > 
+                        decltype(element_comparator)> element_heap;
 };
 
 TEST_CASE("Example 1", "[FreqStack]")
