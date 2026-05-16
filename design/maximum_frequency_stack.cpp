@@ -1,6 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <queue>
+#include <stack>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -13,6 +14,8 @@ struct Element
 
 //! @class FreqStackFA
 //! @details https://leetcode.com/explore/interview/card/amazon/81/design/3001/
+//!
+//!          Did not finish first attempt.
 class FreqStackFA
 {
 public:
@@ -73,18 +76,48 @@ private:
 
 //! @class FreqStackDS
 //! @details https://leetcode.com/problems/maximum-frequency-stack/editorial/
+//!
+//!          Time complexity O(1) for push and pop operations.
+//!          Space complexity O(N), where N = number of elements in FreqStackDS.
 class FreqStackDS
 {
 public:
     void push(int val)
     {
-        //! @todo
+        const int next_frequency {++value_frequency[val]};
+        if (next_frequency > maximum_frequency)
+        {
+            maximum_frequency = next_frequency;
+        }
+
+        frequency_values[next_frequency].push(val);
     }
 
     int pop()
     {
-        //! @todo
+        const int value_with_max_frequency {
+            frequency_values[maximum_frequency].top()};
+        frequency_values[maximum_frequency].pop();
+
+        if (frequency_values[maximum_frequency].empty())
+        {
+            --maximum_frequency;
+        }
+
+        --value_frequency[value_with_max_frequency];
+
+        return value_with_max_frequency;
     }
+
+private:
+    //! Map of <element value, element frequency>
+    std::unordered_map<int, int> value_frequency;
+
+    //! Map of <element frequency, stack of element values with this frequency>
+    std::unordered_map<int, std::stack<int>> frequency_values;
+
+    //! Current maximum frequency of any element in the stack
+    int maximum_frequency {};
 };
 
 TEST_CASE("Example 1", "[FreqStack]")
