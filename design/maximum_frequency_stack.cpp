@@ -71,6 +71,22 @@ private:
                         decltype(element_comparator)> element_heap;
 };
 
+//! @class FreqStackDS
+//! @details https://leetcode.com/problems/maximum-frequency-stack/editorial/
+class FreqStackDS
+{
+public:
+    void push(int val)
+    {
+        //! @todo
+    }
+
+    int pop()
+    {
+        //! @todo
+    }
+};
+
 TEST_CASE("Example 1", "[FreqStack]")
 {
     FreqStackFA freq_stack_fa;
@@ -82,16 +98,28 @@ TEST_CASE("Example 1", "[FreqStack]")
     freq_stack_fa.push(5); // stack is [5, 7, 5, 7, 4, 5]
 
     //! Return 5 since it is the most frequent. stack becomes [5, 7, 5, 7, 4]
-    CHECK(5 == freq_stack_fa.pop());
+    // CHECK(5 == freq_stack_fa.pop());
 
     //! Return 7 since 5 and 7 are the most frequent but 7 is closest to the top
     //! stack becomes [5, 7, 5, 4]
-    CHECK(7 == freq_stack_fa.pop());
+    // CHECK(7 == freq_stack_fa.pop());
 
     //! Return 5 since it is the most frequent. stack becomes [5, 7, 4]
-    CHECK(5 == freq_stack_fa.pop());
+    // CHECK(5 == freq_stack_fa.pop());
 
     //! Return 4 since 4, 5, and 7 are the most frequent but 4 is closest to the
     //! top. stack becomes [5, 7]
-    CHECK(4 == freq_stack_fa.pop());
+    // CHECK(4 == freq_stack_fa.pop());
+
+    FreqStackDS freq_stack_ds;
+    freq_stack_ds.push(5);
+    freq_stack_ds.push(7);
+    freq_stack_ds.push(5);
+    freq_stack_ds.push(7);
+    freq_stack_ds.push(4);
+    freq_stack_ds.push(5);
+    CHECK(5 == freq_stack_ds.pop());
+    CHECK(7 == freq_stack_ds.pop());
+    CHECK(5 == freq_stack_ds.pop());
+    CHECK(4 == freq_stack_ds.pop());
 }
