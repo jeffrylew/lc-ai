@@ -5,17 +5,23 @@
 static int reverseFA(int x)
 {
     //! @details leetcode.com/explore/interview/card/amazon/82/design/3002
-    //!
-    //!          First attempt does not pass Example 4 yet.
+
+    if (x == std::numeric_limits<int>::lowest())
+    {
+        return 0;
+    }
 
     const bool is_negative {x < 0};
     int        reversed_x {};
 
     while (x != 0)
     {
-        const int digit_to_append {x > 0 ? x % 10 : -x % 10};
+        const int digit_to_append {is_negative ? -x % 10 : x % 10};
 
-        if (reversed_x > std::numeric_limits<int>::max() / 10 - digit_to_append)
+        if ((is_negative && -reversed_x <
+                (std::numeric_limits<int>::lowest() + digit_to_append) / 10)
+            || reversed_x >
+                (std::numeric_limits<int>::max() - digit_to_append) / 10)
         {
             return 0;
         }
@@ -46,5 +52,15 @@ TEST_CASE("Example 3", "[reverse]")
 
 TEST_CASE("Example 4", "[reverse]")
 {
-    REQUIRE(0 != reverseFA(-2147483648));
+    REQUIRE(0 == reverseFA(-2147483648));
+}
+
+TEST_CASE("Example 5", "[reverse]")
+{
+    REQUIRE(-1 == reverseFA(-10));
+}
+
+TEST_CASE("Example 6", "[reverse]")
+{
+    REQUIRE(-2147483651 == reverseFA(-1563847412));
 }
