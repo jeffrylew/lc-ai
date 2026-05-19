@@ -5,6 +5,10 @@
 static int reverseFA(int x)
 {
     //! @details leetcode.com/explore/interview/card/amazon/82/design/3002
+    //!
+    //!          Time complexity O(N) where N = number of digits that x has.
+    //!          Function can be made constexpr and evaluated at compile time.
+    //!          Space complexity O(1).
 
     if (x == std::numeric_limits<int>::lowest())
     {
