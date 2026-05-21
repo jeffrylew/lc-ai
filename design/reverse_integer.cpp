@@ -42,6 +42,9 @@ static int reverseFA(int x)
 static int reverseDS(int x)
 {
     //! @details https://leetcode.com/problems/reverse-integer/editorial/
+    //!
+    //!          Time complexity O(log x). x has roughly log_10(x) digits.
+    //!          Space complexity O(1).
 
     int reversed_x {};
 
