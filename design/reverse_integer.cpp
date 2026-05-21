@@ -39,32 +39,69 @@ static int reverseFA(int x)
     return is_negative ? -reversed_x : reversed_x;
 }
 
+static int reverseDS(int x)
+{
+    //! @details https://leetcode.com/problems/reverse-integer/editorial/
+
+    int reversed_x {};
+
+    while (x != 0)
+    {
+        const int digit_to_append {x % 10};
+        x /= 10;
+
+        if (reversed_x > std::numeric_limits<int>::max() / 10
+            || (reversed_x == std::numeric_limits<int>::max() / 10
+                && digit_to_append > 7))
+        {
+            return 0;
+        }
+
+        if (reversed_x < std::numeric_limits<int>::lowest() / 10
+            || (reversed_x == std::numeric_limits<int>::lowest() / 10
+                && digit_to_append < -8))
+        {
+            return 0;
+        }
+
+        reversed_x = 10 * reversed_x + digit_to_append;
+    }
+
+    return reversed_x;
+}
+
 TEST_CASE("Example 1", "[reverse]")
 {
     REQUIRE(321 == reverseFA(123));
+    REQUIRE(321 == reverseDS(123));
 }
 
 TEST_CASE("Example 2", "[reverse]")
 {
     REQUIRE(-321 == reverseFA(-123));
+    REQUIRE(-321 == reverseDS(-123));
 }
 
 TEST_CASE("Example 3", "[reverse]")
 {
     REQUIRE(21 == reverseFA(120));
+    REQUIRE(21 == reverseDS(120));
 }
 
 TEST_CASE("Example 4", "[reverse]")
 {
     REQUIRE(0 == reverseFA(-2147483648));
+    REQUIRE(0 == reverseDS(-2147483648));
 }
 
 TEST_CASE("Example 5", "[reverse]")
 {
     REQUIRE(-1 == reverseFA(-10));
+    REQUIRE(-1 == reverseDS(-10));
 }
 
 TEST_CASE("Example 6", "[reverse]")
 {
     REQUIRE(-2147483651 == reverseFA(-1563847412));
+    REQUIRE(-2147483651 == reverseDS(-1563847412));
 }
