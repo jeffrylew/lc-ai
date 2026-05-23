@@ -1,5 +1,6 @@
 set (
     cpp_files
+    "design_tic-tac-toe"
     "find_median_from_data_stream"
     "maximum_frequency_stack"
     "reverse_integer"
