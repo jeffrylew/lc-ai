@@ -1,18 +1,24 @@
 #include <catch2/catch_test_macros.hpp>
 
+#include <vector>
+
 //! @class TicTacToeFA
 //! @details https://leetcode.com/explore/interview/card/amazon/81/design/517/
 class TicTacToeFA
 {
 public:
     explicit TicTacToeFA(int n)
+        : board {std::vector<std::vector<int>>(n, std::vector<int>(n, 0))}
     {
     }
 
     int move(int row, int col, int player)
     {
-        //! @todo
+        board[row][col] = player;
     }
+
+private:
+    std::vector<std::vector<int>> board; 
 };
 
 TEST_CASE("Example 1", "[TicTacToe]")
