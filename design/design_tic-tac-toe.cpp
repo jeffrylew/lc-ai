@@ -8,17 +8,101 @@ class TicTacToeFA
 {
 public:
     explicit TicTacToeFA(int n)
-        : board {std::vector<std::vector<int>>(n, std::vector<int>(n, 0))}
+        : board_size {n}
+        , board {std::vector<std::vector<int>>(n, std::vector<int>(n, 0))}
     {
     }
 
     int move(int row, int col, int player)
     {
         board[row][col] = player;
+
+        if (++num_moves < 2 * board_size - 1)
+        {
+            //! Less than the minimum required number of moves
+            return 0;
+        }
+
+        if ((board_size - row - 1 == col && is_winner_on_anti_diagonal(player))
+            || (row == col && is_winner_on_diagonal(player))
+            || is_winner_on_row(player, row)
+            || is_winner_on_col(player, col))
+        {
+            return player;
+        }
+
+        return 0;
     }
 
 private:
+    int board_size {};
+    int num_moves {};
+
     std::vector<std::vector<int>> board; 
+
+    //! @brief Check if player is a winner on the left-to-right diagonal
+    //! @param[in] player Player ID
+    //! @return True if player is a winner on left-to-right diagonal, else false
+    [[nodiscard]] bool is_winner_on_diagonal(int player)
+    {
+        for (int idx = 0; idx < board_size; ++idx)
+        {
+            if (board[idx][idx] != player)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    //! @brief Check if player is a winner on the right-to-left diagonal
+    //! @param[in] player Player ID
+    //! @return True if player is a winner on right-to-left diagonal, else false
+    [[nodiscard]] bool is_winner_on_anti_diagonal(int player)
+    {
+        for (int idx = 0; idx < board_size; ++idx)
+        {
+            if (board[idx][board_size - idx - 1] != player)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    //! @brief Check if player is a winner on row
+    //! @param[in] player Player ID
+    //! @return True if player is a winner on row, else false
+    [[nodiscard]] bool is_winner_on_row(int player, int row)
+    {
+        for (int col = 0; col < board_size; ++col)
+        {
+            if (board[row][col] != player)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    //! @brief Check if player is a winner on col
+    //! @param[in] player Player ID
+    //! @return True if player is a winner on col, else false
+    [[nodiscard]] bool is_winner_on_col(int player, int col)
+    {
+        for (int row = 0; row < board_size; ++row)
+        {
+            if (board[row][col] != player)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 };
 
 TEST_CASE("Example 1", "[TicTacToe]")
