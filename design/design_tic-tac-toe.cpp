@@ -105,6 +105,39 @@ private:
     }
 };
 
+//! @class TicTacToeDS1
+//! @details https://leetcode.com/problems/design-tic-tac-toe/editorial/
+class TicTacToeDS1
+{
+public:
+    explicit TicTacToeDS1(int n)
+        : board_size {n}
+        , board {std::vector<std::vector<int>>(n, std::vector<int>(n, 0))}
+    {
+    }
+
+    int move(int row, int col, int player)
+    {
+        board[row][col] = player;
+
+        if (check_col(col, player)
+            || check_row(row, player)
+            || (row == col && check_diagonal(player))
+            || (row == board_size - col - 1 && check_anti_diagonal(player)))
+        {
+            return player;
+        }
+
+        //! No one wins
+        return 0;
+    }
+
+private:
+    int board_size {};
+
+    std::vector<std::vector<int>> board; 
+};
+
 TEST_CASE("Example 1", "[TicTacToe]")
 {
     //! Assume player 1 is 'X' and player 2 is 'O'
@@ -151,4 +184,13 @@ TEST_CASE("Example 1", "[TicTacToe]")
     //! |O|O| |
     //! |X|X|X|
     CHECK(1 == tictactoefa.move(2, 1, 1));
+
+    TicTacToeDS1 tictactoeds1 {3};
+    CHECK(0 == tictactoeds1.move(0, 0, 1));
+    CHECK(0 == tictactoeds1.move(0, 2, 2));
+    CHECK(0 == tictactoeds1.move(2, 2, 1));
+    CHECK(0 == tictactoeds1.move(1, 1, 2));
+    CHECK(0 == tictactoeds1.move(2, 0, 1));
+    CHECK(0 == tictactoeds1.move(1, 0, 2));
+    CHECK(1 == tictactoeds1.move(2, 1, 1));
 }
