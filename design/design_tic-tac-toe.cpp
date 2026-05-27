@@ -43,7 +43,7 @@ private:
     //! @brief Check if player is a winner on the left-to-right diagonal
     //! @param[in] player Player ID
     //! @return True if player is a winner on left-to-right diagonal, else false
-    [[nodiscard]] bool is_winner_on_diagonal(int player)
+    [[nodiscard]] bool is_winner_on_diagonal(int player) const
     {
         for (int idx = 0; idx < board_size; ++idx)
         {
@@ -59,7 +59,7 @@ private:
     //! @brief Check if player is a winner on the right-to-left diagonal
     //! @param[in] player Player ID
     //! @return True if player is a winner on right-to-left diagonal, else false
-    [[nodiscard]] bool is_winner_on_anti_diagonal(int player)
+    [[nodiscard]] bool is_winner_on_anti_diagonal(int player) const
     {
         for (int idx = 0; idx < board_size; ++idx)
         {
@@ -75,7 +75,7 @@ private:
     //! @brief Check if player is a winner on row
     //! @param[in] player Player ID
     //! @return True if player is a winner on row, else false
-    [[nodiscard]] bool is_winner_on_row(int player, int row)
+    [[nodiscard]] bool is_winner_on_row(int player, int row) const
     {
         for (int col = 0; col < board_size; ++col)
         {
@@ -91,7 +91,7 @@ private:
     //! @brief Check if player is a winner on col
     //! @param[in] player Player ID
     //! @return True if player is a winner on col, else false
-    [[nodiscard]] bool is_winner_on_col(int player, int col)
+    [[nodiscard]] bool is_winner_on_col(int player, int col) const
     {
         for (int row = 0; row < board_size; ++row)
         {
@@ -135,7 +135,55 @@ public:
 private:
     int board_size {};
 
-    std::vector<std::vector<int>> board; 
+    std::vector<std::vector<int>> board;
+
+    [[nodiscard]] bool check_col(int col, int player) const
+    {
+        for (int row = 0; row < board_size; ++row)
+        {
+            if (board[row][col] != player)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    [[nodiscard]] bool check_row(int row, int player) const
+    {
+        for (int col = 0; col < board_size; ++col)
+        {
+            if (board[row][col] != player)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    [[nodiscard]] bool check_diagonal(int player) const
+    {
+        for (int row = 0; row < board_size; ++row)
+        {
+            if (board[row][row] != player)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    [[nodiscard]] bool check_anti_diagonal(int player) const
+    {
+        for (int row = 0; row < board_size; ++row)
+        {
+            if (board[row][board_size - row - 1] != player)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 };
 
 TEST_CASE("Example 1", "[TicTacToe]")
