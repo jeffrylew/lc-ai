@@ -107,6 +107,11 @@ private:
 
 //! @class TicTacToeDS1
 //! @details https://leetcode.com/problems/design-tic-tac-toe/editorial/
+//!
+//!          Time complexity O(N) where N = length of the board side. Every move
+//!          we iterate over N cells 4 times to check the column, row, diagonal,
+//!          and anti-diagonal.
+//!          Space complexity O(N ^ 2) to store the 2D vector of size N * N.
 class TicTacToeDS1
 {
 public:
