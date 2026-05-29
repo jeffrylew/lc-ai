@@ -194,6 +194,11 @@ private:
 
 //! @class TicTacToeDS2
 //! @details https://leetcode.com/problems/design-tic-tac-toe/editorial/
+//!
+//!          Time complexity O(1) because we mark a row, column, diagonal, and
+//!          anti-diagonal in constant time for every move.
+//!          Space complexity O(N) where N = the size of the board edge for
+//!          vectors rows and cols.
 class TicTacToeDS2
 {
 public:
