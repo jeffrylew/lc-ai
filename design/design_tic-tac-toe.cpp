@@ -1,5 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 
+#include <cmath>
 #include <vector>
 
 //! @class TicTacToeFA
@@ -191,6 +192,60 @@ private:
     }
 };
 
+//! @class TicTacToeDS2
+//! @details https://leetcode.com/problems/design-tic-tac-toe/editorial/
+class TicTacToeDS2
+{
+public:
+    explicit TicTacToeDS2(int n)
+        : board_size {n}
+        , rows {std::vector<int>(n, 0)}
+        , cols {std::vector<int>(n, 0)}
+    {
+    }
+
+    int move(int row, int col, int player)
+    {
+        const int current_player {player == 1 ? 1 : -1};
+
+        //! Update rows and cols vectors with current_player
+        rows[row] += current_player;
+        cols[col] += current_player;
+
+        //! Update diagonal with current_player
+        if (row == col)
+        {
+            diagonal += current_player;
+        }
+
+        //! Update anti-diagonal with current_player
+        if (col == (board_size - row - 1))
+        {
+            anti_diagonal += current_player;
+        }
+
+        //! Check if the current player wins
+        if (std::abs(rows[row]) == board_size
+            || std::abs(cols[col]) == board_size
+            || std::abs(diagonal) == board_size
+            || std::abs(anti_diagonal) == board_size)
+        {
+            return player;
+        }
+
+        //! No one wins
+        return 0;
+    }
+
+private:
+    int board_size {};
+    int diagonal {};
+    int anti_diagonal {};
+
+    std::vector<int> rows;
+    std::vector<int> cols;
+};
+
 TEST_CASE("Example 1", "[TicTacToe]")
 {
     //! Assume player 1 is 'X' and player 2 is 'O'
@@ -246,4 +301,13 @@ TEST_CASE("Example 1", "[TicTacToe]")
     CHECK(0 == tictactoeds1.move(2, 0, 1));
     CHECK(0 == tictactoeds1.move(1, 0, 2));
     CHECK(1 == tictactoeds1.move(2, 1, 1));
+
+    TicTacToeDS2 tictactoeds2 {3};
+    CHECK(0 == tictactoeds2.move(0, 0, 1));
+    CHECK(0 == tictactoeds2.move(0, 2, 2));
+    CHECK(0 == tictactoeds2.move(2, 2, 1));
+    CHECK(0 == tictactoeds2.move(1, 1, 2));
+    CHECK(0 == tictactoeds2.move(2, 0, 1));
+    CHECK(0 == tictactoeds2.move(1, 0, 2));
+    CHECK(1 == tictactoeds2.move(2, 1, 1));
 }
