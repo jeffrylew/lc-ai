@@ -1,5 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 
+#include <algorithm>
 #include <memory>
 #include <string>
 #include <string_view>
@@ -13,7 +14,7 @@ struct HotDegreeTrieNode
 {
     std::unordered_map<char, std::unique_ptr<FrequencyTrieNode>> children;
 
-    //! Each entry marks the end of a sentence at the current HotDegreeNode.
+    //! Each entry marks the end of a sentence at the current HotDegreeTrieNode.
     //! Each entry has value <hot degree, corresponding sentence>.
     //! A vector is used instead of std::map or std::unordered_map so
     //! std::ranges::partial_sort can be efficiently used to retrieve the top 3
@@ -77,7 +78,53 @@ public:
             return {};
         }
 
-        //! @todo
+        auto* curr_node = &root;
+
+        curr_tested_sentence += c;
+        for (const char letter : curr_tested_sentence)
+        {
+            auto child_it = curr_node->children.find(letter);
+            if (child_it == curr_node->children.end())
+            {
+                return {};
+            }
+
+            curr_node = child_it->second.get();
+        }
+
+        //! curr_node points to HotDegreeTrieNode for input char c
+        static constexpr int top_hot_qty {3};
+
+        auto& hot_degrees_sentences = curr_node->hot_degrees_sentences;
+
+        const auto num_hot_sentences =
+            static_cast<int>(std::ssize(hot_degrees_sentences));
+        
+        if (num_hot_sentences < top_hot_qty)
+        {
+            std::ranges::sort(hot_degrees_sentences,
+                              [](const std::pair<int, std::string>& lhs,
+                                 const std::pair<int, std::string>& rhs) {
+                                  if (lhs.first == rhs.first)
+                                  {
+                                    return lhs.second < rhs.second;
+                                  }
+
+                                  return lhs.first < rhs.first;
+                              });
+
+            std::vector<std::string> top_hot_sentences;
+            top_hot_sentences.reserve(num_hot_sentences);
+
+            //! @todo
+        }
+        
+
+        //! Partially sort hot_degrees_sentences to get the top 3
+        std::ranges::partial_sort(hot_degrees_sentences.begin(),
+                                  hot_degrees_sentences.begin() + top_hot_qty,
+                                  hot_degrees_sentences.end(),
+                                  );
     }
 
 private:
