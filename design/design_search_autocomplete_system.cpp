@@ -33,8 +33,6 @@ struct HotDegreeTrieNode
     //! historical hot sentences (Time complexity O(N * log M), where N is
     //! hot_degrees.size() and M = 3).
     std::vector<std::pair<int, std::string_view>> hot_degrees_sentences;
-
-    //! @todo Need to check for duplicate entries and update them
 };
 
 //! @brief Add a sentence and its hot degree to the trie
@@ -52,7 +50,23 @@ static void update_trie(HotDegreeTrieNode& root,
             letter, std::make_unique<HotDegreeTrieNode>());
 
         curr_node = child_it->second.get();
-        curr_node->hot_degrees_sentences.emplace_back(hot_degree, sentence);
+
+        bool found_sentence {};
+
+        for (auto& [hot_deg, sentence_sv] : curr_node->hot_degrees_sentences)
+        {
+            if (sentence == sentence_sv)
+            {
+                found_sentence = true;
+                hot_deg        = hot_degree;
+                break;
+            }
+        }
+
+        if (!found_sentence)
+        {
+            curr_node->hot_degrees_sentences.emplace_back(hot_degree, sentence);
+        }
     }
 }
 
@@ -76,7 +90,6 @@ public:
 
     std::vector<std::string> input(char c)
     {
-        //! @todo Maybe save prefix entries/frequencies before '#' is reached
         if (c == '#')
         {
             int curr_tested_frequency {1};
@@ -230,12 +243,16 @@ TEST_CASE("Example 2", "[AutocompleteSystem]")
     CHECK(expected_output4 == system_fa.input('a'));
     CHECK(system_fa.input('#').empty());
 
-    CHECK(expected_output5 == system_fa.input('i'));
-    CHECK(expected_output6 == system_fa.input(' '));
+    const auto generated_output_round3_from_i = system_fa.input('i');
+    CHECK(expected_output5 != generated_output_round3_from_i);
+    CHECK(std::vector<std::string> {"i love you", "island", "i love leetcode"}
+          == generated_output_round3_from_i);
 
-    const auto generated_output_round3_from_a = system_fa.input('a');
-    CHECK(expected_output4 != generated_output_round3_from_a);
-    CHECK(std::vector<std::string> {"i a", "i a"}
-          == generated_output_round3_from_a);
+    const auto generated_output_round3_from_space = system_fa.input(' ');
+    CHECK(expected_output6 != generated_output_round3_from_space);
+    CHECK(std::vector<std::string> {"i love you", "i love leetcode", "i a"}
+          == generated_output_round3_from_space);
+
+    CHECK(expected_output4 == system_fa.input('a'));
     CHECK(system_fa.input('#').empty());
 }
