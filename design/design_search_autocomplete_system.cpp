@@ -8,6 +8,18 @@
 #include <utility>
 #include <vector>
 
+[[nodiscard]] constexpr bool
+    compare_hot_sentences(const std::pair<int, std::string_view>& lhs,
+                          const std::pair<int, std::string_view>& rhs)
+{
+    if (lhs.first == rhs.first)
+    {
+        return lhs.second < rhs.second;
+    }
+
+    return lhs.first > rhs.first;
+}
+
 //! @struct HotDegreeTrieNode
 //! @brief Trie node containing pointers to its children and a hot degree
 struct HotDegreeTrieNode
@@ -21,6 +33,8 @@ struct HotDegreeTrieNode
     //! historical hot sentences (Time complexity O(N * log M), where N is
     //! hot_degrees.size() and M = 3).
     std::vector<std::pair<int, std::string_view>> hot_degrees_sentences;
+
+    //! @todo Need to check for duplicate entries and update them
 };
 
 //! @brief Add a sentence and its hot degree to the trie
@@ -106,17 +120,7 @@ public:
         if (num_hot_sentences <= top_hot_qty)
         {
             top_hot_sentences.reserve(num_hot_sentences);
-            std::ranges::sort(
-                hot_degrees_sentences,
-                [](const std::pair<int, std::string_view>& lhs,
-                   const std::pair<int, std::string_view>& rhs) {
-                    if (lhs.first == rhs.first)
-                    {
-                        return lhs.second < rhs.second;
-                    }
-
-                    return lhs.first > rhs.first;
-                });
+            std::ranges::sort(hot_degrees_sentences, compare_hot_sentences);
             std::ranges::transform(
                 hot_degrees_sentences,
                 std::back_inserter(top_hot_sentences),
@@ -131,15 +135,7 @@ public:
             std::ranges::partial_sort(
                 hot_degrees_sentences,
                 hot_degrees_sentences.begin() + top_hot_qty,
-                [](const std::pair<int, std::string_view>& lhs,
-                    const std::pair<int, std::string_view>& rhs) {
-                    if (lhs.first == rhs.first)
-                    {
-                        return lhs.second < rhs.second;
-                    }
- 
-                    return lhs.first > rhs.first;
-                });
+                compare_hot_sentences);
             std::ranges::transform(
                 hot_degrees_sentences.begin(),
                 hot_degrees_sentences.begin() + top_hot_qty,
