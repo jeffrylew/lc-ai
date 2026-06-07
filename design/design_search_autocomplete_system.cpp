@@ -175,12 +175,12 @@ struct TrieNodeDS1
 {
     std::unordered_map<char, std::unique_ptr<TrieNodeDS1>> children;
 
-    std::unordered_map<std::string_view, int> sentence_counts;
+    std::unordered_map<std::string, int> sentence_counts;
 };
 
-static void add_to_trie_DS1(TrieNodeDS1&     root,
-                            std::string_view sentence,
-                            int              count)
+static void add_to_trie_DS1(TrieNodeDS1&       root,
+                            const std::string& sentence,
+                            int                count)
 {
     auto* curr_node = &root;
     for (const char letter : sentence)
@@ -193,17 +193,85 @@ static void add_to_trie_DS1(TrieNodeDS1&     root,
     }
 }
 
+[[nodiscard]] constexpr bool
+    compare_hot_sentences_DS1(const std::pair<std::string, int>& lhs,
+                              const std::pair<std::string, int>& rhs)
+{
+    if (lhs.second == rhs.second)
+    {
+        return lhs.first < lhs.first;
+    }
+
+    return lhs.second < rhs.second;
+}
+
 class AutocompleteSystemDS1
 { 
 public:
     AutocompleteSystemDS1(const std::vector<std::string>& sentences,
                           const std::vector<int>&         times)
     {
+        for (int idx = 0; idx < std::ssize(sentences); ++idx)
+        {
+            add_to_trie_DS1(root, sentences[idx], times[idx]);
+        }
     }
 
     std::vector<std::string> input(char c)
     {
+        if (c == '#')
+        {
+            add_to_trie_DS1(root, curr_sentence, 1);
+            curr_sentence.clear();
+            curr_node = &root;
+            return {};
+        }
+
+        curr_sentence += c;
+        auto child_it = curr_node->children.find(c);
+        if (child_it == curr_node->children.end())
+        {
+            curr_node = &dead_node;
+            return {};
+        }
+
+        curr_node = child_it->second.get();
+
+        std::vector<std::string> hot_sentences;
+        std::ranges::transform(curr_node->sentence_counts,
+                               std::back_inserter(hot_sentences),
+                               [](const std::pair<std::string, int>& elem) {
+                                   return elem.first;
+                               });
+
+        static constexpr int top_hot_qty {3};
+        const auto           num_hot_sentences =
+            static_cast<int>(std::ssize(hot_sentences));
+        if (num_hot_sentences <= top_hot_qty)
+        {
+            std::ranges::sort(hot_sentences, compare_hot_sentences_DS1);
+        }
+        else
+        {
+            std::ranges::partial_sort(hot_sentences,
+                                      hot_sentences.begin() + top_hot_qty,
+                                      compare_hot_sentences_DS1);
+        }
+
+        std::vector<std::string> top_hot_sentences(top_hot_qty);
+        for (int idx = 0; idx < std::min(top_hot_qty, num_hot_sentences); ++idx)
+        {
+            top_hot_sentences[idx] = std::move(hot_sentences);
+        }
+        return top_hot_sentences;
     }
+
+private:
+    TrieNodeDS1           root {};
+    TrieNodeDS1*          curr_node {&root};
+    constexpr TrieNodeDS1 dead_node {};
+
+    std::string curr_sentence;
 };
 
 TEST_CASE("Example 1", "[AutocompleteSystem]")
