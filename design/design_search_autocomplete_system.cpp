@@ -175,8 +175,23 @@ struct TrieNodeDS1
 {
     std::unordered_map<char, std::unique_ptr<TrieNodeDS1>> children;
 
-    std::unordered_map<std::string_view, int> sentences;
+    std::unordered_map<std::string_view, int> sentence_counts;
 };
+
+static void add_to_trie_DS1(TrieNodeDS1&     root,
+                            std::string_view sentence,
+                            int              count)
+{
+    auto* curr_node = &root;
+    for (const char letter : sentence)
+    {
+        auto [child_it, node_exists] = curr_node->children.try_emplace(
+            letter, std::make_unique<TrieNodeDS1>());
+
+        curr_node = child_it->second.get();
+        curr_node->sentence_counts[sentence] += count;
+    }
+}
 
 class AutocompleteSystemDS1
 { 
