@@ -171,6 +171,7 @@ private:
     std::unordered_map<std::string, int> sentence_hot_degree;
 };
 
+//! @struct TrieNodeDS1
 struct TrieNodeDS1
 {
     std::unordered_map<char, std::unique_ptr<TrieNodeDS1>> children;
@@ -205,6 +206,8 @@ static void add_to_trie_DS1(TrieNodeDS1&       root,
     return lhs.second < rhs.second;
 }
 
+//! @class AutocompleteSystemDS1
+//! @details leetcode.com/problems/design-search-autocomplete-system/editorial
 class AutocompleteSystemDS1
 { 
 public:
@@ -237,39 +240,41 @@ public:
 
         curr_node = child_it->second.get();
 
-        std::vector<std::string> hot_sentences;
-        std::ranges::transform(curr_node->sentence_counts,
-                               std::back_inserter(hot_sentences),
-                               [](const std::pair<std::string, int>& elem) {
-                                   return elem.first;
-                               });
+        std::vector<std::pair<std::string, int>> hot_sentences;
+        std::ranges::copy(curr_node->sentence_counts,
+                          std::back_inserter(hot_sentences));
 
         static constexpr int top_hot_qty {3};
         const auto           num_hot_sentences =
             static_cast<int>(std::ssize(hot_sentences));
+        std::vector<std::string> top_hot_sentences;
+
         if (num_hot_sentences <= top_hot_qty)
         {
             std::ranges::sort(hot_sentences, compare_hot_sentences_DS1);
-        }
-        else
-        {
-            std::ranges::partial_sort(hot_sentences,
-                                      hot_sentences.begin() + top_hot_qty,
-                                      compare_hot_sentences_DS1);
+            top_hot_sentences.reserve(num_hot_sentences);
+            for (auto& [sentence, hot_degree] : hot_sentences)
+            {
+                top_hot_sentences.push_back(std::move(sentence));
+            }
+            return top_hot_sentences;
         }
 
-        std::vector<std::string> top_hot_sentences(top_hot_qty);
-        for (int idx = 0; idx < std::min(top_hot_qty, num_hot_sentences); ++idx)
+        std::ranges::partial_sort(hot_sentences,
+                                  hot_sentences.begin() + top_hot_qty,
+                                  compare_hot_sentences_DS1);
+        top_hot_sentences.reserve(top_hot_qty);
+        for (int idx = 0; idx < top_hot_qty; ++idx)
         {
-            top_hot_sentences[idx] = std::move(hot_sentences);
+            top_hot_sentences.push_back(std::move(hot_sentences[idx].first));
         }
         return top_hot_sentences;
     }
 
 private:
-    TrieNodeDS1           root {};
-    TrieNodeDS1*          curr_node {&root};
-    constexpr TrieNodeDS1 dead_node {};
+    TrieNodeDS1  root {};
+    TrieNodeDS1* curr_node {&root};
+    TrieNodeDS1  dead_node {};
 
     std::string curr_sentence;
 };
