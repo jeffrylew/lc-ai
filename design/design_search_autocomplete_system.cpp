@@ -208,6 +208,11 @@ static void add_to_trie_DS1(TrieNodeDS1&       root,
 
 //! @class AutocompleteSystemDS1
 //! @details leetcode.com/problems/design-search-autocomplete-system/editorial
+//!
+//!          Time complexity O(N * K + M * (N + M / K) * log (N + M / K)) where
+//!          N = sentences.size(), K = average length of all sentences, and M is
+//!          the number of times that input() is called.
+//!          Space complexity O(K * (N * K + M)).
 class AutocompleteSystemDS1
 { 
 public:
