@@ -212,6 +212,15 @@ static void add_to_trie_DS1(TrieNodeDS1&       root,
 //!          Time complexity O(N * K + M * (N + M / K) * log (N + M / K)) where
 //!          N = sentences.size(), K = average length of all sentences, and M is
 //!          the number of times that input() is called.
+//!          constructor: We initialize the trie, which costs O(N * K) to
+//!          iterate over each character in each sentence.
+//!          input: Adding a character to curr_sentence and the trie costs O(1).
+//!          Next, we fetch and sort the sentences in the current node. A node
+//!          can initially hold O(N) sentences. After calling input() M times,
+//!          we could add M / K new sentences for a total of O(N + M / K)
+//!          sentences. Sorting them costs O((N + M / K) * log (N + M / K)). The
+//!          work done in the other cases like adding a new sentence to the trie
+//!          will be dominated by this sort.
 //!          Space complexity O(K * (N * K + M)).
 class AutocompleteSystemDS1
 { 
