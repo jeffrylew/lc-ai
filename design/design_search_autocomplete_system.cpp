@@ -300,6 +300,21 @@ private:
     std::string curr_sentence;
 };
 
+//! @class AutocompleteSystemDS2
+//! @details leetcode.com/problems/design-search-autocomplete-system/editorial
+class AutocompleteSystemDS2
+{ 
+public:
+    AutocompleteSystemDS2(const std::vector<std::string>& sentences,
+                          const std::vector<int>&         times)
+    {
+    }
+
+    std::vector<std::string> input(char c)
+    {
+    }
+};
+
 TEST_CASE("Example 1", "[AutocompleteSystem]")
 {
     const std::vector<std::string> sentences {
@@ -338,6 +353,12 @@ TEST_CASE("Example 1", "[AutocompleteSystem]")
     CHECK(expected_output2 == system_ds1.input(' '));
     CHECK(system_ds1.input('a').empty());
     CHECK(system_ds1.input('#').empty());
+
+    AutocompleteSystemDS2 system_ds2 {sentences, times};
+    CHECK(expected_output1 == system_ds2.input('i'));
+    CHECK(expected_output2 == system_ds2.input(' '));
+    CHECK(system_ds2.input('a').empty());
+    CHECK(system_ds2.input('#').empty());
 }
 
 TEST_CASE("Example 2", "[AutocompleteSystem]")
@@ -406,4 +427,20 @@ TEST_CASE("Example 2", "[AutocompleteSystem]")
     CHECK(expected_output6 == system_ds1.input(' '));
     CHECK(expected_output4 == system_ds1.input('a'));
     CHECK(system_ds1.input('#').empty());
+
+    AutocompleteSystemDS2 system_ds2 {sentences, times};
+    CHECK(expected_output1 == system_ds2.input('i'));
+    CHECK(expected_output2 == system_ds2.input(' '));
+    CHECK(system_ds2.input('a').empty());
+    CHECK(system_ds2.input('#').empty());
+
+    CHECK(expected_output1 == system_ds2.input('i'));
+    CHECK(expected_output3 == system_ds2.input(' '));
+    CHECK(expected_output4 == system_ds2.input('a'));
+    CHECK(system_ds2.input('#').empty());
+
+    CHECK(expected_output5 == system_ds2.input('i'));
+    CHECK(expected_output6 == system_ds2.input(' '));
+    CHECK(expected_output4 == system_ds2.input('a'));
+    CHECK(system_ds2.input('#').empty());
 }
