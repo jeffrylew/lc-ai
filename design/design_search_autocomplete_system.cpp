@@ -300,6 +300,29 @@ private:
     std::string curr_sentence;
 };
 
+//! @struct TrieNodeDS2
+struct TrieNodeDS2
+{
+    std::unordered_map<char, std::unique_ptr<TrieNodeDS2>> children;
+
+    std::unordered_map<std::string, int> sentence_hot_degree;
+};
+
+static void add_to_trie_DS2(TrieNodeDS2&       root,
+                            const std::string& sentence,
+                            int                count)
+{
+    auto* curr_node = &root;
+    for (const char letter : sentence)
+    {
+        auto [child_it, node_exists] = curr_node->children.try_emplace(
+            letter, std::make_unique<TrieNodeDS2>());
+
+        curr_node = child_it->second.get();
+        curr_node->sentence_counts[sentence] += count;
+    }
+}
+
 //! @class AutocompleteSystemDS2
 //! @details leetcode.com/problems/design-search-autocomplete-system/editorial
 class AutocompleteSystemDS2
