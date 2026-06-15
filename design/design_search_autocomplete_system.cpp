@@ -331,11 +331,40 @@ public:
     AutocompleteSystemDS2(const std::vector<std::string>& sentences,
                           const std::vector<int>&         times)
     {
+        for (int idx = 0; idx < std::ssize(sentences); ++idx)
+        {
+            add_to_trie_DS2(root, sentences[idx], times[idx]);
+        }
     }
 
     std::vector<std::string> input(char c)
     {
+        if (c == '#')
+        {
+            add_to_trie_DS2(root, curr_sentence, 1);
+            curr_sentence.clear();
+            curr_node = &root;
+            return {};
+        }
+
+        curr_sentence += c;
+        auto child_it = curr_node->children.find(c);
+        if (child_it == curr_node->children.end())
+        {
+            curr_node = &dead_node;
+            return {};
+        }
+
+        curr_node = child_it->second.get();
+        //! @todo
     }
+
+private:
+    TrieNodeDS2  root {};
+    TrieNodeDS2* curr_node {&root};
+    TrieNodeDS2  dead_node {};
+
+    std::string curr_sentence;
 };
 
 TEST_CASE("Example 1", "[AutocompleteSystem]")
