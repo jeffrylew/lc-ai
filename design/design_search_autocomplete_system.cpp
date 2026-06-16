@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <queue>
 #include <string>
 #include <string_view>
 #include <unordered_map>
@@ -200,7 +201,7 @@ static void add_to_trie_DS1(TrieNodeDS1&       root,
 {
     if (lhs.second == rhs.second)
     {
-        return lhs.first < lhs.first;
+        return lhs.first < rhs.first;
     }
 
     return lhs.second < rhs.second;
@@ -323,6 +324,18 @@ static void add_to_trie_DS2(TrieNodeDS2&       root,
     }
 }
 
+[[nodiscard]] constexpr bool
+    compare_hot_sentences_DS2(const std::pair<std::string, int>& lhs,
+                              const std::pair<std::string, int>& rhs)
+{
+    if (lhs.second == rhs.second)
+    {
+        return lhs.first > rhs.first;
+    }
+
+    return lhs.second > rhs.second;
+}
+
 //! @class AutocompleteSystemDS2
 //! @details leetcode.com/problems/design-search-autocomplete-system/editorial
 class AutocompleteSystemDS2
@@ -356,6 +369,9 @@ public:
         }
 
         curr_node = child_it->second.get();
+        std::priority_queue<std::pair<std::string, int>,
+                            std::vector<std::pair<std::string, int>>,
+                            decltype(compare_hot_sentences_DS2)> min_hot_heap;
         //! @todo
     }
 
