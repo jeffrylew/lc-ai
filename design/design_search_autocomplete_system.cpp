@@ -204,7 +204,7 @@ static void add_to_trie_DS1(TrieNodeDS1&       root,
         return lhs.first < rhs.first;
     }
 
-    return lhs.second < rhs.second;
+    return lhs.second > rhs.second;
 }
 
 //! @class AutocompleteSystemDS1
@@ -333,7 +333,7 @@ static void add_to_trie_DS2(TrieNodeDS2&       root,
         return lhs.first > rhs.first;
     }
 
-    return lhs.second > rhs.second;
+    return lhs.second < rhs.second;
 }
 
 //! @class AutocompleteSystemDS2
