@@ -306,7 +306,7 @@ struct TrieNodeDS2
 {
     std::unordered_map<char, std::unique_ptr<TrieNodeDS2>> children;
 
-    std::unordered_map<std::string, int> sentence_hot_degree;
+    std::unordered_map<std::string, int> sentence_counts;
 };
 
 static void add_to_trie_DS2(TrieNodeDS2&       root,
@@ -371,8 +371,24 @@ public:
         curr_node = child_it->second.get();
         std::priority_queue<std::pair<std::string, int>,
                             std::vector<std::pair<std::string, int>>,
-                            decltype(compare_hot_sentences_DS2)> min_hot_heap;
-        //! @todo
+                            decltype(&compare_hot_sentences_DS2)> max_hot_heap {
+                                curr_node->sentence_counts.begin(),
+                                curr_node->sentence_counts.end(),
+                                compare_hot_sentences_DS2};
+
+        static constexpr std::size_t top_hot_qty {3U};
+        std::vector<std::string>     top_hot_sentences;
+        top_hot_sentences.reserve(std::min(top_hot_qty, max_hot_heap.size()));
+
+        int hot_sentence_count {};
+        while (!max_hot_heap.empty() && hot_sentence_count < top_hot_qty)
+        {
+            top_hot_sentences.push_back(std::move(max_hot_heap.top().first));
+            max_hot_heap.pop();
+            ++hot_sentence_count;
+        }
+
+        return top_hot_sentences;
     }
 
 private:
