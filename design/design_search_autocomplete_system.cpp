@@ -378,14 +378,12 @@ public:
 
         static constexpr std::size_t top_hot_qty {3U};
         std::vector<std::string>     top_hot_sentences;
-        top_hot_sentences.reserve(std::min(top_hot_qty, max_hot_heap.size()));
+        top_hot_sentences.resize(std::min(top_hot_qty, max_hot_heap.size()));
 
-        int hot_sentence_count {};
-        while (!max_hot_heap.empty() && hot_sentence_count < top_hot_qty)
+        for (auto& hot_sentence : top_hot_sentences)
         {
-            top_hot_sentences.push_back(std::move(max_hot_heap.top().first));
+            hot_sentence = std::move(max_hot_heap.top().first);
             max_hot_heap.pop();
-            ++hot_sentence_count;
         }
 
         return top_hot_sentences;
