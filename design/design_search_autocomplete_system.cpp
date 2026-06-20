@@ -210,7 +210,7 @@ static void add_to_trie_DS1(TrieNodeDS1&       root,
 //! @class AutocompleteSystemDS1
 //! @details leetcode.com/problems/design-search-autocomplete-system/editorial
 //!
-//!          Time complexity O(N * K + M * (N + M / K) * log (N + M / K)) where
+//!          Time complexity O(N * K + M * (N + M / K)) where
 //!          N = sentences.size(), K = average length of all sentences, and M is
 //!          the number of times that input() is called.
 //!          constructor: We initialize the trie, which costs O(N * K) to
@@ -219,8 +219,9 @@ static void add_to_trie_DS1(TrieNodeDS1&       root,
 //!          Next, we fetch and sort the sentences in the current node. A node
 //!          can initially hold O(N) sentences. After calling input() M times,
 //!          we could add M / K new sentences for a total of O(N + M / K)
-//!          sentences. Sorting them costs O((N + M / K) * log (N + M / K)). The
-//!          work done in the other cases like adding a new sentence to the trie
+//!          sentences. Sorting them costs O((N + M / K) * log (3)) or
+//!          O(N + M / K) due to the use of std::ranges::partial_sort. The work
+//!          done in the other cases like adding a new sentence to the trie O(K)
 //!          will be dominated by this sort.
 //!          Space complexity O(K * (N * K + M)). The worst-case scenario for
 //!          the trie size is when no two sentences share any prefix. The trie
