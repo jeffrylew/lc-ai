@@ -338,6 +338,19 @@ static void add_to_trie_DS2(TrieNodeDS2&       root,
 
 //! @class AutocompleteSystemDS2
 //! @details leetcode.com/problems/design-search-autocomplete-system/editorial
+//!
+//!          Time complexity O(N * K + M * (N + M / K)) where N = number of
+//!          sentences, K = average length of all sentences, and M is the
+//!          number of times input() is called. Initializing the trie in the
+//!          constructor costs O(N * K) to iterate over each character in each
+//!          sentence. In input(), adding a character to curr_sentence and to
+//!          the trie costs O(1). Next, we fetch up to O(N) sentences in the
+//!          current node. After calling input() M times, we could add M / K new
+//!          sentences. Overall, there could be up to O(N + M / K) sentences.
+//!          Heapifying these sentences and finding the best 3 in linear time
+//!          costs O(N + M / K). The work done in the other cases like adding a
+//!          new sentence to the trie will be dominated by this. input() is
+//!          called M times, contributing O(M * (N + M / K)).
 class AutocompleteSystemDS2
 { 
 public:
