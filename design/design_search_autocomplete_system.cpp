@@ -351,6 +351,14 @@ static void add_to_trie_DS2(TrieNodeDS2&       root,
 //!          costs O(N + M / K). The work done in the other cases like adding a
 //!          new sentence to the trie will be dominated by this. input() is
 //!          called M times, contributing O(M * (N + M / K)).
+//!          Space complexity O(K * (N * K + M)). The worst-case scenario for
+//!          the trie size is when no two sentences share any prefix. The trie
+//!          will initially have a size of N * K. Each trie node has children
+//!          and sentence_counts hash maps, where the size of the former is
+//!          limited to 26 so we ignore it. The size of sentence_counts varies,
+//!          but in the case described, each node will only have one entry since
+//!          no two sentences share any prefix (so no trie node is visited by
+//!          more than one sentence). This entry has size O(K).
 class AutocompleteSystemDS2
 { 
 public:
