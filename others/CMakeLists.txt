@@ -1,5 +1,6 @@
 set (
     cpp_files
+    "partition_labels"
     "prison_cells_after_n_days"
 )
 
