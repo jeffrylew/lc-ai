@@ -68,17 +68,35 @@ static std::vector<int> partitionLabelsDS2(std::string s)
     int                  partition_start {};
     int                  partition_end {};
     std::vector<int>     partition_sizes;
-    std::array<int, 26U> first_occurrence {};
+    std::array<int, 26U> first_occurrence;
+    first_occurrence.fill(-1);
 
     for (int idx = 0; idx < s_size; ++idx)
     {
         //! Store the first index of each char (if not set)
-        if (first_occurrence[s[idx] - 'a'] == 0)
+        if (first_occurrence[s[idx] - 'a'] == -1)
         {
             first_occurrence[s[idx] - 'a'] = idx;
         }
 
-        //! @todo
+        //! If we find a new partition starting at the current index
+        if (partition_end < first_occurrence[s[idx] - 'a'])
+        {
+            //! Store the last partition size and update partition boundaries
+            partition_sizes.push_back(partition_end - partition_start + 1);
+            partition_start = idx;
+            partition_end   = idx;
+        }
+
+        //! Update partition end boundary to ensure all occurrences
+        //! of s[idx] are in the same (current) partition
+        partition_end = std::max(partition_end, last_occurrence[s[idx] - 'a']);
+    }
+
+    //! Add the last partition if it exists
+    if (partition_end - partition_start + 1 > 0)
+    {
+        partition_sizes.push_back(partition_end - partition_start + 1);
     }
 
     return partition_sizes;
