@@ -52,12 +52,45 @@ static std::vector<int> partitionLabelsDS1(std::string s)
     return partition_sizes;
 }
 
+static std::vector<int> partitionLabelsDS2(std::string s)
+{
+    //! @details https://leetcode.com/problems/partition-labels/editorial/
+
+    const auto s_size = static_cast<int>(std::ssize(s));
+
+    //! Store the last index of each char in s
+    std::array<int, 26U> last_occurrence {};
+    for (int idx = 0; idx < s_size; ++idx)
+    {
+        last_occurrence[s[idx] - 'a'] = idx;
+    }
+
+    int                  partition_start {};
+    int                  partition_end {};
+    std::vector<int>     partition_sizes;
+    std::array<int, 26U> first_occurrence {};
+
+    for (int idx = 0; idx < s_size; ++idx)
+    {
+        //! Store the first index of each char (if not set)
+        if (first_occurrence[s[idx] - 'a'] == 0)
+        {
+            first_occurrence[s[idx] - 'a'] = idx;
+        }
+
+        //! @todo
+    }
+
+    return partition_sizes;
+}
+
 TEST_CASE("Example 1", "[partitionLabels]")
 {
     const std::string      s {"ababcbacadefegdehijhklij"};
     const std::vector<int> expected_output {9, 7, 8};
 
     REQUIRE(expected_output == partitionLabelsDS1(s));
+    REQUIRE(expected_output == partitionLabelsDS2(s));
 }
 
 TEST_CASE("Example 2", "[partitionLabels]")
@@ -66,6 +99,7 @@ TEST_CASE("Example 2", "[partitionLabels]")
     const std::vector<int> expected_output {10};
 
     REQUIRE(expected_output == partitionLabelsDS1(s));
+    REQUIRE(expected_output == partitionLabelsDS2(s));
 }
 
 TEST_CASE("Example 3", "[partitionLabels]")
@@ -82,4 +116,5 @@ TEST_CASE("Example 3", "[partitionLabels]")
     const std::vector<int> expected_output {3, 1, 1, 1, 5, 1};
 
     REQUIRE(expected_output == partitionLabelsDS1(s));
+    REQUIRE(expected_output == partitionLabelsDS2(s));
 }
