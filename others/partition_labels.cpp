@@ -55,6 +55,19 @@ static std::vector<int> partitionLabelsDS1(std::string s)
 static std::vector<int> partitionLabelsDS2(std::string s)
 {
     //! @details https://leetcode.com/problems/partition-labels/editorial/
+    //!
+    //!          Time complexity O(N) where N = s.size(). The algorithm iterates
+    //!          through s twice. The first loop takes O(N) to store the last
+    //!          occurrence index of each character. The second loops also runs
+    //!          in O(N) to determine partitions by checking the first and last
+    //!          occurrences of each character.
+    //!          Space complexity O(K) where K = number of unique chars in s.
+    //!          The algorithm uses two fixed-size arrays, first_occurrence and
+    //!          last_occurrence, of size 26 to store each character's interval
+    //!          boundaries. In the general case, the space required is
+    //!          proportional to the number of distinct letters in s. Thus, for
+    //!          an arbitrary alphabet (a set of distinct values) of size k, the
+    //!          space complexity of the algorithm is O(K).
 
     const auto s_size = static_cast<int>(std::ssize(s));
 
